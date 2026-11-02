@@ -1,0 +1,153 @@
+thayarwady failed: Request failed: https://archive-api.open-meteo.com/v1/archive
+RuntimeError: HTTP 429: {"reason":"Hourly API request limit exceeded. Please try again in the next hour.","error":true}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 432, in main
+    _write_merged(place, HISTORY_START, end)
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 393, in _write_merged
+    weather = _weather_frame(township_id, float(place["latitude"]), float(place["longitude"]), start, end)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 306, in _weather_frame
+    payload = _load_or_fetch(path, f"{ARCHIVE_URL}?{query}")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 282, in _load_or_fetch
+    payload = _fetch(url)
+              ^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 270, in _fetch
+    raise RuntimeError(f"Request failed: {url.split('?', 1)[0]}") from last_error
+RuntimeError: Request failed: https://archive-api.open-meteo.com/v1/archive
+
+letpadan failed: Request failed: https://archive-api.open-meteo.com/v1/archive
+RuntimeError: HTTP 429: {"error":true,"reason":"Hourly API request limit exceeded. Please try again in the next hour."}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 432, in main
+    _write_merged(place, HISTORY_START, end)
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 393, in _write_merged
+    weather = _weather_frame(township_id, float(place["latitude"]), float(place["longitude"]), start, end)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 306, in _weather_frame
+    payload = _load_or_fetch(path, f"{ARCHIVE_URL}?{query}")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 282, in _load_or_fetch
+    payload = _fetch(url)
+              ^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 270, in _fetch
+    raise RuntimeError(f"Request failed: {url.split('?', 1)[0]}") from last_error
+RuntimeError: Request failed: https://archive-api.open-meteo.com/v1/archive
+
+minhla failed: Request failed: https://archive-api.open-meteo.com/v1/archive
+RuntimeError: HTTP 429: {"reason":"Hourly API request limit exceeded. Please try again in the next hour.","error":true}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 432, in main
+    _write_merged(place, HISTORY_START, end)
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 393, in _write_merged
+    weather = _weather_frame(township_id, float(place["latitude"]), float(place["longitude"]), start, end)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 306, in _weather_frame
+    payload = _load_or_fetch(path, f"{ARCHIVE_URL}?{query}")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 282, in _load_or_fetch
+    payload = _fetch(url)
+              ^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 270, in _fetch
+    raise RuntimeError(f"Request failed: {url.split('?', 1)[0]}") from last_error
+RuntimeError: Request failed: https://archive-api.open-meteo.com/v1/archive
+
+monyo failed: Request failed: https://archive-api.open-meteo.com/v1/archive
+RuntimeError: HTTP 429: {"reason":"Hourly API request limit exceeded. Please try again in the next hour.","error":true}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 432, in main
+    print(f"locations {len(places)} {HISTORY_START} {end}", flush=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 393, in _write_merged
+    township_id = str(place["township_id"])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 306, in _weather_frame
+    "wind_speed_unit": "ms",
+      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 282, in _load_or_fetch
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 270, in _fetch
+    raise last_error from exc
+RuntimeError: Request failed: https://archive-api.open-meteo.com/v1/archive
+
+minhla failed: Request failed: https://archive-api.open-meteo.com/v1/archive
+Traceback (most recent call last):
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1358, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1404, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1353, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1113, in _send_output
+    self.send(msg)
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1057, in send
+    self.connect()
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1492, in connect
+    super().connect()
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1023, in connect
+    self.sock = self._create_connection(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\socket.py", line 841, in create_connection
+    for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\socket.py", line 978, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 256, in _fetch
+    with urllib.request.urlopen(request, timeout=180) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1392, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Huawei\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 11001] getaddrinfo failed>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 437, in main
+    _write_merged(place, HISTORY_START, end)
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 398, in _write_merged
+    weather = _weather_frame(township_id, float(place["latitude"]), float(place["longitude"]), start, end)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 311, in _weather_frame
+    payload = _load_or_fetch(path, f"{ARCHIVE_URL}?{query}")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 287, in _load_or_fetch
+    payload = _fetch(url)
+              ^^^^^^^^^^^
+  File "D:\Ai_Project\HydroFlow_V2\ml\flood\download_bago28_history.py", line 275, in _fetch
+    raise RuntimeError(f"Request failed: {url.split('?', 1)[0]}") from last_error
+RuntimeError: Request failed: https://archive-api.open-meteo.com/v1/archive
+

@@ -1,0 +1,4867 @@
+{
+  "source": "2024 Population and Housing Census, Bago Region tables",
+  "source_file": "data/2024_census_bago_report (update).xlsx",
+  "census_year": 2024,
+  "region_name_en": "Bago",
+  "region_name_local": "ပဲခူးတိုင်းဒေသကြီး",
+  "notes": [
+    "Counts are the published census tables, including the workbook's estimated population.",
+    "Urban and rural residence is published for the region, and for age groups at region and district level.",
+    "Age groups are not published for individual townships.",
+    "Household size and dwelling type describe the living situation at region, district, and township level.",
+    "Urban and rural dwelling type is published for the region only."
+  ],
+  "dwelling_types": [
+    {
+      "key": "apartment",
+      "name_local": "တိုက်ခန်းတွဲ/ တိုက်ခန်း",
+      "name_en": "Apartment or flat"
+    },
+    {
+      "key": "brick",
+      "name_local": "တိုက်အိမ်",
+      "name_en": "Brick house"
+    },
+    {
+      "key": "semi_brick",
+      "name_local": "တိုက်ခံအိမ်",
+      "name_en": "Semi-brick house"
+    },
+    {
+      "key": "wooden",
+      "name_local": "ပျဉ်ထောင်အိမ်/ သစ်သားအိမ်",
+      "name_en": "Wooden house"
+    },
+    {
+      "key": "bamboo",
+      "name_local": "ဝါးအိမ်",
+      "name_en": "Bamboo house"
+    },
+    {
+      "key": "hut",
+      "name_local": "တဲအိမ်",
+      "name_en": "Hut"
+    },
+    {
+      "key": "other",
+      "name_local": "အခြား",
+      "name_en": "Other"
+    }
+  ],
+  "population": {
+    "total": {
+      "total": 4453687,
+      "male": 2078567,
+      "female": 2375120
+    },
+    "urban": {
+      "total": 1128732,
+      "male": 512226,
+      "female": 616506
+    },
+    "rural": {
+      "total": 3324955,
+      "male": 1566341,
+      "female": 1758614
+    }
+  },
+  "age_groups": [
+    {
+      "label": "0-4",
+      "min_age": 0,
+      "max_age": 4,
+      "total": {
+        "total": 259492,
+        "male": 132028,
+        "female": 127464
+      },
+      "urban": {
+        "total": 59168,
+        "male": 29999,
+        "female": 29169
+      },
+      "rural": {
+        "total": 200324,
+        "male": 102029,
+        "female": 98295
+      }
+    },
+    {
+      "label": "5-9",
+      "min_age": 5,
+      "max_age": 9,
+      "total": {
+        "total": 370673,
+        "male": 189530,
+        "female": 181143
+      },
+      "urban": {
+        "total": 85702,
+        "male": 43878,
+        "female": 41824
+      },
+      "rural": {
+        "total": 284971,
+        "male": 145652,
+        "female": 139319
+      }
+    },
+    {
+      "label": "10-14",
+      "min_age": 10,
+      "max_age": 14,
+      "total": {
+        "total": 401123,
+        "male": 205879,
+        "female": 195244
+      },
+      "urban": {
+        "total": 94887,
+        "male": 49467,
+        "female": 45420
+      },
+      "rural": {
+        "total": 306236,
+        "male": 156412,
+        "female": 149824
+      }
+    },
+    {
+      "label": "15-19",
+      "min_age": 15,
+      "max_age": 19,
+      "total": {
+        "total": 362882,
+        "male": 177269,
+        "female": 185613
+      },
+      "urban": {
+        "total": 96241,
+        "male": 46837,
+        "female": 49404
+      },
+      "rural": {
+        "total": 266641,
+        "male": 130432,
+        "female": 136209
+      }
+    },
+    {
+      "label": "20-24",
+      "min_age": 20,
+      "max_age": 24,
+      "total": {
+        "total": 290970,
+        "male": 131890,
+        "female": 159080
+      },
+      "urban": {
+        "total": 82120,
+        "male": 36641,
+        "female": 45479
+      },
+      "rural": {
+        "total": 208850,
+        "male": 95249,
+        "female": 113601
+      }
+    },
+    {
+      "label": "25-29",
+      "min_age": 25,
+      "max_age": 29,
+      "total": {
+        "total": 279526,
+        "male": 126006,
+        "female": 153520
+      },
+      "urban": {
+        "total": 73059,
+        "male": 33054,
+        "female": 40005
+      },
+      "rural": {
+        "total": 206467,
+        "male": 92952,
+        "female": 113515
+      }
+    },
+    {
+      "label": "30-34",
+      "min_age": 30,
+      "max_age": 34,
+      "total": {
+        "total": 299064,
+        "male": 135141,
+        "female": 163923
+      },
+      "urban": {
+        "total": 75356,
+        "male": 34057,
+        "female": 41299
+      },
+      "rural": {
+        "total": 223708,
+        "male": 101084,
+        "female": 122624
+      }
+    },
+    {
+      "label": "35-39",
+      "min_age": 35,
+      "max_age": 39,
+      "total": {
+        "total": 325325,
+        "male": 149171,
+        "female": 176154
+      },
+      "urban": {
+        "total": 80183,
+        "male": 36205,
+        "female": 43978
+      },
+      "rural": {
+        "total": 245142,
+        "male": 112966,
+        "female": 132176
+      }
+    },
+    {
+      "label": "40-44",
+      "min_age": 40,
+      "max_age": 44,
+      "total": {
+        "total": 324084,
+        "male": 148135,
+        "female": 175949
+      },
+      "urban": {
+        "total": 80996,
+        "male": 36173,
+        "female": 44823
+      },
+      "rural": {
+        "total": 243088,
+        "male": 111962,
+        "female": 131126
+      }
+    },
+    {
+      "label": "45-49",
+      "min_age": 45,
+      "max_age": 49,
+      "total": {
+        "total": 309310,
+        "male": 140619,
+        "female": 168691
+      },
+      "urban": {
+        "total": 76200,
+        "male": 33259,
+        "female": 42941
+      },
+      "rural": {
+        "total": 233110,
+        "male": 107360,
+        "female": 125750
+      }
+    },
+    {
+      "label": "50-54",
+      "min_age": 50,
+      "max_age": 54,
+      "total": {
+        "total": 297711,
+        "male": 135040,
+        "female": 162671
+      },
+      "urban": {
+        "total": 75814,
+        "male": 32272,
+        "female": 43542
+      },
+      "rural": {
+        "total": 221897,
+        "male": 102768,
+        "female": 119129
+      }
+    },
+    {
+      "label": "55-59",
+      "min_age": 55,
+      "max_age": 59,
+      "total": {
+        "total": 265967,
+        "male": 119563,
+        "female": 146404
+      },
+      "urban": {
+        "total": 68587,
+        "male": 28557,
+        "female": 40030
+      },
+      "rural": {
+        "total": 197380,
+        "male": 91006,
+        "female": 106374
+      }
+    },
+    {
+      "label": "60-64",
+      "min_age": 60,
+      "max_age": 64,
+      "total": {
+        "total": 224910,
+        "male": 100209,
+        "female": 124701
+      },
+      "urban": {
+        "total": 59089,
+        "male": 24168,
+        "female": 34921
+      },
+      "rural": {
+        "total": 165821,
+        "male": 76041,
+        "female": 89780
+      }
+    },
+    {
+      "label": "65-69",
+      "min_age": 65,
+      "max_age": 69,
+      "total": {
+        "total": 176653,
+        "male": 78433,
+        "female": 98220
+      },
+      "urban": {
+        "total": 47522,
+        "male": 19539,
+        "female": 27983
+      },
+      "rural": {
+        "total": 129131,
+        "male": 58894,
+        "female": 70237
+      }
+    },
+    {
+      "label": "70-74",
+      "min_age": 70,
+      "max_age": 74,
+      "total": {
+        "total": 123178,
+        "male": 52971,
+        "female": 70207
+      },
+      "urban": {
+        "total": 34104,
+        "male": 13694,
+        "female": 20410
+      },
+      "rural": {
+        "total": 89074,
+        "male": 39277,
+        "female": 49797
+      }
+    },
+    {
+      "label": "75-79",
+      "min_age": 75,
+      "max_age": 79,
+      "total": {
+        "total": 72835,
+        "male": 30152,
+        "female": 42683
+      },
+      "urban": {
+        "total": 20381,
+        "male": 7798,
+        "female": 12583
+      },
+      "rural": {
+        "total": 52454,
+        "male": 22354,
+        "female": 30100
+      }
+    },
+    {
+      "label": "80-84",
+      "min_age": 80,
+      "max_age": 84,
+      "total": {
+        "total": 36085,
+        "male": 14139,
+        "female": 21946
+      },
+      "urban": {
+        "total": 10250,
+        "male": 3701,
+        "female": 6549
+      },
+      "rural": {
+        "total": 25835,
+        "male": 10438,
+        "female": 15397
+      }
+    },
+    {
+      "label": "85-89",
+      "min_age": 85,
+      "max_age": 89,
+      "total": {
+        "total": 22699,
+        "male": 8498,
+        "female": 14201
+      },
+      "urban": {
+        "total": 6003,
+        "male": 2023,
+        "female": 3980
+      },
+      "rural": {
+        "total": 16696,
+        "male": 6475,
+        "female": 10221
+      }
+    },
+    {
+      "label": "90+",
+      "min_age": 90,
+      "max_age": null,
+      "total": {
+        "total": 11200,
+        "male": 3894,
+        "female": 7306
+      },
+      "urban": {
+        "total": 3070,
+        "male": 904,
+        "female": 2166
+      },
+      "rural": {
+        "total": 8130,
+        "male": 2990,
+        "female": 5140
+      }
+    }
+  ],
+  "households": {
+    "total": 1029962,
+    "by_size": [
+      {
+        "size": "1",
+        "households": 74440
+      },
+      {
+        "size": "2",
+        "households": 200588
+      },
+      {
+        "size": "3",
+        "households": 269410
+      },
+      {
+        "size": "4",
+        "households": 231119
+      },
+      {
+        "size": "5",
+        "households": 131687
+      },
+      {
+        "size": "6",
+        "households": 64676
+      },
+      {
+        "size": "7",
+        "households": 30104
+      },
+      {
+        "size": "8",
+        "households": 14251
+      },
+      {
+        "size": "9+",
+        "households": 13687
+      }
+    ],
+    "by_dwelling": {
+      "total": 1029962,
+      "apartment": 24558,
+      "brick": 157223,
+      "semi_brick": 121179,
+      "wooden": 577080,
+      "bamboo": 137006,
+      "hut": 11499,
+      "other": 1417
+    },
+    "urban_dwellings": {
+      "total": 266225,
+      "apartment": 14298,
+      "brick": 72887,
+      "semi_brick": 40066,
+      "wooden": 114878,
+      "bamboo": 20486,
+      "hut": 2799,
+      "other": 811
+    },
+    "rural_dwellings": {
+      "total": 763737,
+      "apartment": 10260,
+      "brick": 84336,
+      "semi_brick": 81113,
+      "wooden": 462202,
+      "bamboo": 116520,
+      "hut": 8700,
+      "other": 606
+    }
+  },
+  "districts": [
+    {
+      "name_en": "Bago",
+      "name_local": "ပဲခူးခရိုင်",
+      "population": {
+        "total": 927389,
+        "male": 429760,
+        "female": 497629
+      },
+      "age_groups": [
+        {
+          "label": "0-4",
+          "min_age": 0,
+          "max_age": 4,
+          "total": {
+            "total": 64676,
+            "male": 32937,
+            "female": 31739
+          },
+          "urban": {
+            "total": 19338,
+            "male": 9780,
+            "female": 9558
+          },
+          "rural": {
+            "total": 45338,
+            "male": 23157,
+            "female": 22181
+          }
+        },
+        {
+          "label": "5-9",
+          "min_age": 5,
+          "max_age": 9,
+          "total": {
+            "total": 87299,
+            "male": 44688,
+            "female": 42611
+          },
+          "urban": {
+            "total": 25876,
+            "male": 13267,
+            "female": 12609
+          },
+          "rural": {
+            "total": 61423,
+            "male": 31421,
+            "female": 30002
+          }
+        },
+        {
+          "label": "10-14",
+          "min_age": 10,
+          "max_age": 14,
+          "total": {
+            "total": 92606,
+            "male": 47819,
+            "female": 44787
+          },
+          "urban": {
+            "total": 28141,
+            "male": 14804,
+            "female": 13337
+          },
+          "rural": {
+            "total": 64465,
+            "male": 33015,
+            "female": 31450
+          }
+        },
+        {
+          "label": "15-19",
+          "min_age": 15,
+          "max_age": 19,
+          "total": {
+            "total": 81879,
+            "male": 40057,
+            "female": 41822
+          },
+          "urban": {
+            "total": 29697,
+            "male": 14654,
+            "female": 15043
+          },
+          "rural": {
+            "total": 52182,
+            "male": 25403,
+            "female": 26779
+          }
+        },
+        {
+          "label": "20-24",
+          "min_age": 20,
+          "max_age": 24,
+          "total": {
+            "total": 62849,
+            "male": 27167,
+            "female": 35682
+          },
+          "urban": {
+            "total": 28191,
+            "male": 12264,
+            "female": 15927
+          },
+          "rural": {
+            "total": 34658,
+            "male": 14903,
+            "female": 19755
+          }
+        },
+        {
+          "label": "25-29",
+          "min_age": 25,
+          "max_age": 29,
+          "total": {
+            "total": 55646,
+            "male": 23906,
+            "female": 31740
+          },
+          "urban": {
+            "total": 23379,
+            "male": 10350,
+            "female": 13029
+          },
+          "rural": {
+            "total": 32267,
+            "male": 13556,
+            "female": 18711
+          }
+        },
+        {
+          "label": "30-34",
+          "min_age": 30,
+          "max_age": 34,
+          "total": {
+            "total": 58175,
+            "male": 25348,
+            "female": 32827
+          },
+          "urban": {
+            "total": 22828,
+            "male": 10184,
+            "female": 12644
+          },
+          "rural": {
+            "total": 35347,
+            "male": 15164,
+            "female": 20183
+          }
+        },
+        {
+          "label": "35-39",
+          "min_age": 35,
+          "max_age": 39,
+          "total": {
+            "total": 63476,
+            "male": 28525,
+            "female": 34951
+          },
+          "urban": {
+            "total": 23034,
+            "male": 10463,
+            "female": 12571
+          },
+          "rural": {
+            "total": 40442,
+            "male": 18062,
+            "female": 22380
+          }
+        },
+        {
+          "label": "40-44",
+          "min_age": 40,
+          "max_age": 44,
+          "total": {
+            "total": 64166,
+            "male": 28806,
+            "female": 35360
+          },
+          "urban": {
+            "total": 23034,
+            "male": 10268,
+            "female": 12766
+          },
+          "rural": {
+            "total": 41132,
+            "male": 18538,
+            "female": 22594
+          }
+        },
+        {
+          "label": "45-49",
+          "min_age": 45,
+          "max_age": 49,
+          "total": {
+            "total": 61673,
+            "male": 27634,
+            "female": 34039
+          },
+          "urban": {
+            "total": 21370,
+            "male": 9308,
+            "female": 12062
+          },
+          "rural": {
+            "total": 40303,
+            "male": 18326,
+            "female": 21977
+          }
+        },
+        {
+          "label": "50-54",
+          "min_age": 50,
+          "max_age": 54,
+          "total": {
+            "total": 60110,
+            "male": 26994,
+            "female": 33116
+          },
+          "urban": {
+            "total": 21337,
+            "male": 9121,
+            "female": 12216
+          },
+          "rural": {
+            "total": 38773,
+            "male": 17873,
+            "female": 20900
+          }
+        },
+        {
+          "label": "55-59",
+          "min_age": 55,
+          "max_age": 59,
+          "total": {
+            "total": 52942,
+            "male": 23608,
+            "female": 29334
+          },
+          "urban": {
+            "total": 18313,
+            "male": 7652,
+            "female": 10661
+          },
+          "rural": {
+            "total": 34629,
+            "male": 15956,
+            "female": 18673
+          }
+        },
+        {
+          "label": "60-64",
+          "min_age": 60,
+          "max_age": 64,
+          "total": {
+            "total": 42572,
+            "male": 18882,
+            "female": 23690
+          },
+          "urban": {
+            "total": 15506,
+            "male": 6404,
+            "female": 9102
+          },
+          "rural": {
+            "total": 27066,
+            "male": 12478,
+            "female": 14588
+          }
+        },
+        {
+          "label": "65-69",
+          "min_age": 65,
+          "max_age": 69,
+          "total": {
+            "total": 32252,
+            "male": 14176,
+            "female": 18076
+          },
+          "urban": {
+            "total": 11912,
+            "male": 4880,
+            "female": 7032
+          },
+          "rural": {
+            "total": 20340,
+            "male": 9296,
+            "female": 11044
+          }
+        },
+        {
+          "label": "70-74",
+          "min_age": 70,
+          "max_age": 74,
+          "total": {
+            "total": 21981,
+            "male": 9313,
+            "female": 12668
+          },
+          "urban": {
+            "total": 8264,
+            "male": 3255,
+            "female": 5009
+          },
+          "rural": {
+            "total": 13717,
+            "male": 6058,
+            "female": 7659
+          }
+        },
+        {
+          "label": "75-79",
+          "min_age": 75,
+          "max_age": 79,
+          "total": {
+            "total": 13519,
+            "male": 5592,
+            "female": 7927
+          },
+          "urban": {
+            "total": 5069,
+            "male": 1970,
+            "female": 3099
+          },
+          "rural": {
+            "total": 8450,
+            "male": 3622,
+            "female": 4828
+          }
+        },
+        {
+          "label": "80-84",
+          "min_age": 80,
+          "max_age": 84,
+          "total": {
+            "total": 6385,
+            "male": 2488,
+            "female": 3897
+          },
+          "urban": {
+            "total": 2522,
+            "male": 903,
+            "female": 1619
+          },
+          "rural": {
+            "total": 3863,
+            "male": 1585,
+            "female": 2278
+          }
+        },
+        {
+          "label": "85-89",
+          "min_age": 85,
+          "max_age": 89,
+          "total": {
+            "total": 3555,
+            "male": 1283,
+            "female": 2272
+          },
+          "urban": {
+            "total": 1380,
+            "male": 471,
+            "female": 909
+          },
+          "rural": {
+            "total": 2175,
+            "male": 812,
+            "female": 1363
+          }
+        },
+        {
+          "label": "90+",
+          "min_age": 90,
+          "max_age": null,
+          "total": {
+            "total": 1628,
+            "male": 537,
+            "female": 1091
+          },
+          "urban": {
+            "total": 688,
+            "male": 190,
+            "female": 498
+          },
+          "rural": {
+            "total": 940,
+            "male": 347,
+            "female": 593
+          }
+        }
+      ],
+      "households": {
+        "total": 111465,
+        "by_size": [
+          {
+            "size": "1",
+            "households": 6963
+          },
+          {
+            "size": "2",
+            "households": 18853
+          },
+          {
+            "size": "3",
+            "households": 25470
+          },
+          {
+            "size": "4",
+            "households": 25426
+          },
+          {
+            "size": "5",
+            "households": 16417
+          },
+          {
+            "size": "6",
+            "households": 8995
+          },
+          {
+            "size": "7",
+            "households": 4463
+          },
+          {
+            "size": "8",
+            "households": 2403
+          },
+          {
+            "size": "9+",
+            "households": 2475
+          }
+        ],
+        "by_dwelling": {
+          "total": 111465,
+          "apartment": 6931,
+          "brick": 28766,
+          "semi_brick": 15711,
+          "wooden": 48806,
+          "bamboo": 9518,
+          "hut": 1557,
+          "other": 176
+        }
+      },
+      "townships": [
+        {
+          "name_en": "Bago",
+          "name_local": "ပဲခူးမြို့နယ်",
+          "population": {
+            "total": 484994,
+            "male": 224660,
+            "female": 260334
+          },
+          "households": {
+            "total": 111465,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 6963
+              },
+              {
+                "size": "2",
+                "households": 18853
+              },
+              {
+                "size": "3",
+                "households": 25470
+              },
+              {
+                "size": "4",
+                "households": 25426
+              },
+              {
+                "size": "5",
+                "households": 16417
+              },
+              {
+                "size": "6",
+                "households": 8995
+              },
+              {
+                "size": "7",
+                "households": 4463
+              },
+              {
+                "size": "8",
+                "households": 2403
+              },
+              {
+                "size": "9+",
+                "households": 2475
+              }
+            ],
+            "by_dwelling": {
+              "total": 111465,
+              "apartment": 6931,
+              "brick": 28766,
+              "semi_brick": 15711,
+              "wooden": 48806,
+              "bamboo": 9518,
+              "hut": 1557,
+              "other": 176
+            }
+          }
+        },
+        {
+          "name_en": "Kawa",
+          "name_local": "ကဝမြို့နယ်",
+          "population": {
+            "total": 170896,
+            "male": 79849,
+            "female": 91047
+          },
+          "households": {
+            "total": 45441,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3162
+              },
+              {
+                "size": "2",
+                "households": 8140
+              },
+              {
+                "size": "3",
+                "households": 10912
+              },
+              {
+                "size": "4",
+                "households": 10720
+              },
+              {
+                "size": "5",
+                "households": 6737
+              },
+              {
+                "size": "6",
+                "households": 3326
+              },
+              {
+                "size": "7",
+                "households": 1393
+              },
+              {
+                "size": "8",
+                "households": 636
+              },
+              {
+                "size": "9+",
+                "households": 415
+              }
+            ],
+            "by_dwelling": {
+              "total": 45441,
+              "apartment": 263,
+              "brick": 3807,
+              "semi_brick": 4570,
+              "wooden": 22215,
+              "bamboo": 13853,
+              "hut": 714,
+              "other": 19
+            }
+          }
+        },
+        {
+          "name_en": "Thanatpin",
+          "name_local": "သနပ်ပင်မြို့နယ်",
+          "population": {
+            "total": 122360,
+            "male": 56553,
+            "female": 65807
+          },
+          "households": {
+            "total": 30911,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 1925
+              },
+              {
+                "size": "2",
+                "households": 5221
+              },
+              {
+                "size": "3",
+                "households": 6997
+              },
+              {
+                "size": "4",
+                "households": 6968
+              },
+              {
+                "size": "5",
+                "households": 4713
+              },
+              {
+                "size": "6",
+                "households": 2640
+              },
+              {
+                "size": "7",
+                "households": 1278
+              },
+              {
+                "size": "8",
+                "households": 609
+              },
+              {
+                "size": "9+",
+                "households": 560
+              }
+            ],
+            "by_dwelling": {
+              "total": 30911,
+              "apartment": 190,
+              "brick": 3314,
+              "semi_brick": 3538,
+              "wooden": 15517,
+              "bamboo": 8025,
+              "hut": 313,
+              "other": 14
+            }
+          }
+        },
+        {
+          "name_en": "Waw",
+          "name_local": "ဝေါမြို့နယ်",
+          "population": {
+            "total": 149139,
+            "male": 68698,
+            "female": 80441
+          },
+          "households": {
+            "total": 36792,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2157
+              },
+              {
+                "size": "2",
+                "households": 5735
+              },
+              {
+                "size": "3",
+                "households": 8068
+              },
+              {
+                "size": "4",
+                "households": 8684
+              },
+              {
+                "size": "5",
+                "households": 5654
+              },
+              {
+                "size": "6",
+                "households": 3235
+              },
+              {
+                "size": "7",
+                "households": 1675
+              },
+              {
+                "size": "8",
+                "households": 788
+              },
+              {
+                "size": "9+",
+                "households": 796
+              }
+            ],
+            "by_dwelling": {
+              "total": 36792,
+              "apartment": 182,
+              "brick": 5657,
+              "semi_brick": 4562,
+              "wooden": 22388,
+              "bamboo": 3416,
+              "hut": 557,
+              "other": 30
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name_en": "Nyaunglebin",
+      "name_local": "ညောင်လေးပင်ခရိုင်",
+      "population": {
+        "total": 866565,
+        "male": 404090,
+        "female": 462475
+      },
+      "age_groups": [
+        {
+          "label": "0-4",
+          "min_age": 0,
+          "max_age": 4,
+          "total": {
+            "total": 63897,
+            "male": 32624,
+            "female": 31273
+          },
+          "urban": {
+            "total": 11869,
+            "male": 6054,
+            "female": 5815
+          },
+          "rural": {
+            "total": 52028,
+            "male": 26570,
+            "female": 25458
+          }
+        },
+        {
+          "label": "5-9",
+          "min_age": 5,
+          "max_age": 9,
+          "total": {
+            "total": 88245,
+            "male": 45144,
+            "female": 43101
+          },
+          "urban": {
+            "total": 17565,
+            "male": 8962,
+            "female": 8603
+          },
+          "rural": {
+            "total": 70680,
+            "male": 36182,
+            "female": 34498
+          }
+        },
+        {
+          "label": "10-14",
+          "min_age": 10,
+          "max_age": 14,
+          "total": {
+            "total": 93721,
+            "male": 47783,
+            "female": 45938
+          },
+          "urban": {
+            "total": 19418,
+            "male": 10064,
+            "female": 9354
+          },
+          "rural": {
+            "total": 74303,
+            "male": 37719,
+            "female": 36584
+          }
+        },
+        {
+          "label": "15-19",
+          "min_age": 15,
+          "max_age": 19,
+          "total": {
+            "total": 77868,
+            "male": 37217,
+            "female": 40651
+          },
+          "urban": {
+            "total": 17076,
+            "male": 8033,
+            "female": 9043
+          },
+          "rural": {
+            "total": 60792,
+            "male": 29184,
+            "female": 31608
+          }
+        },
+        {
+          "label": "20-24",
+          "min_age": 20,
+          "max_age": 24,
+          "total": {
+            "total": 52764,
+            "male": 23340,
+            "female": 29424
+          },
+          "urban": {
+            "total": 11322,
+            "male": 4930,
+            "female": 6392
+          },
+          "rural": {
+            "total": 41442,
+            "male": 18410,
+            "female": 23032
+          }
+        },
+        {
+          "label": "25-29",
+          "min_age": 25,
+          "max_age": 29,
+          "total": {
+            "total": 51773,
+            "male": 23012,
+            "female": 28761
+          },
+          "urban": {
+            "total": 10862,
+            "male": 4633,
+            "female": 6229
+          },
+          "rural": {
+            "total": 40911,
+            "male": 18379,
+            "female": 22532
+          }
+        },
+        {
+          "label": "30-34",
+          "min_age": 30,
+          "max_age": 34,
+          "total": {
+            "total": 55403,
+            "male": 24678,
+            "female": 30725
+          },
+          "urban": {
+            "total": 12167,
+            "male": 5225,
+            "female": 6942
+          },
+          "rural": {
+            "total": 43236,
+            "male": 19453,
+            "female": 23783
+          }
+        },
+        {
+          "label": "35-39",
+          "min_age": 35,
+          "max_age": 39,
+          "total": {
+            "total": 59843,
+            "male": 27041,
+            "female": 32802
+          },
+          "urban": {
+            "total": 13123,
+            "male": 5891,
+            "female": 7232
+          },
+          "rural": {
+            "total": 46720,
+            "male": 21150,
+            "female": 25570
+          }
+        },
+        {
+          "label": "40-44",
+          "min_age": 40,
+          "max_age": 44,
+          "total": {
+            "total": 58603,
+            "male": 26371,
+            "female": 32232
+          },
+          "urban": {
+            "total": 13025,
+            "male": 5670,
+            "female": 7355
+          },
+          "rural": {
+            "total": 45578,
+            "male": 20701,
+            "female": 24877
+          }
+        },
+        {
+          "label": "45-49",
+          "min_age": 45,
+          "max_age": 49,
+          "total": {
+            "total": 55823,
+            "male": 25339,
+            "female": 30484
+          },
+          "urban": {
+            "total": 12331,
+            "male": 5387,
+            "female": 6944
+          },
+          "rural": {
+            "total": 43492,
+            "male": 19952,
+            "female": 23540
+          }
+        },
+        {
+          "label": "50-54",
+          "min_age": 50,
+          "max_age": 54,
+          "total": {
+            "total": 53598,
+            "male": 24019,
+            "female": 29579
+          },
+          "urban": {
+            "total": 12306,
+            "male": 5143,
+            "female": 7163
+          },
+          "rural": {
+            "total": 41292,
+            "male": 18876,
+            "female": 22416
+          }
+        },
+        {
+          "label": "55-59",
+          "min_age": 55,
+          "max_age": 59,
+          "total": {
+            "total": 47359,
+            "male": 21181,
+            "female": 26178
+          },
+          "urban": {
+            "total": 11320,
+            "male": 4843,
+            "female": 6477
+          },
+          "rural": {
+            "total": 36039,
+            "male": 16338,
+            "female": 19701
+          }
+        },
+        {
+          "label": "60-64",
+          "min_age": 60,
+          "max_age": 64,
+          "total": {
+            "total": 38482,
+            "male": 17048,
+            "female": 21434
+          },
+          "urban": {
+            "total": 9462,
+            "male": 3848,
+            "female": 5614
+          },
+          "rural": {
+            "total": 29020,
+            "male": 13200,
+            "female": 15820
+          }
+        },
+        {
+          "label": "65-69",
+          "min_age": 65,
+          "max_age": 69,
+          "total": {
+            "total": 28662,
+            "male": 12662,
+            "female": 16000
+          },
+          "urban": {
+            "total": 7200,
+            "male": 2981,
+            "female": 4219
+          },
+          "rural": {
+            "total": 21462,
+            "male": 9681,
+            "female": 11781
+          }
+        },
+        {
+          "label": "70-74",
+          "min_age": 70,
+          "max_age": 74,
+          "total": {
+            "total": 18497,
+            "male": 7956,
+            "female": 10541
+          },
+          "urban": {
+            "total": 4943,
+            "male": 1941,
+            "female": 3002
+          },
+          "rural": {
+            "total": 13554,
+            "male": 6015,
+            "female": 7539
+          }
+        },
+        {
+          "label": "75-79",
+          "min_age": 75,
+          "max_age": 79,
+          "total": {
+            "total": 11405,
+            "male": 4738,
+            "female": 6667
+          },
+          "urban": {
+            "total": 3122,
+            "male": 1215,
+            "female": 1907
+          },
+          "rural": {
+            "total": 8283,
+            "male": 3523,
+            "female": 4760
+          }
+        },
+        {
+          "label": "80-84",
+          "min_age": 80,
+          "max_age": 84,
+          "total": {
+            "total": 5716,
+            "male": 2220,
+            "female": 3496
+          },
+          "urban": {
+            "total": 1588,
+            "male": 576,
+            "female": 1012
+          },
+          "rural": {
+            "total": 4128,
+            "male": 1644,
+            "female": 2484
+          }
+        },
+        {
+          "label": "85-89",
+          "min_age": 85,
+          "max_age": 89,
+          "total": {
+            "total": 3328,
+            "male": 1190,
+            "female": 2138
+          },
+          "urban": {
+            "total": 910,
+            "male": 303,
+            "female": 607
+          },
+          "rural": {
+            "total": 2418,
+            "male": 887,
+            "female": 1531
+          }
+        },
+        {
+          "label": "90+",
+          "min_age": 90,
+          "max_age": null,
+          "total": {
+            "total": 1578,
+            "male": 527,
+            "female": 1051
+          },
+          "urban": {
+            "total": 428,
+            "male": 133,
+            "female": 295
+          },
+          "rural": {
+            "total": 1150,
+            "male": 394,
+            "female": 756
+          }
+        }
+      ],
+      "households": {
+        "total": 34991,
+        "by_size": [
+          {
+            "size": "1",
+            "households": 2361
+          },
+          {
+            "size": "2",
+            "households": 6184
+          },
+          {
+            "size": "3",
+            "households": 8411
+          },
+          {
+            "size": "4",
+            "households": 8080
+          },
+          {
+            "size": "5",
+            "households": 4918
+          },
+          {
+            "size": "6",
+            "households": 2565
+          },
+          {
+            "size": "7",
+            "households": 1264
+          },
+          {
+            "size": "8",
+            "households": 581
+          },
+          {
+            "size": "9+",
+            "households": 627
+          }
+        ],
+        "by_dwelling": {
+          "total": 34991,
+          "apartment": 454,
+          "brick": 6280,
+          "semi_brick": 4166,
+          "wooden": 20438,
+          "bamboo": 3230,
+          "hut": 406,
+          "other": 17
+        }
+      },
+      "townships": [
+        {
+          "name_en": "Nyaunglebin",
+          "name_local": "ညောင်လေးပင်မြို့နယ်",
+          "population": {
+            "total": 229634,
+            "male": 104821,
+            "female": 124813
+          },
+          "households": {
+            "total": 34991,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2361
+              },
+              {
+                "size": "2",
+                "households": 6184
+              },
+              {
+                "size": "3",
+                "households": 8411
+              },
+              {
+                "size": "4",
+                "households": 8080
+              },
+              {
+                "size": "5",
+                "households": 4918
+              },
+              {
+                "size": "6",
+                "households": 2565
+              },
+              {
+                "size": "7",
+                "households": 1264
+              },
+              {
+                "size": "8",
+                "households": 581
+              },
+              {
+                "size": "9+",
+                "households": 627
+              }
+            ],
+            "by_dwelling": {
+              "total": 34991,
+              "apartment": 454,
+              "brick": 6280,
+              "semi_brick": 4166,
+              "wooden": 20438,
+              "bamboo": 3230,
+              "hut": 406,
+              "other": 17
+            }
+          }
+        },
+        {
+          "name_en": "Kyauktaga",
+          "name_local": "ကျောက်တံခါးမြို့နယ်",
+          "population": {
+            "total": 247846,
+            "male": 113766,
+            "female": 134080
+          },
+          "households": {
+            "total": 41415,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2105
+              },
+              {
+                "size": "2",
+                "households": 6091
+              },
+              {
+                "size": "3",
+                "households": 8615
+              },
+              {
+                "size": "4",
+                "households": 8919
+              },
+              {
+                "size": "5",
+                "households": 6431
+              },
+              {
+                "size": "6",
+                "households": 3861
+              },
+              {
+                "size": "7",
+                "households": 2336
+              },
+              {
+                "size": "8",
+                "households": 1282
+              },
+              {
+                "size": "9+",
+                "households": 1775
+              }
+            ],
+            "by_dwelling": {
+              "total": 41415,
+              "apartment": 358,
+              "brick": 9408,
+              "semi_brick": 6006,
+              "wooden": 19967,
+              "bamboo": 4692,
+              "hut": 947,
+              "other": 37
+            }
+          }
+        },
+        {
+          "name_en": "Daik-U",
+          "name_local": "ဒိုက်ဦးမြို့နယ်",
+          "population": {
+            "total": 165793,
+            "male": 77922,
+            "female": 87871
+          },
+          "households": {
+            "total": 42687,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2949
+              },
+              {
+                "size": "2",
+                "households": 7809
+              },
+              {
+                "size": "3",
+                "households": 10354
+              },
+              {
+                "size": "4",
+                "households": 9905
+              },
+              {
+                "size": "5",
+                "households": 5947
+              },
+              {
+                "size": "6",
+                "households": 3071
+              },
+              {
+                "size": "7",
+                "households": 1469
+              },
+              {
+                "size": "8",
+                "households": 659
+              },
+              {
+                "size": "9+",
+                "households": 524
+              }
+            ],
+            "by_dwelling": {
+              "total": 42687,
+              "apartment": 467,
+              "brick": 9341,
+              "semi_brick": 4257,
+              "wooden": 24461,
+              "bamboo": 3831,
+              "hut": 309,
+              "other": 21
+            }
+          }
+        },
+        {
+          "name_en": "Shwegyin",
+          "name_local": "ရွှေကျင်မြို့နယ်",
+          "population": {
+            "total": 121470,
+            "male": 58991,
+            "female": 62479
+          },
+          "households": {
+            "total": 9343,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 435
+              },
+              {
+                "size": "2",
+                "households": 1082
+              },
+              {
+                "size": "3",
+                "households": 1752
+              },
+              {
+                "size": "4",
+                "households": 2123
+              },
+              {
+                "size": "5",
+                "households": 1636
+              },
+              {
+                "size": "6",
+                "households": 991
+              },
+              {
+                "size": "7",
+                "households": 571
+              },
+              {
+                "size": "8",
+                "households": 346
+              },
+              {
+                "size": "9+",
+                "households": 407
+              }
+            ],
+            "by_dwelling": {
+              "total": 9343,
+              "apartment": 419,
+              "brick": 1759,
+              "semi_brick": 1450,
+              "wooden": 5174,
+              "bamboo": 438,
+              "hut": 101,
+              "other": 2
+            }
+          }
+        },
+        {
+          "name_en": "Kyaukkyi",
+          "name_local": "ကျောက်ကြီးမြို့နယ်",
+          "population": {
+            "total": 101822,
+            "male": 48590,
+            "female": 53232
+          },
+          "households": {
+            "total": 1909,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 179
+              },
+              {
+                "size": "2",
+                "households": 370
+              },
+              {
+                "size": "3",
+                "households": 429
+              },
+              {
+                "size": "4",
+                "households": 372
+              },
+              {
+                "size": "5",
+                "households": 261
+              },
+              {
+                "size": "6",
+                "households": 157
+              },
+              {
+                "size": "7",
+                "households": 72
+              },
+              {
+                "size": "8",
+                "households": 32
+              },
+              {
+                "size": "9+",
+                "households": 37
+              }
+            ],
+            "by_dwelling": {
+              "total": 1909,
+              "apartment": 83,
+              "brick": 311,
+              "semi_brick": 315,
+              "wooden": 1087,
+              "bamboo": 65,
+              "hut": 40,
+              "other": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name_en": "Taungoo",
+      "name_local": "တောင်ငူခရိုင်",
+      "population": {
+        "total": 954712,
+        "male": 449947,
+        "female": 504765
+      },
+      "age_groups": [
+        {
+          "label": "0-4",
+          "min_age": 0,
+          "max_age": 4,
+          "total": {
+            "total": 48525,
+            "male": 24659,
+            "female": 23866
+          },
+          "urban": {
+            "total": 10915,
+            "male": 5514,
+            "female": 5401
+          },
+          "rural": {
+            "total": 37610,
+            "male": 19145,
+            "female": 18465
+          }
+        },
+        {
+          "label": "5-9",
+          "min_age": 5,
+          "max_age": 9,
+          "total": {
+            "total": 75237,
+            "male": 38457,
+            "female": 36780
+          },
+          "urban": {
+            "total": 17727,
+            "male": 9067,
+            "female": 8660
+          },
+          "rural": {
+            "total": 57510,
+            "male": 29390,
+            "female": 28120
+          }
+        },
+        {
+          "label": "10-14",
+          "min_age": 10,
+          "max_age": 14,
+          "total": {
+            "total": 88463,
+            "male": 45553,
+            "female": 42910
+          },
+          "urban": {
+            "total": 21076,
+            "male": 10943,
+            "female": 10133
+          },
+          "rural": {
+            "total": 67387,
+            "male": 34610,
+            "female": 32777
+          }
+        },
+        {
+          "label": "15-19",
+          "min_age": 15,
+          "max_age": 19,
+          "total": {
+            "total": 84195,
+            "male": 40921,
+            "female": 43274
+          },
+          "urban": {
+            "total": 21185,
+            "male": 10096,
+            "female": 11089
+          },
+          "rural": {
+            "total": 63010,
+            "male": 30825,
+            "female": 32185
+          }
+        },
+        {
+          "label": "20-24",
+          "min_age": 20,
+          "max_age": 24,
+          "total": {
+            "total": 73207,
+            "male": 33782,
+            "female": 39425
+          },
+          "urban": {
+            "total": 17309,
+            "male": 7746,
+            "female": 9563
+          },
+          "rural": {
+            "total": 55898,
+            "male": 26036,
+            "female": 29862
+          }
+        },
+        {
+          "label": "25-29",
+          "min_age": 25,
+          "max_age": 29,
+          "total": {
+            "total": 69238,
+            "male": 32211,
+            "female": 37027
+          },
+          "urban": {
+            "total": 15590,
+            "male": 7139,
+            "female": 8451
+          },
+          "rural": {
+            "total": 53648,
+            "male": 25072,
+            "female": 28576
+          }
+        },
+        {
+          "label": "30-34",
+          "min_age": 30,
+          "max_age": 34,
+          "total": {
+            "total": 69655,
+            "male": 32597,
+            "female": 37058
+          },
+          "urban": {
+            "total": 15946,
+            "male": 7230,
+            "female": 8716
+          },
+          "rural": {
+            "total": 53709,
+            "male": 25367,
+            "female": 28342
+          }
+        },
+        {
+          "label": "35-39",
+          "min_age": 35,
+          "max_age": 39,
+          "total": {
+            "total": 71992,
+            "male": 33648,
+            "female": 38344
+          },
+          "urban": {
+            "total": 16977,
+            "male": 7472,
+            "female": 9505
+          },
+          "rural": {
+            "total": 55015,
+            "male": 26176,
+            "female": 28839
+          }
+        },
+        {
+          "label": "40-44",
+          "min_age": 40,
+          "max_age": 44,
+          "total": {
+            "total": 69257,
+            "male": 32264,
+            "female": 36993
+          },
+          "urban": {
+            "total": 17221,
+            "male": 7645,
+            "female": 9576
+          },
+          "rural": {
+            "total": 52036,
+            "male": 24619,
+            "female": 27417
+          }
+        },
+        {
+          "label": "45-49",
+          "min_age": 45,
+          "max_age": 49,
+          "total": {
+            "total": 64203,
+            "male": 29609,
+            "female": 34594
+          },
+          "urban": {
+            "total": 16307,
+            "male": 7056,
+            "female": 9251
+          },
+          "rural": {
+            "total": 47896,
+            "male": 22553,
+            "female": 25343
+          }
+        },
+        {
+          "label": "50-54",
+          "min_age": 50,
+          "max_age": 54,
+          "total": {
+            "total": 60450,
+            "male": 27808,
+            "female": 32642
+          },
+          "urban": {
+            "total": 16124,
+            "male": 6810,
+            "female": 9314
+          },
+          "rural": {
+            "total": 44326,
+            "male": 20998,
+            "female": 23328
+          }
+        },
+        {
+          "label": "55-59",
+          "min_age": 55,
+          "max_age": 59,
+          "total": {
+            "total": 53041,
+            "male": 23809,
+            "female": 29232
+          },
+          "urban": {
+            "total": 14617,
+            "male": 6062,
+            "female": 8555
+          },
+          "rural": {
+            "total": 38424,
+            "male": 17747,
+            "female": 20677
+          }
+        },
+        {
+          "label": "60-64",
+          "min_age": 60,
+          "max_age": 64,
+          "total": {
+            "total": 42281,
+            "male": 18798,
+            "female": 23483
+          },
+          "urban": {
+            "total": 12185,
+            "male": 4939,
+            "female": 7246
+          },
+          "rural": {
+            "total": 30096,
+            "male": 13859,
+            "female": 16237
+          }
+        },
+        {
+          "label": "65-69",
+          "min_age": 65,
+          "max_age": 69,
+          "total": {
+            "total": 32754,
+            "male": 14491,
+            "female": 18263
+          },
+          "urban": {
+            "total": 9836,
+            "male": 4022,
+            "female": 5814
+          },
+          "rural": {
+            "total": 22918,
+            "male": 10469,
+            "female": 12449
+          }
+        },
+        {
+          "label": "70-74",
+          "min_age": 70,
+          "max_age": 74,
+          "total": {
+            "total": 22518,
+            "male": 9548,
+            "female": 12970
+          },
+          "urban": {
+            "total": 6889,
+            "male": 2771,
+            "female": 4118
+          },
+          "rural": {
+            "total": 15629,
+            "male": 6777,
+            "female": 8852
+          }
+        },
+        {
+          "label": "75-79",
+          "min_age": 75,
+          "max_age": 79,
+          "total": {
+            "total": 14514,
+            "male": 5878,
+            "female": 8636
+          },
+          "urban": {
+            "total": 4333,
+            "male": 1581,
+            "female": 2752
+          },
+          "rural": {
+            "total": 10181,
+            "male": 4297,
+            "female": 5884
+          }
+        },
+        {
+          "label": "80-84",
+          "min_age": 80,
+          "max_age": 84,
+          "total": {
+            "total": 7902,
+            "male": 3169,
+            "female": 4733
+          },
+          "urban": {
+            "total": 2316,
+            "male": 854,
+            "female": 1462
+          },
+          "rural": {
+            "total": 5586,
+            "male": 2315,
+            "female": 3271
+          }
+        },
+        {
+          "label": "85-89",
+          "min_age": 85,
+          "max_age": 89,
+          "total": {
+            "total": 4788,
+            "male": 1871,
+            "female": 2917
+          },
+          "urban": {
+            "total": 1312,
+            "male": 451,
+            "female": 861
+          },
+          "rural": {
+            "total": 3476,
+            "male": 1420,
+            "female": 2056
+          }
+        },
+        {
+          "label": "90+",
+          "min_age": 90,
+          "max_age": null,
+          "total": {
+            "total": 2492,
+            "male": 874,
+            "female": 1618
+          },
+          "urban": {
+            "total": 754,
+            "male": 229,
+            "female": 525
+          },
+          "rural": {
+            "total": 1738,
+            "male": 645,
+            "female": 1093
+          }
+        }
+      ],
+      "households": {
+        "total": 50692,
+        "by_size": [
+          {
+            "size": "1",
+            "households": 3028
+          },
+          {
+            "size": "2",
+            "households": 8414
+          },
+          {
+            "size": "3",
+            "households": 12463
+          },
+          {
+            "size": "4",
+            "households": 11990
+          },
+          {
+            "size": "5",
+            "households": 7208
+          },
+          {
+            "size": "6",
+            "households": 3701
+          },
+          {
+            "size": "7",
+            "households": 1919
+          },
+          {
+            "size": "8",
+            "households": 961
+          },
+          {
+            "size": "9+",
+            "households": 1008
+          }
+        ],
+        "by_dwelling": {
+          "total": 50692,
+          "apartment": 2611,
+          "brick": 15160,
+          "semi_brick": 6798,
+          "wooden": 22678,
+          "bamboo": 2697,
+          "hut": 620,
+          "other": 128
+        }
+      },
+      "townships": [
+        {
+          "name_en": "Taungoo",
+          "name_local": "တောင်ငူမြို့နယ်",
+          "population": {
+            "total": 237727,
+            "male": 110180,
+            "female": 127547
+          },
+          "households": {
+            "total": 50692,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3028
+              },
+              {
+                "size": "2",
+                "households": 8414
+              },
+              {
+                "size": "3",
+                "households": 12463
+              },
+              {
+                "size": "4",
+                "households": 11990
+              },
+              {
+                "size": "5",
+                "households": 7208
+              },
+              {
+                "size": "6",
+                "households": 3701
+              },
+              {
+                "size": "7",
+                "households": 1919
+              },
+              {
+                "size": "8",
+                "households": 961
+              },
+              {
+                "size": "9+",
+                "households": 1008
+              }
+            ],
+            "by_dwelling": {
+              "total": 50692,
+              "apartment": 2611,
+              "brick": 15160,
+              "semi_brick": 6798,
+              "wooden": 22678,
+              "bamboo": 2697,
+              "hut": 620,
+              "other": 128
+            }
+          }
+        },
+        {
+          "name_en": "Oktwin",
+          "name_local": "အုတ်တွင်းမြို့နယ်",
+          "population": {
+            "total": 150881,
+            "male": 72171,
+            "female": 78710
+          },
+          "households": {
+            "total": 39202,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2108
+              },
+              {
+                "size": "2",
+                "households": 6252
+              },
+              {
+                "size": "3",
+                "households": 10474
+              },
+              {
+                "size": "4",
+                "households": 10059
+              },
+              {
+                "size": "5",
+                "households": 5559
+              },
+              {
+                "size": "6",
+                "households": 2604
+              },
+              {
+                "size": "7",
+                "households": 1205
+              },
+              {
+                "size": "8",
+                "households": 524
+              },
+              {
+                "size": "9+",
+                "households": 417
+              }
+            ],
+            "by_dwelling": {
+              "total": 39202,
+              "apartment": 1051,
+              "brick": 10691,
+              "semi_brick": 7235,
+              "wooden": 17605,
+              "bamboo": 2101,
+              "hut": 511,
+              "other": 8
+            }
+          }
+        },
+        {
+          "name_en": "Yedashe",
+          "name_local": "ရေတာရှည်မြို့နယ်",
+          "population": {
+            "total": 175823,
+            "male": 84075,
+            "female": 91748
+          },
+          "households": {
+            "total": 42857,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3039
+              },
+              {
+                "size": "2",
+                "households": 7304
+              },
+              {
+                "size": "3",
+                "households": 10867
+              },
+              {
+                "size": "4",
+                "households": 10015
+              },
+              {
+                "size": "5",
+                "households": 5902
+              },
+              {
+                "size": "6",
+                "households": 2984
+              },
+              {
+                "size": "7",
+                "households": 1327
+              },
+              {
+                "size": "8",
+                "households": 659
+              },
+              {
+                "size": "9+",
+                "households": 760
+              }
+            ],
+            "by_dwelling": {
+              "total": 42857,
+              "apartment": 1343,
+              "brick": 7471,
+              "semi_brick": 4319,
+              "wooden": 23593,
+              "bamboo": 5174,
+              "hut": 930,
+              "other": 27
+            }
+          }
+        },
+        {
+          "name_en": "Pyu",
+          "name_local": "ဖြူးမြို့နယ်",
+          "population": {
+            "total": 268165,
+            "male": 125491,
+            "female": 142674
+          },
+          "households": {
+            "total": 29722,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 1480
+              },
+              {
+                "size": "2",
+                "households": 4356
+              },
+              {
+                "size": "3",
+                "households": 6407
+              },
+              {
+                "size": "4",
+                "households": 6888
+              },
+              {
+                "size": "5",
+                "households": 4667
+              },
+              {
+                "size": "6",
+                "households": 2671
+              },
+              {
+                "size": "7",
+                "households": 1515
+              },
+              {
+                "size": "8",
+                "households": 798
+              },
+              {
+                "size": "9+",
+                "households": 940
+              }
+            ],
+            "by_dwelling": {
+              "total": 29722,
+              "apartment": 441,
+              "brick": 7876,
+              "semi_brick": 5399,
+              "wooden": 13568,
+              "bamboo": 1936,
+              "hut": 479,
+              "other": 23
+            }
+          }
+        },
+        {
+          "name_en": "Htantabin",
+          "name_local": "ထန်းတပင်မြို့နယ်",
+          "population": {
+            "total": 122116,
+            "male": 58030,
+            "female": 64086
+          },
+          "households": {
+            "total": 16120,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 1355
+              },
+              {
+                "size": "2",
+                "households": 3548
+              },
+              {
+                "size": "3",
+                "households": 4605
+              },
+              {
+                "size": "4",
+                "households": 3745
+              },
+              {
+                "size": "5",
+                "households": 1689
+              },
+              {
+                "size": "6",
+                "households": 672
+              },
+              {
+                "size": "7",
+                "households": 258
+              },
+              {
+                "size": "8",
+                "households": 144
+              },
+              {
+                "size": "9+",
+                "households": 104
+              }
+            ],
+            "by_dwelling": {
+              "total": 16120,
+              "apartment": 199,
+              "brick": 4427,
+              "semi_brick": 2739,
+              "wooden": 7788,
+              "bamboo": 731,
+              "hut": 193,
+              "other": 43
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name_en": "Thayarwady",
+      "name_local": "သာယာဝတီခရိုင်",
+      "population": {
+        "total": 708096,
+        "male": 330158,
+        "female": 377938
+      },
+      "age_groups": [
+        {
+          "label": "0-4",
+          "min_age": 0,
+          "max_age": 4,
+          "total": {
+            "total": 39190,
+            "male": 19829,
+            "female": 19361
+          },
+          "urban": {
+            "total": 5564,
+            "male": 2810,
+            "female": 2754
+          },
+          "rural": {
+            "total": 33626,
+            "male": 17019,
+            "female": 16607
+          }
+        },
+        {
+          "label": "5-9",
+          "min_age": 5,
+          "max_age": 9,
+          "total": {
+            "total": 55853,
+            "male": 28537,
+            "female": 27316
+          },
+          "urban": {
+            "total": 8200,
+            "male": 4184,
+            "female": 4016
+          },
+          "rural": {
+            "total": 47653,
+            "male": 24353,
+            "female": 23300
+          }
+        },
+        {
+          "label": "10-14",
+          "min_age": 10,
+          "max_age": 14,
+          "total": {
+            "total": 59367,
+            "male": 30383,
+            "female": 28984
+          },
+          "urban": {
+            "total": 8912,
+            "male": 4695,
+            "female": 4217
+          },
+          "rural": {
+            "total": 50455,
+            "male": 25688,
+            "female": 24767
+          }
+        },
+        {
+          "label": "15-19",
+          "min_age": 15,
+          "max_age": 19,
+          "total": {
+            "total": 52954,
+            "male": 26034,
+            "female": 26920
+          },
+          "urban": {
+            "total": 9265,
+            "male": 4597,
+            "female": 4668
+          },
+          "rural": {
+            "total": 43689,
+            "male": 21437,
+            "female": 22252
+          }
+        },
+        {
+          "label": "20-24",
+          "min_age": 20,
+          "max_age": 24,
+          "total": {
+            "total": 42289,
+            "male": 19364,
+            "female": 22925
+          },
+          "urban": {
+            "total": 7849,
+            "male": 3771,
+            "female": 4078
+          },
+          "rural": {
+            "total": 34440,
+            "male": 15593,
+            "female": 18847
+          }
+        },
+        {
+          "label": "25-29",
+          "min_age": 25,
+          "max_age": 29,
+          "total": {
+            "total": 42879,
+            "male": 19341,
+            "female": 23538
+          },
+          "urban": {
+            "total": 7417,
+            "male": 3612,
+            "female": 3805
+          },
+          "rural": {
+            "total": 35462,
+            "male": 15729,
+            "female": 19733
+          }
+        },
+        {
+          "label": "30-34",
+          "min_age": 30,
+          "max_age": 34,
+          "total": {
+            "total": 48115,
+            "male": 21707,
+            "female": 26408
+          },
+          "urban": {
+            "total": 7899,
+            "male": 3794,
+            "female": 4105
+          },
+          "rural": {
+            "total": 40216,
+            "male": 17913,
+            "female": 22303
+          }
+        },
+        {
+          "label": "35-39",
+          "min_age": 35,
+          "max_age": 39,
+          "total": {
+            "total": 51287,
+            "male": 23632,
+            "female": 27655
+          },
+          "urban": {
+            "total": 8080,
+            "male": 3816,
+            "female": 4264
+          },
+          "rural": {
+            "total": 43207,
+            "male": 19816,
+            "female": 23391
+          }
+        },
+        {
+          "label": "40-44",
+          "min_age": 40,
+          "max_age": 44,
+          "total": {
+            "total": 52042,
+            "male": 23988,
+            "female": 28054
+          },
+          "urban": {
+            "total": 8547,
+            "male": 3966,
+            "female": 4581
+          },
+          "rural": {
+            "total": 43495,
+            "male": 20022,
+            "female": 23473
+          }
+        },
+        {
+          "label": "45-49",
+          "min_age": 45,
+          "max_age": 49,
+          "total": {
+            "total": 49775,
+            "male": 22671,
+            "female": 27104
+          },
+          "urban": {
+            "total": 7879,
+            "male": 3556,
+            "female": 4323
+          },
+          "rural": {
+            "total": 41896,
+            "male": 19115,
+            "female": 22781
+          }
+        },
+        {
+          "label": "50-54",
+          "min_age": 50,
+          "max_age": 54,
+          "total": {
+            "total": 48261,
+            "male": 22013,
+            "female": 26248
+          },
+          "urban": {
+            "total": 7790,
+            "male": 3337,
+            "female": 4453
+          },
+          "rural": {
+            "total": 40471,
+            "male": 18676,
+            "female": 21795
+          }
+        },
+        {
+          "label": "55-59",
+          "min_age": 55,
+          "max_age": 59,
+          "total": {
+            "total": 43691,
+            "male": 19755,
+            "female": 23936
+          },
+          "urban": {
+            "total": 7324,
+            "male": 3070,
+            "female": 4254
+          },
+          "rural": {
+            "total": 36367,
+            "male": 16685,
+            "female": 19682
+          }
+        },
+        {
+          "label": "60-64",
+          "min_age": 60,
+          "max_age": 64,
+          "total": {
+            "total": 39925,
+            "male": 17805,
+            "female": 22120
+          },
+          "urban": {
+            "total": 6529,
+            "male": 2625,
+            "female": 3904
+          },
+          "rural": {
+            "total": 33396,
+            "male": 15180,
+            "female": 18216
+          }
+        },
+        {
+          "label": "65-69",
+          "min_age": 65,
+          "max_age": 69,
+          "total": {
+            "total": 32628,
+            "male": 14494,
+            "female": 18134
+          },
+          "urban": {
+            "total": 5568,
+            "male": 2233,
+            "female": 3335
+          },
+          "rural": {
+            "total": 27060,
+            "male": 12261,
+            "female": 14799
+          }
+        },
+        {
+          "label": "70-74",
+          "min_age": 70,
+          "max_age": 74,
+          "total": {
+            "total": 24066,
+            "male": 10318,
+            "female": 13748
+          },
+          "urban": {
+            "total": 4374,
+            "male": 1759,
+            "female": 2615
+          },
+          "rural": {
+            "total": 19692,
+            "male": 8559,
+            "female": 11133
+          }
+        },
+        {
+          "label": "75-79",
+          "min_age": 75,
+          "max_age": 79,
+          "total": {
+            "total": 13296,
+            "male": 5482,
+            "female": 7814
+          },
+          "urban": {
+            "total": 2529,
+            "male": 988,
+            "female": 1541
+          },
+          "rural": {
+            "total": 10767,
+            "male": 4494,
+            "female": 6273
+          }
+        },
+        {
+          "label": "80-84",
+          "min_age": 80,
+          "max_age": 84,
+          "total": {
+            "total": 6055,
+            "male": 2381,
+            "female": 3674
+          },
+          "urban": {
+            "total": 1210,
+            "male": 424,
+            "female": 786
+          },
+          "rural": {
+            "total": 4845,
+            "male": 1957,
+            "female": 2888
+          }
+        },
+        {
+          "label": "85-89",
+          "min_age": 85,
+          "max_age": 89,
+          "total": {
+            "total": 4230,
+            "male": 1626,
+            "female": 2604
+          },
+          "urban": {
+            "total": 765,
+            "male": 266,
+            "female": 499
+          },
+          "rural": {
+            "total": 3465,
+            "male": 1360,
+            "female": 2105
+          }
+        },
+        {
+          "label": "90+",
+          "min_age": 90,
+          "max_age": null,
+          "total": {
+            "total": 2193,
+            "male": 798,
+            "female": 1395
+          },
+          "urban": {
+            "total": 399,
+            "male": 121,
+            "female": 278
+          },
+          "rural": {
+            "total": 1794,
+            "male": 677,
+            "female": 1117
+          }
+        }
+      ],
+      "households": {
+        "total": 37481,
+        "by_size": [
+          {
+            "size": "1",
+            "households": 3016
+          },
+          {
+            "size": "2",
+            "households": 7243
+          },
+          {
+            "size": "3",
+            "households": 9613
+          },
+          {
+            "size": "4",
+            "households": 8632
+          },
+          {
+            "size": "5",
+            "households": 4809
+          },
+          {
+            "size": "6",
+            "households": 2328
+          },
+          {
+            "size": "7",
+            "households": 1026
+          },
+          {
+            "size": "8",
+            "households": 483
+          },
+          {
+            "size": "9+",
+            "households": 331
+          }
+        ],
+        "by_dwelling": {
+          "total": 37481,
+          "apartment": 467,
+          "brick": 2923,
+          "semi_brick": 5271,
+          "wooden": 20962,
+          "bamboo": 7659,
+          "hut": 143,
+          "other": 56
+        }
+      },
+      "townships": [
+        {
+          "name_en": "Thayarwady",
+          "name_local": "သာယာဝတီမြို့နယ်",
+          "population": {
+            "total": 140122,
+            "male": 66291,
+            "female": 73831
+          },
+          "households": {
+            "total": 37481,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3016
+              },
+              {
+                "size": "2",
+                "households": 7243
+              },
+              {
+                "size": "3",
+                "households": 9613
+              },
+              {
+                "size": "4",
+                "households": 8632
+              },
+              {
+                "size": "5",
+                "households": 4809
+              },
+              {
+                "size": "6",
+                "households": 2328
+              },
+              {
+                "size": "7",
+                "households": 1026
+              },
+              {
+                "size": "8",
+                "households": 483
+              },
+              {
+                "size": "9+",
+                "households": 331
+              }
+            ],
+            "by_dwelling": {
+              "total": 37481,
+              "apartment": 467,
+              "brick": 2923,
+              "semi_brick": 5271,
+              "wooden": 20962,
+              "bamboo": 7659,
+              "hut": 143,
+              "other": 56
+            }
+          }
+        },
+        {
+          "name_en": "Letpadan",
+          "name_local": "လက်ပံတန်းမြို့နယ်",
+          "population": {
+            "total": 151332,
+            "male": 70054,
+            "female": 81278
+          },
+          "households": {
+            "total": 41676,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3371
+              },
+              {
+                "size": "2",
+                "households": 7978
+              },
+              {
+                "size": "3",
+                "households": 10599
+              },
+              {
+                "size": "4",
+                "households": 9575
+              },
+              {
+                "size": "5",
+                "households": 5394
+              },
+              {
+                "size": "6",
+                "households": 2643
+              },
+              {
+                "size": "7",
+                "households": 1226
+              },
+              {
+                "size": "8",
+                "households": 503
+              },
+              {
+                "size": "9+",
+                "households": 387
+              }
+            ],
+            "by_dwelling": {
+              "total": 41676,
+              "apartment": 236,
+              "brick": 3168,
+              "semi_brick": 5206,
+              "wooden": 21942,
+              "bamboo": 10705,
+              "hut": 319,
+              "other": 100
+            }
+          }
+        },
+        {
+          "name_en": "Minhla",
+          "name_local": "မင်းလှမြို့နယ်",
+          "population": {
+            "total": 105823,
+            "male": 49012,
+            "female": 56811
+          },
+          "households": {
+            "total": 29886,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2413
+              },
+              {
+                "size": "2",
+                "households": 5834
+              },
+              {
+                "size": "3",
+                "households": 8029
+              },
+              {
+                "size": "4",
+                "households": 6989
+              },
+              {
+                "size": "5",
+                "households": 3728
+              },
+              {
+                "size": "6",
+                "households": 1673
+              },
+              {
+                "size": "7",
+                "households": 710
+              },
+              {
+                "size": "8",
+                "households": 268
+              },
+              {
+                "size": "9+",
+                "households": 242
+              }
+            ],
+            "by_dwelling": {
+              "total": 29886,
+              "apartment": 196,
+              "brick": 1599,
+              "semi_brick": 4382,
+              "wooden": 18591,
+              "bamboo": 4801,
+              "hut": 294,
+              "other": 23
+            }
+          }
+        },
+        {
+          "name_en": "Monyo",
+          "name_local": "မိုးညိုမြို့နယ်",
+          "population": {
+            "total": 118103,
+            "male": 54948,
+            "female": 63155
+          },
+          "households": {
+            "total": 34510,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2717
+              },
+              {
+                "size": "2",
+                "households": 7373
+              },
+              {
+                "size": "3",
+                "households": 9741
+              },
+              {
+                "size": "4",
+                "households": 7794
+              },
+              {
+                "size": "5",
+                "households": 4037
+              },
+              {
+                "size": "6",
+                "households": 1800
+              },
+              {
+                "size": "7",
+                "households": 664
+              },
+              {
+                "size": "8",
+                "households": 256
+              },
+              {
+                "size": "9+",
+                "households": 128
+              }
+            ],
+            "by_dwelling": {
+              "total": 34510,
+              "apartment": 153,
+              "brick": 1217,
+              "semi_brick": 2446,
+              "wooden": 19381,
+              "bamboo": 11117,
+              "hut": 176,
+              "other": 20
+            }
+          }
+        },
+        {
+          "name_en": "Okpo",
+          "name_local": "အုတ်ဖိုမြို့နယ်",
+          "population": {
+            "total": 93196,
+            "male": 43443,
+            "female": 49753
+          },
+          "households": {
+            "total": 28196,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2217
+              },
+              {
+                "size": "2",
+                "households": 6907
+              },
+              {
+                "size": "3",
+                "households": 8089
+              },
+              {
+                "size": "4",
+                "households": 6174
+              },
+              {
+                "size": "5",
+                "households": 2871
+              },
+              {
+                "size": "6",
+                "households": 1155
+              },
+              {
+                "size": "7",
+                "households": 479
+              },
+              {
+                "size": "8",
+                "households": 187
+              },
+              {
+                "size": "9+",
+                "households": 117
+              }
+            ],
+            "by_dwelling": {
+              "total": 28196,
+              "apartment": 172,
+              "brick": 1610,
+              "semi_brick": 3151,
+              "wooden": 19976,
+              "bamboo": 3157,
+              "hut": 116,
+              "other": 14
+            }
+          }
+        },
+        {
+          "name_en": "Gyobingauk",
+          "name_local": "ကြို့ပင်ကောက်မြို့နယ်",
+          "population": {
+            "total": 99520,
+            "male": 46410,
+            "female": 53110
+          },
+          "households": {
+            "total": 29649,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2550
+              },
+              {
+                "size": "2",
+                "households": 6665
+              },
+              {
+                "size": "3",
+                "households": 8725
+              },
+              {
+                "size": "4",
+                "households": 6289
+              },
+              {
+                "size": "5",
+                "households": 3274
+              },
+              {
+                "size": "6",
+                "households": 1288
+              },
+              {
+                "size": "7",
+                "households": 455
+              },
+              {
+                "size": "8",
+                "households": 229
+              },
+              {
+                "size": "9+",
+                "households": 174
+              }
+            ],
+            "by_dwelling": {
+              "total": 29649,
+              "apartment": 141,
+              "brick": 1782,
+              "semi_brick": 2023,
+              "wooden": 22996,
+              "bamboo": 2577,
+              "hut": 74,
+              "other": 56
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name_en": "Nattalin",
+      "name_local": "နတ်တလင်းခရိုင်",
+      "population": {
+        "total": 432535,
+        "male": 201657,
+        "female": 230878
+      },
+      "age_groups": [
+        {
+          "label": "0-4",
+          "min_age": 0,
+          "max_age": 4,
+          "total": {
+            "total": 17523,
+            "male": 9018,
+            "female": 8505
+          },
+          "urban": {
+            "total": 3710,
+            "male": 1927,
+            "female": 1783
+          },
+          "rural": {
+            "total": 13813,
+            "male": 7091,
+            "female": 6722
+          }
+        },
+        {
+          "label": "5-9",
+          "min_age": 5,
+          "max_age": 9,
+          "total": {
+            "total": 26275,
+            "male": 13483,
+            "female": 12792
+          },
+          "urban": {
+            "total": 5368,
+            "male": 2737,
+            "female": 2631
+          },
+          "rural": {
+            "total": 20907,
+            "male": 10746,
+            "female": 10161
+          }
+        },
+        {
+          "label": "10-14",
+          "min_age": 10,
+          "max_age": 14,
+          "total": {
+            "total": 28021,
+            "male": 14417,
+            "female": 13604
+          },
+          "urban": {
+            "total": 5883,
+            "male": 3014,
+            "female": 2869
+          },
+          "rural": {
+            "total": 22138,
+            "male": 11403,
+            "female": 10735
+          }
+        },
+        {
+          "label": "15-19",
+          "min_age": 15,
+          "max_age": 19,
+          "total": {
+            "total": 27467,
+            "male": 13628,
+            "female": 13839
+          },
+          "urban": {
+            "total": 6132,
+            "male": 3072,
+            "female": 3060
+          },
+          "rural": {
+            "total": 21335,
+            "male": 10556,
+            "female": 10779
+          }
+        },
+        {
+          "label": "20-24",
+          "min_age": 20,
+          "max_age": 24,
+          "total": {
+            "total": 24132,
+            "male": 11341,
+            "female": 12791
+          },
+          "urban": {
+            "total": 4936,
+            "male": 2341,
+            "female": 2595
+          },
+          "rural": {
+            "total": 19196,
+            "male": 9000,
+            "female": 10196
+          }
+        },
+        {
+          "label": "25-29",
+          "min_age": 25,
+          "max_age": 29,
+          "total": {
+            "total": 25511,
+            "male": 11741,
+            "female": 13770
+          },
+          "urban": {
+            "total": 4934,
+            "male": 2385,
+            "female": 2549
+          },
+          "rural": {
+            "total": 20577,
+            "male": 9356,
+            "female": 11221
+          }
+        },
+        {
+          "label": "30-34",
+          "min_age": 30,
+          "max_age": 34,
+          "total": {
+            "total": 29680,
+            "male": 13389,
+            "female": 16291
+          },
+          "urban": {
+            "total": 5526,
+            "male": 2585,
+            "female": 2941
+          },
+          "rural": {
+            "total": 24154,
+            "male": 10804,
+            "female": 13350
+          }
+        },
+        {
+          "label": "35-39",
+          "min_age": 35,
+          "max_age": 39,
+          "total": {
+            "total": 34147,
+            "male": 15776,
+            "female": 18371
+          },
+          "urban": {
+            "total": 6320,
+            "male": 2929,
+            "female": 3391
+          },
+          "rural": {
+            "total": 27827,
+            "male": 12847,
+            "female": 14980
+          }
+        },
+        {
+          "label": "40-44",
+          "min_age": 40,
+          "max_age": 44,
+          "total": {
+            "total": 34248,
+            "male": 15873,
+            "female": 18375
+          },
+          "urban": {
+            "total": 6389,
+            "male": 2884,
+            "female": 3505
+          },
+          "rural": {
+            "total": 27859,
+            "male": 12989,
+            "female": 14870
+          }
+        },
+        {
+          "label": "45-49",
+          "min_age": 45,
+          "max_age": 49,
+          "total": {
+            "total": 34373,
+            "male": 15716,
+            "female": 18657
+          },
+          "urban": {
+            "total": 6405,
+            "male": 2877,
+            "female": 3528
+          },
+          "rural": {
+            "total": 27968,
+            "male": 12839,
+            "female": 15129
+          }
+        },
+        {
+          "label": "50-54",
+          "min_age": 50,
+          "max_age": 54,
+          "total": {
+            "total": 33565,
+            "male": 15402,
+            "female": 18163
+          },
+          "urban": {
+            "total": 6626,
+            "male": 2935,
+            "female": 3691
+          },
+          "rural": {
+            "total": 26939,
+            "male": 12467,
+            "female": 14472
+          }
+        },
+        {
+          "label": "55-59",
+          "min_age": 55,
+          "max_age": 59,
+          "total": {
+            "total": 30688,
+            "male": 13976,
+            "female": 16712
+          },
+          "urban": {
+            "total": 6412,
+            "male": 2671,
+            "female": 3741
+          },
+          "rural": {
+            "total": 24276,
+            "male": 11305,
+            "female": 12971
+          }
+        },
+        {
+          "label": "60-64",
+          "min_age": 60,
+          "max_age": 64,
+          "total": {
+            "total": 28087,
+            "male": 12710,
+            "female": 15377
+          },
+          "urban": {
+            "total": 5650,
+            "male": 2352,
+            "female": 3298
+          },
+          "rural": {
+            "total": 22437,
+            "male": 10358,
+            "female": 12079
+          }
+        },
+        {
+          "label": "65-69",
+          "min_age": 65,
+          "max_age": 69,
+          "total": {
+            "total": 22762,
+            "male": 10309,
+            "female": 12453
+          },
+          "urban": {
+            "total": 4771,
+            "male": 1995,
+            "female": 2776
+          },
+          "rural": {
+            "total": 17991,
+            "male": 8314,
+            "female": 9677
+          }
+        },
+        {
+          "label": "70-74",
+          "min_age": 70,
+          "max_age": 74,
+          "total": {
+            "total": 16906,
+            "male": 7348,
+            "female": 9558
+          },
+          "urban": {
+            "total": 3679,
+            "male": 1461,
+            "female": 2218
+          },
+          "rural": {
+            "total": 13227,
+            "male": 5887,
+            "female": 7340
+          }
+        },
+        {
+          "label": "75-79",
+          "min_age": 75,
+          "max_age": 79,
+          "total": {
+            "total": 9511,
+            "male": 3927,
+            "female": 5584
+          },
+          "urban": {
+            "total": 2022,
+            "male": 743,
+            "female": 1279
+          },
+          "rural": {
+            "total": 7489,
+            "male": 3184,
+            "female": 4305
+          }
+        },
+        {
+          "label": "80-84",
+          "min_age": 80,
+          "max_age": 84,
+          "total": {
+            "total": 4778,
+            "male": 1824,
+            "female": 2954
+          },
+          "urban": {
+            "total": 1007,
+            "male": 354,
+            "female": 653
+          },
+          "rural": {
+            "total": 3771,
+            "male": 1470,
+            "female": 2301
+          }
+        },
+        {
+          "label": "85-89",
+          "min_age": 85,
+          "max_age": 89,
+          "total": {
+            "total": 3260,
+            "male": 1216,
+            "female": 2044
+          },
+          "urban": {
+            "total": 649,
+            "male": 202,
+            "female": 447
+          },
+          "rural": {
+            "total": 2611,
+            "male": 1014,
+            "female": 1597
+          }
+        },
+        {
+          "label": "90+",
+          "min_age": 90,
+          "max_age": null,
+          "total": {
+            "total": 1601,
+            "male": 563,
+            "female": 1038
+          },
+          "urban": {
+            "total": 314,
+            "male": 86,
+            "female": 228
+          },
+          "rural": {
+            "total": 1287,
+            "male": 477,
+            "female": 810
+          }
+        }
+      ],
+      "households": {
+        "total": 41428,
+        "by_size": [
+          {
+            "size": "1",
+            "households": 3272
+          },
+          {
+            "size": "2",
+            "households": 9633
+          },
+          {
+            "size": "3",
+            "households": 12690
+          },
+          {
+            "size": "4",
+            "households": 8718
+          },
+          {
+            "size": "5",
+            "households": 4364
+          },
+          {
+            "size": "6",
+            "households": 1665
+          },
+          {
+            "size": "7",
+            "households": 679
+          },
+          {
+            "size": "8",
+            "households": 245
+          },
+          {
+            "size": "9+",
+            "households": 162
+          }
+        ],
+        "by_dwelling": {
+          "total": 41428,
+          "apartment": 407,
+          "brick": 4136,
+          "semi_brick": 4002,
+          "wooden": 28157,
+          "bamboo": 4601,
+          "hut": 108,
+          "other": 17
+        }
+      },
+      "townships": [
+        {
+          "name_en": "Nattalin",
+          "name_local": "နတ်တလင်းမြို့နယ်",
+          "population": {
+            "total": 137823,
+            "male": 63747,
+            "female": 74076
+          },
+          "households": {
+            "total": 41428,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3272
+              },
+              {
+                "size": "2",
+                "households": 9633
+              },
+              {
+                "size": "3",
+                "households": 12690
+              },
+              {
+                "size": "4",
+                "households": 8718
+              },
+              {
+                "size": "5",
+                "households": 4364
+              },
+              {
+                "size": "6",
+                "households": 1665
+              },
+              {
+                "size": "7",
+                "households": 679
+              },
+              {
+                "size": "8",
+                "households": 245
+              },
+              {
+                "size": "9+",
+                "households": 162
+              }
+            ],
+            "by_dwelling": {
+              "total": 41428,
+              "apartment": 407,
+              "brick": 4136,
+              "semi_brick": 4002,
+              "wooden": 28157,
+              "bamboo": 4601,
+              "hut": 108,
+              "other": 17
+            }
+          }
+        },
+        {
+          "name_en": "Zigon",
+          "name_local": "ဇီးကုန်းမြို့နယ်",
+          "population": {
+            "total": 61441,
+            "male": 28204,
+            "female": 33237
+          },
+          "households": {
+            "total": 18145,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 1515
+              },
+              {
+                "size": "2",
+                "households": 4278
+              },
+              {
+                "size": "3",
+                "households": 5150
+              },
+              {
+                "size": "4",
+                "households": 3787
+              },
+              {
+                "size": "5",
+                "households": 1991
+              },
+              {
+                "size": "6",
+                "households": 873
+              },
+              {
+                "size": "7",
+                "households": 348
+              },
+              {
+                "size": "8",
+                "households": 115
+              },
+              {
+                "size": "9+",
+                "households": 88
+              }
+            ],
+            "by_dwelling": {
+              "total": 18145,
+              "apartment": 90,
+              "brick": 1449,
+              "semi_brick": 1710,
+              "wooden": 13067,
+              "bamboo": 1715,
+              "hut": 46,
+              "other": 68
+            }
+          }
+        },
+        {
+          "name_en": "Thegon",
+          "name_local": "သဲကုန်းမြို့နယ်",
+          "population": {
+            "total": 115663,
+            "male": 53838,
+            "female": 61825
+          },
+          "households": {
+            "total": 35973,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3297
+              },
+              {
+                "size": "2",
+                "households": 8918
+              },
+              {
+                "size": "3",
+                "households": 11325
+              },
+              {
+                "size": "4",
+                "households": 7333
+              },
+              {
+                "size": "5",
+                "households": 3299
+              },
+              {
+                "size": "6",
+                "households": 1170
+              },
+              {
+                "size": "7",
+                "households": 408
+              },
+              {
+                "size": "8",
+                "households": 135
+              },
+              {
+                "size": "9+",
+                "households": 88
+              }
+            ],
+            "by_dwelling": {
+              "total": 35973,
+              "apartment": 460,
+              "brick": 2212,
+              "semi_brick": 4066,
+              "wooden": 24267,
+              "bamboo": 4733,
+              "hut": 194,
+              "other": 41
+            }
+          }
+        },
+        {
+          "name_en": "Paungde",
+          "name_local": "ပေါင်းတည်မြို့နယ်",
+          "population": {
+            "total": 117608,
+            "male": 55868,
+            "female": 61740
+          },
+          "households": {
+            "total": 35503,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2863
+              },
+              {
+                "size": "2",
+                "households": 8485
+              },
+              {
+                "size": "3",
+                "households": 11350
+              },
+              {
+                "size": "4",
+                "households": 7413
+              },
+              {
+                "size": "5",
+                "households": 3374
+              },
+              {
+                "size": "6",
+                "households": 1311
+              },
+              {
+                "size": "7",
+                "households": 437
+              },
+              {
+                "size": "8",
+                "households": 160
+              },
+              {
+                "size": "9+",
+                "households": 110
+              }
+            ],
+            "by_dwelling": {
+              "total": 35503,
+              "apartment": 242,
+              "brick": 2486,
+              "semi_brick": 2723,
+              "wooden": 27316,
+              "bamboo": 2587,
+              "hut": 96,
+              "other": 53
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name_en": "Pyay",
+      "name_local": "ပြည်ခရိုင်",
+      "population": {
+        "total": 564390,
+        "male": 262955,
+        "female": 301435
+      },
+      "age_groups": [
+        {
+          "label": "0-4",
+          "min_age": 0,
+          "max_age": 4,
+          "total": {
+            "total": 25681,
+            "male": 12961,
+            "female": 12720
+          },
+          "urban": {
+            "total": 7772,
+            "male": 3914,
+            "female": 3858
+          },
+          "rural": {
+            "total": 17909,
+            "male": 9047,
+            "female": 8862
+          }
+        },
+        {
+          "label": "5-9",
+          "min_age": 5,
+          "max_age": 9,
+          "total": {
+            "total": 37764,
+            "male": 19221,
+            "female": 18543
+          },
+          "urban": {
+            "total": 10966,
+            "male": 5661,
+            "female": 5305
+          },
+          "rural": {
+            "total": 26798,
+            "male": 13560,
+            "female": 13238
+          }
+        },
+        {
+          "label": "10-14",
+          "min_age": 10,
+          "max_age": 14,
+          "total": {
+            "total": 38945,
+            "male": 19924,
+            "female": 19021
+          },
+          "urban": {
+            "total": 11457,
+            "male": 5947,
+            "female": 5510
+          },
+          "rural": {
+            "total": 27488,
+            "male": 13977,
+            "female": 13511
+          }
+        },
+        {
+          "label": "15-19",
+          "min_age": 15,
+          "max_age": 19,
+          "total": {
+            "total": 38519,
+            "male": 19412,
+            "female": 19107
+          },
+          "urban": {
+            "total": 12886,
+            "male": 6385,
+            "female": 6501
+          },
+          "rural": {
+            "total": 25633,
+            "male": 13027,
+            "female": 12606
+          }
+        },
+        {
+          "label": "20-24",
+          "min_age": 20,
+          "max_age": 24,
+          "total": {
+            "total": 35729,
+            "male": 16896,
+            "female": 18833
+          },
+          "urban": {
+            "total": 12513,
+            "male": 5589,
+            "female": 6924
+          },
+          "rural": {
+            "total": 23216,
+            "male": 11307,
+            "female": 11909
+          }
+        },
+        {
+          "label": "25-29",
+          "min_age": 25,
+          "max_age": 29,
+          "total": {
+            "total": 34479,
+            "male": 15795,
+            "female": 18684
+          },
+          "urban": {
+            "total": 10877,
+            "male": 4935,
+            "female": 5942
+          },
+          "rural": {
+            "total": 23602,
+            "male": 10860,
+            "female": 12742
+          }
+        },
+        {
+          "label": "30-34",
+          "min_age": 30,
+          "max_age": 34,
+          "total": {
+            "total": 38036,
+            "male": 17422,
+            "female": 20614
+          },
+          "urban": {
+            "total": 10990,
+            "male": 5039,
+            "female": 5951
+          },
+          "rural": {
+            "total": 27046,
+            "male": 12383,
+            "female": 14663
+          }
+        },
+        {
+          "label": "35-39",
+          "min_age": 35,
+          "max_age": 39,
+          "total": {
+            "total": 44580,
+            "male": 20549,
+            "female": 24031
+          },
+          "urban": {
+            "total": 12649,
+            "male": 5634,
+            "female": 7015
+          },
+          "rural": {
+            "total": 31931,
+            "male": 14915,
+            "female": 17016
+          }
+        },
+        {
+          "label": "40-44",
+          "min_age": 40,
+          "max_age": 44,
+          "total": {
+            "total": 45768,
+            "male": 20833,
+            "female": 24935
+          },
+          "urban": {
+            "total": 12780,
+            "male": 5740,
+            "female": 7040
+          },
+          "rural": {
+            "total": 32988,
+            "male": 15093,
+            "female": 17895
+          }
+        },
+        {
+          "label": "45-49",
+          "min_age": 45,
+          "max_age": 49,
+          "total": {
+            "total": 43463,
+            "male": 19650,
+            "female": 23813
+          },
+          "urban": {
+            "total": 11908,
+            "male": 5075,
+            "female": 6833
+          },
+          "rural": {
+            "total": 31555,
+            "male": 14575,
+            "female": 16980
+          }
+        },
+        {
+          "label": "50-54",
+          "min_age": 50,
+          "max_age": 54,
+          "total": {
+            "total": 41727,
+            "male": 18804,
+            "female": 22923
+          },
+          "urban": {
+            "total": 11631,
+            "male": 4926,
+            "female": 6705
+          },
+          "rural": {
+            "total": 30096,
+            "male": 13878,
+            "female": 16218
+          }
+        },
+        {
+          "label": "55-59",
+          "min_age": 55,
+          "max_age": 59,
+          "total": {
+            "total": 38246,
+            "male": 17234,
+            "female": 21012
+          },
+          "urban": {
+            "total": 10601,
+            "male": 4259,
+            "female": 6342
+          },
+          "rural": {
+            "total": 27645,
+            "male": 12975,
+            "female": 14670
+          }
+        },
+        {
+          "label": "60-64",
+          "min_age": 60,
+          "max_age": 64,
+          "total": {
+            "total": 33563,
+            "male": 14966,
+            "female": 18597
+          },
+          "urban": {
+            "total": 9757,
+            "male": 4000,
+            "female": 5757
+          },
+          "rural": {
+            "total": 23806,
+            "male": 10966,
+            "female": 12840
+          }
+        },
+        {
+          "label": "65-69",
+          "min_age": 65,
+          "max_age": 69,
+          "total": {
+            "total": 27595,
+            "male": 12301,
+            "female": 15294
+          },
+          "urban": {
+            "total": 8235,
+            "male": 3428,
+            "female": 4807
+          },
+          "rural": {
+            "total": 19360,
+            "male": 8873,
+            "female": 10487
+          }
+        },
+        {
+          "label": "70-74",
+          "min_age": 70,
+          "max_age": 74,
+          "total": {
+            "total": 19210,
+            "male": 8488,
+            "female": 10722
+          },
+          "urban": {
+            "total": 5955,
+            "male": 2507,
+            "female": 3448
+          },
+          "rural": {
+            "total": 13255,
+            "male": 5981,
+            "female": 7274
+          }
+        },
+        {
+          "label": "75-79",
+          "min_age": 75,
+          "max_age": 79,
+          "total": {
+            "total": 10590,
+            "male": 4535,
+            "female": 6055
+          },
+          "urban": {
+            "total": 3306,
+            "male": 1301,
+            "female": 2005
+          },
+          "rural": {
+            "total": 7284,
+            "male": 3234,
+            "female": 4050
+          }
+        },
+        {
+          "label": "80-84",
+          "min_age": 80,
+          "max_age": 84,
+          "total": {
+            "total": 5249,
+            "male": 2057,
+            "female": 3192
+          },
+          "urban": {
+            "total": 1607,
+            "male": 590,
+            "female": 1017
+          },
+          "rural": {
+            "total": 3642,
+            "male": 1467,
+            "female": 2175
+          }
+        },
+        {
+          "label": "85-89",
+          "min_age": 85,
+          "max_age": 89,
+          "total": {
+            "total": 3538,
+            "male": 1312,
+            "female": 2226
+          },
+          "urban": {
+            "total": 987,
+            "male": 330,
+            "female": 657
+          },
+          "rural": {
+            "total": 2551,
+            "male": 982,
+            "female": 1569
+          }
+        },
+        {
+          "label": "90+",
+          "min_age": 90,
+          "max_age": null,
+          "total": {
+            "total": 1708,
+            "male": 595,
+            "female": 1113
+          },
+          "urban": {
+            "total": 487,
+            "male": 145,
+            "female": 342
+          },
+          "rural": {
+            "total": 1221,
+            "male": 450,
+            "female": 771
+          }
+        }
+      ],
+      "households": {
+        "total": 60227,
+        "by_size": [
+          {
+            "size": "1",
+            "households": 5101
+          },
+          {
+            "size": "2",
+            "households": 13126
+          },
+          {
+            "size": "3",
+            "households": 16872
+          },
+          {
+            "size": "4",
+            "households": 12719
+          },
+          {
+            "size": "5",
+            "households": 6644
+          },
+          {
+            "size": "6",
+            "households": 3031
+          },
+          {
+            "size": "7",
+            "households": 1396
+          },
+          {
+            "size": "8",
+            "households": 693
+          },
+          {
+            "size": "9+",
+            "households": 645
+          }
+        ],
+        "by_dwelling": {
+          "total": 60227,
+          "apartment": 3189,
+          "brick": 13204,
+          "semi_brick": 7995,
+          "wooden": 27963,
+          "bamboo": 6656,
+          "hut": 1064,
+          "other": 156
+        }
+      },
+      "townships": [
+        {
+          "name_en": "Pyay",
+          "name_local": "ပြည်မြို့နယ်",
+          "population": {
+            "total": 221331,
+            "male": 102648,
+            "female": 118683
+          },
+          "households": {
+            "total": 60227,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 5101
+              },
+              {
+                "size": "2",
+                "households": 13126
+              },
+              {
+                "size": "3",
+                "households": 16872
+              },
+              {
+                "size": "4",
+                "households": 12719
+              },
+              {
+                "size": "5",
+                "households": 6644
+              },
+              {
+                "size": "6",
+                "households": 3031
+              },
+              {
+                "size": "7",
+                "households": 1396
+              },
+              {
+                "size": "8",
+                "households": 693
+              },
+              {
+                "size": "9+",
+                "households": 645
+              }
+            ],
+            "by_dwelling": {
+              "total": 60227,
+              "apartment": 3189,
+              "brick": 13204,
+              "semi_brick": 7995,
+              "wooden": 27963,
+              "bamboo": 6656,
+              "hut": 1064,
+              "other": 156
+            }
+          }
+        },
+        {
+          "name_en": "Paukkaung",
+          "name_local": "ပေါက်ခေါင်းမြို့နယ်",
+          "population": {
+            "total": 102405,
+            "male": 49266,
+            "female": 53139
+          },
+          "households": {
+            "total": 31034,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 2114
+              },
+              {
+                "size": "2",
+                "households": 6681
+              },
+              {
+                "size": "3",
+                "households": 10497
+              },
+              {
+                "size": "4",
+                "households": 7008
+              },
+              {
+                "size": "5",
+                "households": 2939
+              },
+              {
+                "size": "6",
+                "households": 1202
+              },
+              {
+                "size": "7",
+                "households": 365
+              },
+              {
+                "size": "8",
+                "households": 146
+              },
+              {
+                "size": "9+",
+                "households": 82
+              }
+            ],
+            "by_dwelling": {
+              "total": 31034,
+              "apartment": 445,
+              "brick": 1614,
+              "semi_brick": 1394,
+              "wooden": 24110,
+              "bamboo": 3399,
+              "hut": 65,
+              "other": 7
+            }
+          }
+        },
+        {
+          "name_en": "Padaung",
+          "name_local": "ပန်းတောင်းမြို့နယ်",
+          "population": {
+            "total": 128940,
+            "male": 60178,
+            "female": 68762
+          },
+          "households": {
+            "total": 38610,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3421
+              },
+              {
+                "size": "2",
+                "households": 9555
+              },
+              {
+                "size": "3",
+                "households": 11155
+              },
+              {
+                "size": "4",
+                "households": 7988
+              },
+              {
+                "size": "5",
+                "households": 3890
+              },
+              {
+                "size": "6",
+                "households": 1589
+              },
+              {
+                "size": "7",
+                "households": 649
+              },
+              {
+                "size": "8",
+                "households": 211
+              },
+              {
+                "size": "9+",
+                "households": 152
+              }
+            ],
+            "by_dwelling": {
+              "total": 38610,
+              "apartment": 2572,
+              "brick": 2559,
+              "semi_brick": 2455,
+              "wooden": 23676,
+              "bamboo": 6670,
+              "hut": 562,
+              "other": 116
+            }
+          }
+        },
+        {
+          "name_en": "Shwedaung",
+          "name_local": "ရွှေတောင်မြို့နယ်",
+          "population": {
+            "total": 111714,
+            "male": 50863,
+            "female": 60851
+          },
+          "households": {
+            "total": 34097,
+            "by_size": [
+              {
+                "size": "1",
+                "households": 3327
+              },
+              {
+                "size": "2",
+                "households": 8553
+              },
+              {
+                "size": "3",
+                "households": 9751
+              },
+              {
+                "size": "4",
+                "households": 6806
+              },
+              {
+                "size": "5",
+                "households": 3334
+              },
+              {
+                "size": "6",
+                "households": 1475
+              },
+              {
+                "size": "7",
+                "households": 517
+              },
+              {
+                "size": "8",
+                "households": 198
+              },
+              {
+                "size": "9+",
+                "households": 136
+              }
+            ],
+            "by_dwelling": {
+              "total": 34097,
+              "apartment": 796,
+              "brick": 2996,
+              "semi_brick": 3290,
+              "wooden": 19391,
+              "bamboo": 6922,
+              "hut": 565,
+              "other": 137
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

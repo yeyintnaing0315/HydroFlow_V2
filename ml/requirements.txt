@@ -1,0 +1,9 @@
+numpy==2.5.3
+pandas==3.0.6
+scikit-learn==1.9.1
+xgboost==2.1.4
+joblib==1.6.0
+openpyxl>=3.1.5
+pytest==9.1.1
+opencv-python-headless>=4.10.0
+albumentations>=1.4.0

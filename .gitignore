@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Generated ML and data outputs
+artifacts/
+data/processed/*
+!data/processed/.gitkeep
+
+# Frontend (added in Phase 14)
+node_modules/
+dist/
+*.tsbuildinfo
+frontend/src/**/*.js
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# Rebuildable SQLite caches. They are not the operational database.
+data/cache/*.sqlite
+data/cache/*.sqlite-journal
+data/cache/*.sqlite-wal
+data/cache/*.sqlite-shm
+
+# Inventory photos and the local PostgreSQL data directory
+data/inventory/pgdata/
+data/inventory/objectDetect/
+data/Raw_Pic/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

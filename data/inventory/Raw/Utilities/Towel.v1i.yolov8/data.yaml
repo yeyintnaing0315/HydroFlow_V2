@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Towel']
+
+roboflow:
+  workspace: practicas-preprofesionales
+  project: towel-yp6ge
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/practicas-preprofesionales/towel-yp6ge/dataset/1

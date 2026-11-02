@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres:16
+    container_name: hydroflow-inventory-db
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: hydroflow
+      POSTGRES_PASSWORD: hydroflow_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data

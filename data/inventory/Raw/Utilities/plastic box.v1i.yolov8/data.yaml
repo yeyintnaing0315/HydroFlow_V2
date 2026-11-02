@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['plastic_box']
+
+roboflow:
+  workspace: sony-yqbhl
+  project: plastic-box
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/sony-yqbhl/plastic-box/dataset/1

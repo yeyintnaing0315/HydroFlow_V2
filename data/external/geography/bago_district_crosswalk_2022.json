@@ -1,0 +1,60 @@
+{
+  "version": "MOHA-2022-04-30",
+  "region": {
+    "id": "MMR-BAGO",
+    "name_en": "Bago",
+    "name_local": "ပဲခူးတိုင်းဒေသကြီး",
+    "source_admin1_codes": ["MMR007", "MMR008"]
+  },
+  "sources": [
+    {
+      "title": "Ministry of Home Affairs Notifications 319/2022–333/2022 summary",
+      "url": "https://www.myanmaritv.com/news/expansion-new-districts-new-districts-expanded-nay-pyi-taw-regions-and-states",
+      "date": "2022-05-02"
+    },
+    {
+      "title": "Global New Light of Myanmar, 2 May 2022, district expansion table",
+      "url": "https://cdn.digitalagencybangkok.com/file/client-cdn/gnlm/wp-content/uploads/2022/05/2_Mayl_22_gnlm.pdf",
+      "date": "2022-05-02"
+    }
+  ],
+  "method": "Current district membership cross-checked against the 2022 district expansion references. District geometry is a nondissolved MultiPolygon assembled from licensed OCHA COD-AB v01 township polygons; it is not MIMU v9.7 geometry.",
+  "districts": [
+    {
+      "id": "MOHA2022-BAGO",
+      "name_en": "Bago",
+      "name_local": "ပဲခူးခရိုင်",
+      "townships": ["Bago", "Kawa", "Thanatpin", "Waw"]
+    },
+    {
+      "id": "MOHA2022-NYAUNGLEBIN",
+      "name_en": "Nyaunglebin",
+      "name_local": "ညောင်လေးပင်ခရိုင်",
+      "townships": ["Nyaunglebin", "Kyauktaga", "Daik-U", "Shwegyin", "Kyaukkyi"]
+    },
+    {
+      "id": "MOHA2022-TAUNGOO",
+      "name_en": "Taungoo",
+      "name_local": "တောင်ငူခရိုင်",
+      "townships": ["Taungoo", "Oktwin", "Yedashe", "Pyu", "Htantabin"]
+    },
+    {
+      "id": "MOHA2022-THAYARWADY",
+      "name_en": "Thayarwady",
+      "name_local": "သာယာဝတီခရိုင်",
+      "townships": ["Thayarwady", "Letpadan", "Minhla", "Monyo", "Okpo", "Gyobingauk"]
+    },
+    {
+      "id": "MOHA2022-NATTALIN",
+      "name_en": "Nattalin",
+      "name_local": "နတ်တလင်းခရိုင်",
+      "townships": ["Nattalin", "Zigon", "Thegon", "Paungde"]
+    },
+    {
+      "id": "MOHA2022-PYAY",
+      "name_en": "Pyay",
+      "name_local": "ပြည်ခရိုင်",
+      "townships": ["Pyay", "Paukkaung", "Padaung", "Shwedaung"]
+    }
+  ]
+}

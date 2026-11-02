@@ -1,0 +1,87 @@
+{
+  "selected": "xgb-land",
+  "selected_features": [
+    "rainfall_1d_mm",
+    "rainfall_3d_mm",
+    "rainfall_7d_mm",
+    "rainfall_14d_mm",
+    "rainfall_30d_mm",
+    "temperature_c",
+    "relative_humidity_pct",
+    "wind_speed_m_s",
+    "latitude",
+    "longitude",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "discharge_lag_1d_m3s",
+    "discharge_lag_3d_mean_m3s",
+    "soil_moisture_0_to_7cm",
+    "soil_moisture_7_to_28cm",
+    "et0_fao_evapotranspiration"
+  ],
+  "validation_pr_auc_by_candidate": {
+    "xgb-base": 0.055212410730159596,
+    "xgb-land": 0.056659286172941005
+  },
+  "candidate_rows": {
+    "xgb-base": 39534,
+    "xgb-land": 39534
+  },
+  "scale_pos_weight": {
+    "xgb-base": 557.3809523809524,
+    "xgb-land": 557.3809523809524
+  },
+  "land_error": null,
+  "land_api_fields": {
+    "soil_moisture_0_to_7cm": "soil_moisture_0_to_7cm_mean",
+    "soil_moisture_7_to_28cm": "soil_moisture_7_to_28cm_mean",
+    "et0_fao_evapotranspiration": "et0_fao_evapotranspiration"
+  },
+  "archive_start": "2021-04-01",
+  "archive_end": "2026-03-31",
+  "baseline_model": "hist_gradient_boosting",
+  "baseline_pr_auc": 0.008497032022443982,
+  "validation": {
+    "rows": 8030,
+    "flood_rows": 167,
+    "threshold": 0.05,
+    "accuracy": 0.7642590286425903,
+    "precision": 0.057435897435897436,
+    "recall": 0.6706586826347305,
+    "f1": 0.10581010864430798,
+    "roc_auc": 0.8083904682051387,
+    "pr_auc": 0.060205534086959,
+    "confusion_matrix_tn_fp_fn_tp": [
+      6025,
+      1838,
+      55,
+      112
+    ],
+    "probability_p50_non_flood": 0.005709624849259853,
+    "probability_p95_non_flood": 0.054910242557525635,
+    "probability_p50_flood": 0.054910238832235336
+  },
+  "test": {
+    "rows": 8052,
+    "flood_rows": 11,
+    "threshold": 0.05,
+    "accuracy": 0.7452806756085445,
+    "precision": 0.0038910505836575876,
+    "recall": 0.7272727272727273,
+    "f1": 0.0077406869859700045,
+    "roc_auc": 0.8212739256763633,
+    "pr_auc": 0.004133547221783008,
+    "confusion_matrix_tn_fp_fn_tp": [
+      5993,
+      2048,
+      3,
+      8
+    ],
+    "probability_p50_non_flood": 0.005709624849259853,
+    "probability_p95_non_flood": 0.054910242557525635,
+    "probability_p50_flood": 0.054910238832235336
+  },
+  "joblib_replaced": false,
+  "test_used_for_training_calibration_or_threshold": false,
+  "logistic_secondary_unchanged": true
+}

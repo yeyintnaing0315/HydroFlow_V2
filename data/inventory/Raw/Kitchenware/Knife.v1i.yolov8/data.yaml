@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Knife']
+
+roboflow:
+  workspace: kaibin
+  project: knife-7uvia
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/kaibin/knife-7uvia/dataset/1

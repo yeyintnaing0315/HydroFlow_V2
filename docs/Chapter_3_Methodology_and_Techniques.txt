@@ -1,0 +1,240 @@
+CHAPTER 3
+METHODOLOGY AND TECHNIQUES
+
+This chapter states the methods that turn a Bago township-day into a flood class, a risk band, an assistance illustration, and a stock count. The prediction service loads one flood artifact: a histogram gradient boosting classifier saved as hgb-depth3, wrapped by an isotonic calibrator. A class-weighted logistic regression is trained on the same rows and the same fifteen features so the results chapter has a linear baseline. Assistance figures, routes, and inventory counts follow their own rules. The figures below are the ones stored with the loaded artifacts.
+
+The unit of analysis is the township-day. The label is the relief flood flag on the validated daily table: a flood day that appears in the available relief records. The flag is an incomplete indicator. The metadata records that no synthetic flood rows were added. The served artifact names twenty-two townships: Bago, Daik-U, Htantabin, Kawa, Kyauktaga, Madauk, Minhla, Monyo, Okpho, Oktwin, Pantaung, Pyay, Pyu, Shwedaung, Shwegyin, Taungoo, Thanatpin, Thayarwady, Thegon, Waw, Yedashe, and Zigon.
+
+After feature construction, 39,534 rows have every served input and the flood flag. Six hundred and thirty-eight rows are dropped because a required feature or the flag is missing. The chronological assignment is the saved file data/processed/split_assignments.csv. The validation block holds 8,030 rows, including 167 flood days. The test block holds 8,052 rows, including 11 flood days. The trainer uses that file. It does not redraw the split at fit time.
+
+3.1  Machine-Learning Approaches for Flood Occurrence
+
+Two classifiers were examined for the same township-day label. Both consume a fixed numeric feature list, both are fit only on the training block, and both are scored on a test block that is not used to choose the threshold. The label is the relief flood flag on the same calendar day as the rainfall and discharge features. Same-day weather is therefore contemporaneous with the label. It is not a forecast lead of one or more days. Calling the score a three-day-ahead warning would misstate the task.
+
+A row is called a flood day when its estimated probability p is at least a threshold τ. The four counts that follow from that rule are the true positives (TP), false positives (FP), true negatives (TN), and false negatives (FN). The reported class scores are then
+
+Precision = TP / (TP + FP)
+Recall = TP / (TP + FN)
+F1 = 2 * TP / (2 * TP + FP + FN)
+Accuracy = (TP + TN) / N
+
+where N is the number of rows in the block. The false-positive rate used for the receiver-operating curve is FP / (FP + TN). ROC-AUC is the area under the curve of recall against that rate as τ runs from high to low. PR-AUC, reported as average precision, is the area under the curve of precision against recall over the same sweep. Neither area depends on one chosen threshold.
+
+The threshold used for the class counts is chosen on the validation block only. The search evaluates F1 at every point on the grid 0.01, 0.02, ..., 0.99 and keeps the value that maximises flood-class F1. The test block is scored only after that value is frozen. A majority-class accuracy is computed on the same test rows by assigning every row to the non-flood class, so the accuracy of a fitted model can be read against a prediction that never declares a flood.
+
+3.1.1  Class-Weighted Logistic Regression
+
+Logistic regression estimates the log-odds of the flood flag as a linear function of standardised features,
+
+log( p / (1 - p) ) = β0 + β . x
+p = 1 / ( 1 + exp( -(β0 + β . x) ) ).
+
+The coefficients minimise a weighted negative log-likelihood. For one row the contribution is -[ y log p + (1 - y) log(1 - p) ]. With balanced class weights, the weight of class c is wc = n / (2 * nc), where n is the number of training rows and nc is the number of training rows in that class. The flood rows and the non-flood rows then contribute the same total weight. Numeric fields are median-imputed and standardised inside the training block. A missing value is replaced by the training median. The scaler then subtracts the training mean and divides by the training standard deviation. Both transforms are stored in the same pipeline as the classifier, so a later row is prepared with the training statistics. The decision threshold is the validation value of τ that maximises the F1 expression in Section 3.1.
+
+An earlier forecast-valid logistic specification used twelve features drawn from rainfall, modelled discharge, seasonality, and coordinates. NASA POWER soil wetness and humidity were removed from that experiment because those retrospective fields were not treated as dependable outlook inputs. A fourteen-feature predecessor still included those NASA fields. Both specifications are scored with the precision, recall, F1, and PR-AUC definitions above, on a test block that is not used to choose τ. The logistic artifact stored beside the current served model uses the fifteen-feature list in Section 3.3 and the same validation F1 rule. It is retained as a secondary, interpretable reference. It is not the model the metadata marks as selected.
+
+3.1.2  Histogram Gradient Boosting
+
+Histogram gradient boosting builds an additive ensemble of shallow trees on binned features,
+
+Fm(x) = Fm-1(x) + ν * hm(x),
+
+where hm is a regression tree and ν is the learning rate. At stage m the tree is fit to the negative gradient of the training log-loss. For a binary label that gradient at a row is the residual y - p. Each feature is divided into bins before the split search, and a candidate split is scored from the summed gradients inside those bins. The saved candidate is named hgb-depth3.
+
+An isotonic calibrator then maps the raw score s to a probability. On the validation pairs (si, yi) it minimises the sum of (yi - g(si))^2 subject to g being non-decreasing in s, and the result is clipped to the unit interval. The class threshold is the validation F1 maximum applied to g(s), using the same grid and the same F1 expression as Section 3.1. The test block is not used to fit the trees, to fit g, or to choose τ. Validation and test class scores, areas, and confusion counts are obtained from the definitions in Section 3.1 after that threshold has been frozen.
+
+3.2  Leakage Control and Chronological Evaluation
+
+Leakage is the use, when a township-day is scored, of a value that would not yet be known. The served models control it in the features and in the way the dates are divided.
+
+Feature construction sorts the daily table by township and by date, and every window is computed inside one township. A rolling rainfall sum takes the current day and earlier days of that township only. The window is kept only when every day in it is present, so the start of a township series does not borrow a later day, and one township does not borrow rainfall from another. Modeled discharge is shifted back by one day before it is used. The one-day discharge feature is that shifted value. The three-day discharge feature is the mean of the shifted series over three days, and that mean is kept only when three observations are present. The discharge recorded on the same calendar day as the label therefore does not enter either discharge column. Because each window looks backward inside one township, a change to rainfall or discharge on a later date leaves the features of an earlier date unchanged.
+
+Household counts and affected-people counts are recorded after an event. They are left out of the feature list. Census totals are left out as well. Latitude, longitude, and the sine and cosine of the day of the year are taken from the row being scored.
+
+Same-day rainfall, temperature, humidity, and wind sit on the same calendar day as the relief flag. They describe that recorded day. They are not a lead of one or more days, and they do not turn the score into a forecast issued ahead of the day.
+
+The chronological assignment is the saved file data/processed/split_assignments.csv. The trainer joins it to the engineered table on township and date. It stops if the training block, the validation block, or the test block is absent. It also stops unless the last training date falls before the first validation date, and the last validation date falls before the first test date. The classifier is fit on the training rows only. For the histogram model, the choice of candidate by validation average precision, the isotonic map, and the F1 threshold all use the validation rows only. Early stopping holds out a fraction of the rows that are passed to the fit, and those rows are taken from the training block. For the logistic model, the median imputer, the scaler, and the coefficients are fit on the training rows only, and the threshold uses the same validation F1 rule given in Section 3.1. The test block is scored only after those choices are frozen. The metadata records whether the test block was used for training, calibration, or the threshold.
+
+3.3  Feature Construction
+
+The flood classifiers do not read the raw daily columns. Both the served histogram model and the logistic reference read the same fifteen numeric fields, built from the validated daily table before any split is used for fitting.
+
+Rows are sorted by township and by date. Every window is taken inside one township, so the rainfall or discharge of one township never enters the window of another. Rolling columns that may already sit in a source workbook are not trusted. The training script rebuilds each window.
+
+Rainfall comes from the daily rainfall column, which stores Open-Meteo reanalysis precipitation. The one-day feature is the rainfall on the current day. The three-day, seven-day, fourteen-day, and thirty-day features are trailing sums that include the current day. A sum is kept only when every day of the window is present. Until a township has accumulated a full window, that feature is missing, and the row is not used.
+
+Discharge comes from the daily modeled-discharge column, which stores GloFAS river discharge. The series is shifted back by one day inside the township before a discharge feature is formed. The one-day discharge feature is that previous-day value. The three-day discharge feature is the mean of the shifted series, and it is kept only when three shifted observations are present. The discharge on the same calendar day as the label therefore stays out of both discharge columns.
+
+Seasonality is stored as a pair, so that the end of December and the start of January meet on a circle:
+
+day_of_year_sin = sin(2 π d / 365.25)
+day_of_year_cos = cos(2 π d / 365.25)
+
+where d is the day of the year of the row. Latitude and longitude are the township coordinates already stored on that row.
+
+Temperature, relative humidity, and wind are joined on township and date from the NASA POWER cache. Temperature is the 2 m air temperature T2M, humidity is the 2 m relative humidity RH2M, and wind is the 2 m wind speed WS2M. A cache value at or below −999 is treated as missing. Where a NASA value is missing, the training join may take the same field from the Open-Meteo archive. The served metadata records that no value was filled from that archive, so the meteorology columns of the saved model come from NASA POWER.
+
+A row enters the fitting table only when all fifteen fields and the flood flag are present. The served metadata records 638 rows removed for a missing field and 39,534 rows retained. Household counts and affected-people counts are not among the fifteen fields. The metadata also names soil moisture, runoff, a seven-day CHIRPS rainfall total, a HAND fraction below two metres, a 100-year flood depth, and a built-up floodplain fraction. Those names are extended fields. They are not columns of either classifier.
+
+At request time the service builds the same fifteen names for the selected township and date. A short gap after the last stored day may be carried forward from the last rainfall, discharge, or meteorology value, so that the screen can still be drawn. A carried-forward value is the last stored neighbour of that series.
+
+Table 3.1  Fifteen features of the flood classifiers
+
+Feature                              Construction
+rainfall_1d_mm                       Rainfall on the current day
+rainfall_3d_mm                       Three-day trailing rainfall sum, current day included
+rainfall_7d_mm                       Seven-day trailing rainfall sum, current day included
+rainfall_14d_mm                      Fourteen-day trailing rainfall sum, current day included
+rainfall_30d_mm                      Thirty-day trailing rainfall sum, current day included
+temperature_c                        NASA POWER 2 m air temperature (T2M)
+relative_humidity_pct                NASA POWER 2 m relative humidity (RH2M)
+wind_speed_m_s                       NASA POWER 2 m wind speed (WS2M)
+latitude, longitude                  Township coordinates on the daily row
+day_of_year_sin, day_of_year_cos     Sine and cosine of the day of the year on a 365.25-day circle
+discharge_lag_1d_m3s                 Modeled discharge shifted back by one day
+discharge_lag_3d_mean_m3s            Three-day mean of that shifted discharge
+
+3.4  Humanitarian Help Model
+
+HydroFlow V2 keeps humanitarian assistance separate from the flood-occurrence score. For a chosen township and date, the help model estimates whether assistance is required, the expected number of affected people and households, and a three-day package of shelter, food, and drinking water. Recorded household and affected-people counts are the targets of that estimate. They are excluded from the inputs. The flood-model file stays in place, and a help result is not treated as a second flood probability.
+
+The learned specification has two stages. Both use hydrologic fields, seasonality, and coordinates. The flood flag is excluded together with the two impact counts. Complete dates are divided chronologically: the first 60 percent of dates form the training block, the next 20 percent the validation block, and the last 20 percent the test block. The trainer checks that training dates end before validation begins and that validation ends before the test begins. Fitting uses the training block only.
+
+The first stage is a class-weighted logistic regression. Its label, help_needed, equals 1 when recorded households or recorded affected people are greater than zero. The decision threshold is the validation value that maximises help-class F1, by the same F1 expression as in Section 3.1. The second stage is two Ridge regressions, each with penalty strength 1, and both are fit only on training rows where help_needed equals 1. One predicts the logarithm of one plus the affected-people count. The other predicts the logarithm of one plus the household count. Each prediction is converted back by the inverse logarithm and is kept at or above zero. The expected count is that magnitude multiplied by the help probability and then rounded:
+
+expected people = round( p × people magnitude )
+expected households = round( p × household magnitude )
+
+The test block is not used to fit either stage or to choose the threshold.
+
+A fixed planning rule turns those expected counts into the three-day package. Shelter kits equal the expected households, one kit for each household. Food rations equal three times the expected people, one ration for each person on each of three days. Drinking water equals 15 litres per person per day over those three days, which is 45 litres per person. Assistance priority is a retrospective rule applied to the expected counts, not a class learned by the model. The score is households plus affected people divided by five. The bands are none at zero, low above zero, moderate from 100, high from 500, and severe from 2,000. One township plan is then kept at or below 1,000 people, and the household count is scaled by the same ratio when that limit is reached. The package is an academic illustration for the dashboard. It is not a field count, and it is not an operational relief order.
+
+The service uses the two-stage file only when the model and its metadata are both on disk. Those files are absent from this project tree, so each request follows a recorded source and the response names that source. A relief-workbook impact for the township and date is taken first. An archived day that is marked as a flood day is taken next. Otherwise the flood probability scales a township relief baseline. An empty people or household baseline is replaced by eight percent of the matching 2024 census total, and the people count is kept at or below the township population. When the academic risk band is high or severe and that scaled count is still zero, the count is 55 percent of the baseline for a high band and 85 percent of the baseline for a severe band. Shelter, food, water, priority, and the 1,000-person limit are then applied to the counts from the source that was used.
+
+3.5  Resource Allocation and Planning Ratios
+
+Resource allocation turns a help estimate into a township plan. It does not retrain the flood classifier. For each township that meets the caller’s minimum assistance priority, and that has a positive people count or a positive help flag, the service reads the expected people, expected households, three-day food rations, shelter kits, and drinking-water litres from Section 3.4. Those five figures are the inputs of the planning ratios.
+
+The ratios are fixed multipliers, rounded to whole units. Rice bags equal the three-day food rations divided by three. Canned fish equals half a can per expected household. Blankets equal the shelter kits, one blanket per kit. Water dippers equal the drinking-water litres divided by 15. Oil bottles equal those litres divided by 40. T-shirts equal 0.4 per expected person, and men’s longyi and women’s longyi each equal 0.3 per expected person. Fund equals 2,500 Myanmar kyat per expected person. A line with a zero quantity is omitted. A learned stock-keeping model may replace these multipliers when its file and metadata are both present and marked allocation-v3. That file is absent from this tree, so the plan uses the multipliers above and records the version name allocation-rules-fallback.
+
+Townships are ordered within a depot by flood probability, then by expected affected people, then by the amount of requested stock the depot cannot cover. The two depots are Bago in the east and Pyay in the west. When the caller leaves the depot on automatic, a township is assigned to the nearer depot. Stock is then given out in that order. For each line, the allocated quantity is the smaller of the requested quantity and the quantity still remaining at the depot. What is not covered is kept as a shortage for that depot. Affected people on the plan row are also split into male and female by the township’s census sex ratio, for display. The split does not change the ratios above.
+
+Stops on a delivery round are township centroids. They are ordered from the depot, and a round holds at most eight stops before the next round begins. The path is built on a flood-aware graph of those stops and back to the depot. When that corridor is blocked, the plan keeps the flood-aware line and records the block. When the corridor is clear, the same waypoints are sent to OSRM for a driving path. If OSRM does not return a road, the plan keeps a straight line through the centroids. The stored method name records which line was used. The line is an illustration of order and distance. It is not a surveyed site route.
+
+The plan is saved as a draft. Confirmation checks that the depot store has been verified and that the allocated quantities are still on hand, then writes an outward stock movement for each allocated line. Until that confirmation, recognition counts and help figures do not by themselves remove stock.
+
+3.6  Application Services and External Data Clients
+
+The HTTP service is a FastAPI application. Its description states that the service is an academic flood-risk prototype and is not an operational warning desk. Separate routers cover health, hydrology, prediction, allocation, inventory, operations, and a replay of archived days. At startup the process opens the operational database and ensures a demonstration stock so the inventory screen is not empty. A score is refused when the model file or the JSON metadata is missing, or when the artifact has no probability method. The service returns an unavailable-model error in that case. It does not invent a probability from an untrained default.
+
+External clients fill values the local table does not already hold for a live day. Open-Meteo supplies rainfall. GloFAS modeled discharge is read through the Open-Meteo flood interface. NASA POWER supplies retrospective temperature, humidity, and wind for the training join and for historical charts. OpenTopography supplies Copernicus GLO-30 elevation for the selected point. That elevation is shown as terrain context. It includes canopy and buildings, and it is not one of the fifteen model inputs. Driving geometry, when the public routing service answers, comes from OSRM. If that call does not return a road path, the allocation code can keep a flood-aware corridor or a straight-line fallback. Stops on those routes are township centroids. Keys for services that require them stay in the environment. They are not written into source listings or API responses.
+
+3.7  Risk Scoring and Alert Policy
+
+Beside the learned flood probability, the service computes an academic risk level with a documented heuristic. The heuristic is not a third trained model. Rainfall in millimetres, modeled discharge in cubic metres per second, and the flood probability p are combined as
+
+R = min( 100, 1.25 × rainfall + 0.04 × discharge + 10 × p ).
+
+A negative rainfall, discharge, or probability contributes nothing. The result is limited to the range from 0 to 100 and rounded to two decimal places. The bands on R are low below 25, moderate below 50, high below 75, and severe from 75.
+
+A separate display band groups the probability itself: low below 0.25, moderate below 0.50, high below 0.75, and very high from 0.75. The very-high band is drawn with the severe colour. These colour bands explain the map. They are not the classifier’s decision threshold. Across several days, the chance of at least one flood day is one minus the product of one minus each day’s probability. A day with no probability is left out of that product. It is not treated as a dry day.
+
+Days the heuristic treats as high or severe can be written as in-app prototype alerts. The stored text names the township, the date, and the level, and it states that the result uses Open-Meteo and GloFAS and is not an operational warning. The same place, time, and level are kept once. The prediction and outlook responses in this tree set the alert flag to false and do not call that writer, so a high score on those routes does not by itself insert a row. There is no path from this application to a public siren, a short message, or an official bulletin. The service description states that the system is an academic flood-risk prototype and is not for operational warnings.
+
+3.8  Proposed System Workflow
+
+The workflow has three phases. In the first, the daily table is validated and the features are rebuilt without future rows and without impact columns. In the second, the pipelines are fit on the training dates, the thresholds are frozen on validation, and the artifacts are written to disk. In the third, FastAPI loads each artifact once, builds the live feature row for a selected township and date from forecast and recent observations, and the React client draws only what the service returns. Figure 1 shows that path. Census, elevation, inventory photographs, and route ordering stay off the arrow that enters the flood model.
+
+In the first phase the validated daily file is the source. Rows are checked for a binary flood flag, a unique township and date, usable coordinates, and non-negative rainfall and discharge. Features are then rebuilt inside each township. A rainfall window uses the current day and earlier days only, and it is kept only when the window is complete. Discharge is shifted back by one day before it is used. Household counts and affected-people counts stay out of the feature list. The fifteen names in Section 3.3 are the columns that leave this phase.
+
+In the second phase the histogram candidates are fit on the training dates. One candidate is chosen by validation average precision. The isotonic calibrator and the F1 threshold are fit on the validation block, and the test block is scored only after that choice is frozen. The logistic pipeline is fit on the same dates and saved beside the served file. Both the model and its metadata are written to disk. The service does not refit them when a user opens the map. The help model and the stock-keeping model are separate files. They are loaded only when those files are present, and they are absent from this tree.
+
+In the third phase the API loads the flood artifact once and keeps it for later requests. A missing file, or a file with no probability method, is returned as an unavailable model. For a selected township and date the service assembles the same fifteen names from Open-Meteo rainfall, GloFAS modeled discharge, NASA meteorology where a value exists, and the recent days needed for the trailing windows. The flood class is positive when the calibrated probability meets the saved threshold. The academic risk score in Section 3.7 is computed beside that probability. It is not an extra input to the classifier. The React screens request those responses and draw the map, the plan, and the stock list from them. They do not recompute the flood class in the browser.
+
+Census figures, Copernicus elevation, inventory photographs, and the ordering of delivery stops are read for their own screens. None of them is appended to the fifteen flood features. A change in those collections can change the context a user sees without changing the columns the histogram model receives.
+
+Figure 1. HydroFlow V2 data and inference flow. Side collections are context. They are not flood-model features.
+
+3.9  Inventory Recognition
+
+Inventory recognition counts relief goods that are visible in a photograph or a short video. It is a detection task, kept separate from the flood classifier and from the humanitarian help model. The user chooses one goods class. The four classes that can be scanned are foods, clothing, kitchenware, and utilities. Fund is typed in Myanmar kyat. It has no photographs and no detector.
+
+Each class is a list of item codes, and those codes are the names the detector is expected to return. Foods are rice, oil, and canned fish. Clothing is a T-shirt, a men’s longyi, and a women’s longyi. Kitchenware is a bowl, a knife, a mug, a spoon, soap, a water dipper, a plate, and a pot. Utilities are a bed net, a blanket, a towel, and a box. A detector name that does not match the catalog is mapped before it is counted: can is read as canned fish, and dipper or cup is read as water dipper. A box whose code is not in the chosen class is left out of the count.
+
+The detector belongs to the one-stage family. A separate model is trained for each of the four classes on that class’s own photographs. The training run starts from YOLOv8m weights. When a single later YOLO11s file has been placed in the model directory, every class uses that one file. Until then, the service loads the weights of the class the user selected. A box is kept when its confidence is at least 0.35. In a photograph, the quantity of an item is the number of kept boxes of that item code, and the confidence shown beside the quantity is the mean of those box scores.
+
+A video is read frame by frame, and at most 900 frames are used. The same detector follows each object from frame to frame with ByteTrack. One tracked object is counted once, so later frames of the same object do not raise the quantity. The confidence of a track is the mean of its frame scores, and the confidence of an item is the mean of its tracks.
+
+The list returned to the screen is for review. Stock on hand is unchanged when detection finishes. The user confirms the quantities, and only that confirmation writes a stock entry for the matching item. A photograph larger than 12 megabytes, or a video larger than 200 megabytes, is refused. If the weights for the chosen class are missing, the service reports that the detector is not installed and does not invent a count.
+
+3.10  Relief, Census, and Inventory Data Preparation
+
+The daily flood table is validated before features are built. Validation checks the schema, the binary flood flag, duplicate township-date keys, coordinates inside valid ranges, and non-negative rainfall and discharge. Invalid dates, non-binary labels, and missing required fields are rejected. The approved daily file is the source. The processed copy used for training is data/processed/validated_daily.csv. The label column remains the relief flag. Rolling rainfall and lagged discharge are rebuilt inside the training script. The trainer does not trust precomputed rolling columns that may already sit in a source workbook.
+
+The 2024 Bago census extract supplies population, household counts, and the age and dwelling context the allocation screen can show. Age groups are published for the region and the districts. They are not a column of the flood model. Census figures enter the assistance illustration only when a relief baseline for people or households is empty, and then only as the eight-percent scale described in Section 3.4.
+
+Inventory images are prepared separately for each detector. Foods cover rice, oil, and canned fish. Clothing covers T-shirts, men’s longyi, and women’s longyi. Kitchenware covers bowl, knife, mug, spoon, soap, water dipper, plate, and pot. Utilities cover bed net, blanket, towel, and box. The catalog class fund is entered by hand in Myanmar kyat and has no detector. Class names in each image set are aligned to the item codes the scan screen expects, so a confirmed box can be written to the matching stock row.
+
+3.11  Application Database and Processed Data Store
+
+Two kinds of storage are kept apart. Model files, the validated daily table, the split assignment, the census extract, and the offline hydrology cache stay on the filesystem. The API reads ml/models/bago_flood_model.joblib and bago_flood_model_metadata.json by path. An environment setting can point the service at another artifact path. Those files are not inserted into the application database. A change to the model is a change of files, followed by a reload of the process.
+
+The application database holds operational records: locations, allocation plans, alerts, and inventory rows. Local development uses SQLite through the default database URL. The Docker stack uses PostgreSQL, from the PostGIS 16 image, for the same role. Saved route geometry is stored as GeoJSON text. A second SQLite file, data/offline/flood_sources.sqlite, can hold merged hydrology for hindcast dates so the map can read stored rainfall and discharge without a live call. Source tables and detector weights remain on disk beside that database.
+
+Lookups are by township and by date. The database answers those lookups and keeps the rows the interface writes, including confirmed stock and a selected delivery plan. The flood decision remains a classifier over the fifteen numeric columns in Table 3.1.
+
+3.12  Multi-Source Hydrometeorological Inputs
+
+No single archive supplies every column. Rainfall in the training table is Open-Meteo reanalysis already stored on the validated daily file. Discharge is GloFAS river discharge stored from the Open-Meteo flood interface. GloFAS discharge is a modeled field from a hydrological chain. It is not a reading from a local staff gauge [7]. Humidity is NASA POWER RH2M. Temperature and wind are NASA POWER T2M and WS2M. Each source is joined on township and date, and the feature names in Table 3.1 are the names the classifier expects.
+
+For a live outlook the feature builder assembles the same fifteen names. Where a retrospective NASA value exists it is preferred for temperature, humidity, and wind. Short gaps in the local hydrology series can be carried forward, as Section 3.3 describes. The screen remains a prototype view of that assembled row.
+
+Elevation from Copernicus GLO-30 is requested for the selected point and shown as terrain context. The 2024 census extract is requested as population, age, and dwelling context. Neither source is appended to the fifteen flood features. A map layer can therefore change without changing the columns the histogram model receives.
+
+3.13  Claim Limits
+
+Claim limits are part of the method. The risk bands in Section 3.14 come from a documented formula. They are a display rule beside the classifier. Assistance priority taken from households and affected people uses the retrospective score
+
+    score = households + affected people / 5.                    (3.9)
+
+The bands are none at zero, low above zero, moderate from 100, high from 500, and severe from 2,000. That score uses counts available after an event. It is not a learned forecast of severity. Agreement with the relief flag on the held-out block is a description of this label, not an operational probability of inundation.
+
+3.14  Request Handling and Response Generation
+
+A prediction request names a township and a date. The service builds the fifteen features, checks that each required name is present, and calls the probability method on the loaded histogram model. The flood class is positive when the calibrated probability is at least the saved threshold of 0.05. The response carries the probability, the class, the threshold, and the model version read from the metadata. The version name on the served file is hist_gradient_boosting.
+
+The academic risk score is a bounded sum,
+
+    R = min(100, 1.25 · rainfall_mm + 0.04 · discharge + 10 · p).  (3.10)
+
+Rainfall is in millimetres and discharge is in cubic metres per second. Bands on R are low below 25, moderate below 50, high below 75, and severe from 75. A separate display band groups the probability itself: low below 0.25, moderate below 0.50, high below 0.75, and very high from 0.75. The very-high band is drawn with the severe colour. These bands explain the colour on the map. They are not the decision threshold of 0.05.
+
+An assistance request checks sources in a fixed order. It prefers a relief-workbook impact for that township and date when one exists. Otherwise it reads an archived simulation day when that day is marked as a flood day. Otherwise it scales a relief baseline by the flood probability. When the relief baseline for people or for households is empty, the scale uses eight percent of the matching 2024 census total. The headcount is capped at the township population. If the risk band is high or severe and the scaled count is still zero while a baseline exists, the fallback uses 55 percent of the baseline for a high band and 85 percent for a severe band. Shelter kits equal the expected households, because the planning ratio is one kit per household. Three-day food rations equal three times the expected people. Drinking water equals 15 litres per person per day across three days, which is 45 litres per person for the package [13]. Assistance priority applies equation (3.9) to those expected counts. A learned two-stage help artifact is used only when that file is present on disk. It is absent from this tree, so the screens follow the workbook, archive, or scaled-baseline path, and the response version string names which path was used.
+
+Inventory detection accepts an image or a video, runs the detector for the requested goods class, and returns boxes. The accepted classes are clothing, foods, kitchenware, and utilities. Stock changes only after the user confirms those boxes. Fund amounts are typed in. They are not detected from a photograph. Allocation can then compare route options for the township centroids and store the selected plan, including the route method that produced the line. The recorded methods are an OSRM road path, a flood-aware corridor, and a straight-line fallback.
+
+References cited in this chapter
+
+[4] Friedman, J.H., 2001. Greedy function approximation: a gradient boosting machine. Annals of Statistics, 29(5), pp.1189–1232.
+
+[5] Pedregosa, F. et al., 2011. Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, pp.2825–2830.
+
+[7] Harrigan, S. et al., 2020. GloFAS-ERA5 operational global river discharge reanalysis 1979–present. Earth System Science Data, 12, pp.2043–2060.
+
+[11] Kaufman, S., Rosset, S., Perlich, C. and Stitelman, O., 2012. Leakage in data mining: Formulation, detection, and avoidance. ACM Transactions on Knowledge Discovery from Data, 6(4), pp.1–21.
+
+[12] Saito, T. and Rehmsmeier, M., 2015. The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets. PLoS ONE, 10(3), e0118432.
+
+[13] Sphere Association, 2018. The Sphere Handbook: Humanitarian Charter and Minimum Standards in Humanitarian Response. 4th ed. Geneva: Sphere Association.
+
+[16] Cox, D.R., 1958. The regression analysis of binary sequences. Journal of the Royal Statistical Society: Series B, 20(2), pp.215–242.
+
+[17] Fan, R.E., Chang, K.W., Hsieh, C.J., Wang, X.R. and Lin, C.J., 2008. LIBLINEAR: A library for large linear classification. Journal of Machine Learning Research, 9, pp.1871–1874.
+
+[18] He, H. and Garcia, E.A., 2009. Learning from imbalanced data. IEEE Transactions on Knowledge and Data Engineering, 21(9), pp.1263–1284.
+
+[19] Ke, G. et al., 2017. LightGBM: A highly efficient gradient boosting decision tree. Advances in Neural Information Processing Systems, 30.
+
+[20] Niculescu-Mizil, A. and Caruana, R., 2005. Predicting good probabilities with supervised learning. In: Proceedings of the 22nd International Conference on Machine Learning, pp.625–632.
+
+[21] Zadrozny, B. and Elkan, C., 2002. Transforming classifier scores into accurate multiclass probability estimates. In: Proceedings of the Eighth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp.694–699.

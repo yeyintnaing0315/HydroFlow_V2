@@ -1,0 +1,96 @@
+{
+  "labels_found": true,
+  "label_file": "D:\\Ai_Project\\HydroFlow_V2\\data\\processed\\validated_daily.csv",
+  "split_file": "D:\\Ai_Project\\HydroFlow_V1\\data\\processed\\split_assignments.csv",
+  "joblib_replaced": false,
+  "baseline_pr_auc": 0.008497032022443982,
+  "test_pr_auc": 0.006465857829494193,
+  "candidate": "hgb-depth4",
+  "features": [
+    "rainfall_1d_mm",
+    "rainfall_3d_mm",
+    "rainfall_7d_mm",
+    "rainfall_14d_mm",
+    "rainfall_30d_mm",
+    "temperature_c",
+    "relative_humidity_pct",
+    "wind_speed_m_s",
+    "latitude",
+    "longitude",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "discharge_lag_1d_m3s",
+    "discharge_lag_3d_mean_m3s",
+    "river_distance_km",
+    "rainfall_upstream_1d_mm"
+  ],
+  "upstream_fallback_rows": 7304,
+  "upstream_note": "rainfall_upstream_1d_mm is the mean of same-basin townships at least 0.15 degrees north. Rows with no such neighbor use centroid rainfall.",
+  "missing_nasa_cache": [],
+  "missing_rasters": [
+    "JRC global river flood hazard v2.1",
+    "Copernicus DEM GLO-30 or FABDEM",
+    "MERIT Hydro",
+    "ESA WorldCover",
+    "HydroBASINS"
+  ],
+  "rows_with_complete_features": 39534,
+  "validation_pr_auc_by_candidate": {
+    "hgb-depth3": 0.051650621740350414,
+    "hgb-depth3-balanced": 0.02148858147221472,
+    "hgb-depth4": 0.05258733252294441
+  },
+  "validation": {
+    "rows": 8030,
+    "flood_rows": 167,
+    "threshold": 0.05,
+    "accuracy": 0.858530510585305,
+    "precision": 0.05834092980856882,
+    "recall": 0.38323353293413176,
+    "f1": 0.10126582278481013,
+    "roc_auc": 0.81267263260583,
+    "pr_auc": 0.05533755063890837,
+    "brier": 0.019762364049365287,
+    "confusion_matrix_tn_fp_fn_tp": [
+      6830,
+      1033,
+      103,
+      64
+    ]
+  },
+  "test": {
+    "rows": 8052,
+    "flood_rows": 11,
+    "threshold": 0.05,
+    "accuracy": 0.8694734227521113,
+    "precision": 0.007575757575757576,
+    "recall": 0.7272727272727273,
+    "f1": 0.01499531396438613,
+    "roc_auc": 0.8648517258142927,
+    "pr_auc": 0.006465857829494193,
+    "brier": 0.002297131686023501,
+    "confusion_matrix_tn_fp_fn_tp": [
+      6993,
+      1048,
+      3,
+      8
+    ]
+  },
+  "test_band_precision_recall": {
+    "0.25": {
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "0.50": {
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "0.75": {
+      "precision": 0.0,
+      "recall": 0.0
+    }
+  },
+  "lead_1_test_pr_auc": 0.005344848635970733,
+  "lead_3_test_pr_auc": 0.004663833699614851,
+  "test_used_for_training_calibration_or_threshold": false
+}

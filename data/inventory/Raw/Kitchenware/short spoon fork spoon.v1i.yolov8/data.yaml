@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['fork', 'short-spoon', 'spoon']
+
+roboflow:
+  workspace: 671310171
+  project: short-spoon-fork-spoon
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/671310171/short-spoon-fork-spoon/dataset/1

@@ -1,0 +1,41 @@
+{
+  "version": "baseline-logistic-v2-served",
+  "selected_model": "logistic_regression",
+  "role": "secondary",
+  "primary_model": "hist_gradient_boosting",
+  "features": [
+    "rainfall_1d_mm",
+    "rainfall_3d_mm",
+    "rainfall_7d_mm",
+    "rainfall_14d_mm",
+    "rainfall_30d_mm",
+    "temperature_c",
+    "relative_humidity_pct",
+    "wind_speed_m_s",
+    "latitude",
+    "longitude",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "discharge_lag_1d_m3s",
+    "discharge_lag_3d_mean_m3s"
+  ],
+  "decision_threshold": 0.87,
+  "test": {
+    "rows": 8052,
+    "flood_rows": 11,
+    "threshold": 0.87,
+    "accuracy": 0.948956780923994,
+    "precision": 0.0024875621890547263,
+    "recall": 0.09090909090909091,
+    "f1": 0.004842615012106538,
+    "roc_auc": 0.7949712270070435,
+    "pr_auc": 0.006294588398180723,
+    "confusion_matrix_tn_fp_fn_tp": [
+      7640,
+      401,
+      10,
+      1
+    ]
+  },
+  "best_model": "hist_gradient_boosting"
+}

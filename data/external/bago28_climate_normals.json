@@ -1,0 +1,1800 @@
+{
+  "bago": {
+    "1": {
+      "rainfall_30d_mm": 1.5000000000000284,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.231
+    },
+    "2": {
+      "rainfall_30d_mm": 0.6,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.23
+    },
+    "3": {
+      "rainfall_30d_mm": 0.40000000000002756,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.23
+    },
+    "4": {
+      "rainfall_30d_mm": 10.35000000000003,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.232
+    },
+    "5": {
+      "rainfall_30d_mm": 115.35000000000002,
+      "discharge_lag_1d_m3s": 0.19,
+      "soil_moisture_0_to_7cm": 0.409
+    },
+    "6": {
+      "rainfall_30d_mm": 424.90000000000003,
+      "discharge_lag_1d_m3s": 3.94,
+      "soil_moisture_0_to_7cm": 0.466
+    },
+    "7": {
+      "rainfall_30d_mm": 525.3000000000001,
+      "discharge_lag_1d_m3s": 4.97,
+      "soil_moisture_0_to_7cm": 0.466
+    },
+    "8": {
+      "rainfall_30d_mm": 536.9000000000001,
+      "discharge_lag_1d_m3s": 4.865,
+      "soil_moisture_0_to_7cm": 0.466
+    },
+    "9": {
+      "rainfall_30d_mm": 442.55,
+      "discharge_lag_1d_m3s": 3.295,
+      "soil_moisture_0_to_7cm": 0.464
+    },
+    "10": {
+      "rainfall_30d_mm": 279.5,
+      "discharge_lag_1d_m3s": 0.975,
+      "soil_moisture_0_to_7cm": 0.439
+    },
+    "11": {
+      "rainfall_30d_mm": 94.55000000000003,
+      "discharge_lag_1d_m3s": 0.05,
+      "soil_moisture_0_to_7cm": 0.303
+    },
+    "12": {
+      "rainfall_30d_mm": 4.300000000000032,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.233
+    }
+  },
+  "daik_u": {
+    "1": {
+      "rainfall_30d_mm": 2.0999999999999996,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.185
+    },
+    "2": {
+      "rainfall_30d_mm": 0.6,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.172
+    },
+    "3": {
+      "rainfall_30d_mm": 0.45,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.176
+    },
+    "4": {
+      "rainfall_30d_mm": 19.2,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.202
+    },
+    "5": {
+      "rainfall_30d_mm": 132.45,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.416
+    },
+    "6": {
+      "rainfall_30d_mm": 458.70000000000005,
+      "discharge_lag_1d_m3s": 2.39,
+      "soil_moisture_0_to_7cm": 0.447
+    },
+    "7": {
+      "rainfall_30d_mm": 569.8000000000001,
+      "discharge_lag_1d_m3s": 4.005,
+      "soil_moisture_0_to_7cm": 0.448
+    },
+    "8": {
+      "rainfall_30d_mm": 594.55,
+      "discharge_lag_1d_m3s": 4.38,
+      "soil_moisture_0_to_7cm": 0.448
+    },
+    "9": {
+      "rainfall_30d_mm": 477.1,
+      "discharge_lag_1d_m3s": 2.66,
+      "soil_moisture_0_to_7cm": 0.445
+    },
+    "10": {
+      "rainfall_30d_mm": 247.14999999999998,
+      "discharge_lag_1d_m3s": 0.805,
+      "soil_moisture_0_to_7cm": 0.432
+    },
+    "11": {
+      "rainfall_30d_mm": 74.8,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.311
+    },
+    "12": {
+      "rainfall_30d_mm": 5.2,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.2255
+    }
+  },
+  "gyobingauk": {
+    "1": {
+      "rainfall_30d_mm": 0.3000000000000284,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.246
+    },
+    "2": {
+      "rainfall_30d_mm": 0.1999999999999858,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.245
+    },
+    "3": {
+      "rainfall_30d_mm": 0.1999999999999999,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.245
+    },
+    "4": {
+      "rainfall_30d_mm": 3.4999999999999996,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.246
+    },
+    "5": {
+      "rainfall_30d_mm": 74.15,
+      "discharge_lag_1d_m3s": 0.22,
+      "soil_moisture_0_to_7cm": 0.374
+    },
+    "6": {
+      "rainfall_30d_mm": 321.20000000000005,
+      "discharge_lag_1d_m3s": 14.05,
+      "soil_moisture_0_to_7cm": 0.471
+    },
+    "7": {
+      "rainfall_30d_mm": 408.75,
+      "discharge_lag_1d_m3s": 45.03,
+      "soil_moisture_0_to_7cm": 0.472
+    },
+    "8": {
+      "rainfall_30d_mm": 417.35,
+      "discharge_lag_1d_m3s": 51.54,
+      "soil_moisture_0_to_7cm": 0.472
+    },
+    "9": {
+      "rainfall_30d_mm": 342.20000000000005,
+      "discharge_lag_1d_m3s": 33.91,
+      "soil_moisture_0_to_7cm": 0.47
+    },
+    "10": {
+      "rainfall_30d_mm": 219.20000000000002,
+      "discharge_lag_1d_m3s": 14.05,
+      "soil_moisture_0_to_7cm": 0.451
+    },
+    "11": {
+      "rainfall_30d_mm": 93.35000000000002,
+      "discharge_lag_1d_m3s": 1.335,
+      "soil_moisture_0_to_7cm": 0.32
+    },
+    "12": {
+      "rainfall_30d_mm": 6.100000000000028,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.25
+    }
+  },
+  "htantabin": {
+    "1": {
+      "rainfall_30d_mm": 1.4999999999999931,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.134
+    },
+    "2": {
+      "rainfall_30d_mm": 1.1,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.123
+    },
+    "3": {
+      "rainfall_30d_mm": 0.6,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.12
+    },
+    "4": {
+      "rainfall_30d_mm": 8.8,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.13
+    },
+    "5": {
+      "rainfall_30d_mm": 112.04999999999998,
+      "discharge_lag_1d_m3s": 0.12,
+      "soil_moisture_0_to_7cm": 0.332
+    },
+    "6": {
+      "rainfall_30d_mm": 343.70000000000005,
+      "discharge_lag_1d_m3s": 7.550000000000001,
+      "soil_moisture_0_to_7cm": 0.416
+    },
+    "7": {
+      "rainfall_30d_mm": 449.3,
+      "discharge_lag_1d_m3s": 16.845,
+      "soil_moisture_0_to_7cm": 0.423
+    },
+    "8": {
+      "rainfall_30d_mm": 495.45,
+      "discharge_lag_1d_m3s": 19.0,
+      "soil_moisture_0_to_7cm": 0.423
+    },
+    "9": {
+      "rainfall_30d_mm": 382.5,
+      "discharge_lag_1d_m3s": 13.355,
+      "soil_moisture_0_to_7cm": 0.416
+    },
+    "10": {
+      "rainfall_30d_mm": 209.15,
+      "discharge_lag_1d_m3s": 5.535,
+      "soil_moisture_0_to_7cm": 0.385
+    },
+    "11": {
+      "rainfall_30d_mm": 66.35000000000001,
+      "discharge_lag_1d_m3s": 0.25,
+      "soil_moisture_0_to_7cm": 0.2535
+    },
+    "12": {
+      "rainfall_30d_mm": 5.3999999999999995,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.155
+    }
+  },
+  "kawa": {
+    "1": {
+      "rainfall_30d_mm": 0.7,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "2": {
+      "rainfall_30d_mm": 0.3000000000000036,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.126
+    },
+    "3": {
+      "rainfall_30d_mm": 0.6,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.123
+    },
+    "4": {
+      "rainfall_30d_mm": 10.7,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.131
+    },
+    "5": {
+      "rainfall_30d_mm": 132.3,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.374
+    },
+    "6": {
+      "rainfall_30d_mm": 466.6,
+      "discharge_lag_1d_m3s": 11.27,
+      "soil_moisture_0_to_7cm": 0.424
+    },
+    "7": {
+      "rainfall_30d_mm": 547.1500000000001,
+      "discharge_lag_1d_m3s": 13.91,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "8": {
+      "rainfall_30d_mm": 575.6999999999999,
+      "discharge_lag_1d_m3s": 14.03,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "9": {
+      "rainfall_30d_mm": 477.9,
+      "discharge_lag_1d_m3s": 10.415,
+      "soil_moisture_0_to_7cm": 0.422
+    },
+    "10": {
+      "rainfall_30d_mm": 273.6,
+      "discharge_lag_1d_m3s": 3.255,
+      "soil_moisture_0_to_7cm": 0.3905
+    },
+    "11": {
+      "rainfall_30d_mm": 74.85,
+      "discharge_lag_1d_m3s": 0.09,
+      "soil_moisture_0_to_7cm": 0.266
+    },
+    "12": {
+      "rainfall_30d_mm": 3.6999999999999997,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.168
+    }
+  },
+  "kyaukkyi": {
+    "1": {
+      "rainfall_30d_mm": 1.8999999999999857,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.19
+    },
+    "2": {
+      "rainfall_30d_mm": 0.4999999999999998,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.172
+    },
+    "3": {
+      "rainfall_30d_mm": 0.2999999999999716,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.169
+    },
+    "4": {
+      "rainfall_30d_mm": 2.8,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.1895
+    },
+    "5": {
+      "rainfall_30d_mm": 113.39999999999998,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.415
+    },
+    "6": {
+      "rainfall_30d_mm": 436.65,
+      "discharge_lag_1d_m3s": 1.38,
+      "soil_moisture_0_to_7cm": 0.442
+    },
+    "7": {
+      "rainfall_30d_mm": 616.8,
+      "discharge_lag_1d_m3s": 4.9,
+      "soil_moisture_0_to_7cm": 0.443
+    },
+    "8": {
+      "rainfall_30d_mm": 751.6500000000001,
+      "discharge_lag_1d_m3s": 5.41,
+      "soil_moisture_0_to_7cm": 0.443
+    },
+    "9": {
+      "rainfall_30d_mm": 599.15,
+      "discharge_lag_1d_m3s": 3.505,
+      "soil_moisture_0_to_7cm": 0.441
+    },
+    "10": {
+      "rainfall_30d_mm": 476.7,
+      "discharge_lag_1d_m3s": 1.605,
+      "soil_moisture_0_to_7cm": 0.434
+    },
+    "11": {
+      "rainfall_30d_mm": 153.8,
+      "discharge_lag_1d_m3s": 0.12,
+      "soil_moisture_0_to_7cm": 0.3725
+    },
+    "12": {
+      "rainfall_30d_mm": 15.299999999999972,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.252
+    }
+  },
+  "kyauktaga": {
+    "1": {
+      "rainfall_30d_mm": 1.7999999999999856,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.276
+    },
+    "2": {
+      "rainfall_30d_mm": 1.199999999999999,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.266
+    },
+    "3": {
+      "rainfall_30d_mm": 0.5,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.263
+    },
+    "4": {
+      "rainfall_30d_mm": 15.9,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.285
+    },
+    "5": {
+      "rainfall_30d_mm": 132.4,
+      "discharge_lag_1d_m3s": 0.22,
+      "soil_moisture_0_to_7cm": 0.4635
+    },
+    "6": {
+      "rainfall_30d_mm": 398.4,
+      "discharge_lag_1d_m3s": 19.205,
+      "soil_moisture_0_to_7cm": 0.485
+    },
+    "7": {
+      "rainfall_30d_mm": 499.85,
+      "discharge_lag_1d_m3s": 30.735,
+      "soil_moisture_0_to_7cm": 0.485
+    },
+    "8": {
+      "rainfall_30d_mm": 523.95,
+      "discharge_lag_1d_m3s": 31.619999999999997,
+      "soil_moisture_0_to_7cm": 0.485
+    },
+    "9": {
+      "rainfall_30d_mm": 435.55,
+      "discharge_lag_1d_m3s": 17.39,
+      "soil_moisture_0_to_7cm": 0.483
+    },
+    "10": {
+      "rainfall_30d_mm": 270.5,
+      "discharge_lag_1d_m3s": 4.22,
+      "soil_moisture_0_to_7cm": 0.472
+    },
+    "11": {
+      "rainfall_30d_mm": 98.55,
+      "discharge_lag_1d_m3s": 0.12,
+      "soil_moisture_0_to_7cm": 0.362
+    },
+    "12": {
+      "rainfall_30d_mm": 11.799999999999999,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.294
+    }
+  },
+  "letpadan": {
+    "1": {
+      "rainfall_30d_mm": 1.15,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.178
+    },
+    "2": {
+      "rainfall_30d_mm": 0.1,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "3": {
+      "rainfall_30d_mm": 0.0,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.169
+    },
+    "4": {
+      "rainfall_30d_mm": 5.0,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.186
+    },
+    "5": {
+      "rainfall_30d_mm": 77.55000000000001,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.373
+    },
+    "6": {
+      "rainfall_30d_mm": 347.95000000000005,
+      "discharge_lag_1d_m3s": 4.92,
+      "soil_moisture_0_to_7cm": 0.444
+    },
+    "7": {
+      "rainfall_30d_mm": 434.25,
+      "discharge_lag_1d_m3s": 14.795,
+      "soil_moisture_0_to_7cm": 0.447
+    },
+    "8": {
+      "rainfall_30d_mm": 438.85,
+      "discharge_lag_1d_m3s": 16.14,
+      "soil_moisture_0_to_7cm": 0.447
+    },
+    "9": {
+      "rainfall_30d_mm": 350.4,
+      "discharge_lag_1d_m3s": 10.004999999999999,
+      "soil_moisture_0_to_7cm": 0.443
+    },
+    "10": {
+      "rainfall_30d_mm": 224.60000000000002,
+      "discharge_lag_1d_m3s": 3.535,
+      "soil_moisture_0_to_7cm": 0.432
+    },
+    "11": {
+      "rainfall_30d_mm": 98.35,
+      "discharge_lag_1d_m3s": 0.175,
+      "soil_moisture_0_to_7cm": 0.3345
+    },
+    "12": {
+      "rainfall_30d_mm": 6.1,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.225
+    }
+  },
+  "madauk": {
+    "1": {
+      "rainfall_30d_mm": 1.7349999999999999,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.44
+    },
+    "2": {
+      "rainfall_30d_mm": 0.19999999999999998,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.3
+    },
+    "3": {
+      "rainfall_30d_mm": 0.8400000000000001,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.25
+    },
+    "4": {
+      "rainfall_30d_mm": 11.98,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.28
+    },
+    "5": {
+      "rainfall_30d_mm": 83.63499999999999,
+      "discharge_lag_1d_m3s": 0.06,
+      "soil_moisture_0_to_7cm": 0.51
+    },
+    "6": {
+      "rainfall_30d_mm": 162.375,
+      "discharge_lag_1d_m3s": 2.18,
+      "soil_moisture_0_to_7cm": 0.62
+    },
+    "7": {
+      "rainfall_30d_mm": 219.32,
+      "discharge_lag_1d_m3s": 3.79,
+      "soil_moisture_0_to_7cm": 0.73
+    },
+    "8": {
+      "rainfall_30d_mm": 266.355,
+      "discharge_lag_1d_m3s": 4.13,
+      "soil_moisture_0_to_7cm": 0.84
+    },
+    "9": {
+      "rainfall_30d_mm": 202.40000000000003,
+      "discharge_lag_1d_m3s": 2.4450000000000003,
+      "soil_moisture_0_to_7cm": 0.85
+    },
+    "10": {
+      "rainfall_30d_mm": 152.41,
+      "discharge_lag_1d_m3s": 0.77,
+      "soil_moisture_0_to_7cm": 0.82
+    },
+    "11": {
+      "rainfall_30d_mm": 51.59,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.7
+    },
+    "12": {
+      "rainfall_30d_mm": 5.86,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.55
+    }
+  },
+  "minhla": {
+    "1": {
+      "rainfall_30d_mm": 1.2600000000000071,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.19
+    },
+    "2": {
+      "rainfall_30d_mm": 0.12,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.15
+    },
+    "3": {
+      "rainfall_30d_mm": 0.5350000000000003,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.12
+    },
+    "4": {
+      "rainfall_30d_mm": 4.130000000000001,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.16
+    },
+    "5": {
+      "rainfall_30d_mm": 28.630000000000003,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.38
+    },
+    "6": {
+      "rainfall_30d_mm": 69.64,
+      "discharge_lag_1d_m3s": 4.92,
+      "soil_moisture_0_to_7cm": 0.5
+    },
+    "7": {
+      "rainfall_30d_mm": 132.41,
+      "discharge_lag_1d_m3s": 14.795,
+      "soil_moisture_0_to_7cm": 0.58
+    },
+    "8": {
+      "rainfall_30d_mm": 130.47000000000003,
+      "discharge_lag_1d_m3s": 16.14,
+      "soil_moisture_0_to_7cm": 0.64
+    },
+    "9": {
+      "rainfall_30d_mm": 84.83000000000001,
+      "discharge_lag_1d_m3s": 10.004999999999999,
+      "soil_moisture_0_to_7cm": 0.59
+    },
+    "10": {
+      "rainfall_30d_mm": 67.10499999999999,
+      "discharge_lag_1d_m3s": 3.535,
+      "soil_moisture_0_to_7cm": 0.53
+    },
+    "11": {
+      "rainfall_30d_mm": 34.195,
+      "discharge_lag_1d_m3s": 0.175,
+      "soil_moisture_0_to_7cm": 0.47
+    },
+    "12": {
+      "rainfall_30d_mm": 3.7500000000000018,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.28
+    }
+  },
+  "monyo": {
+    "1": {
+      "rainfall_30d_mm": 0.10000000000001422,
+      "discharge_lag_1d_m3s": 0.08,
+      "soil_moisture_0_to_7cm": 0.13
+    },
+    "2": {
+      "rainfall_30d_mm": 0.0,
+      "discharge_lag_1d_m3s": 0.05,
+      "soil_moisture_0_to_7cm": 0.115
+    },
+    "3": {
+      "rainfall_30d_mm": 0.0,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.113
+    },
+    "4": {
+      "rainfall_30d_mm": 2.5500000000000074,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.115
+    },
+    "5": {
+      "rainfall_30d_mm": 60.000000000000014,
+      "discharge_lag_1d_m3s": 0.59,
+      "soil_moisture_0_to_7cm": 0.2805
+    },
+    "6": {
+      "rainfall_30d_mm": 289.65,
+      "discharge_lag_1d_m3s": 64.46,
+      "soil_moisture_0_to_7cm": 0.409
+    },
+    "7": {
+      "rainfall_30d_mm": 341.4,
+      "discharge_lag_1d_m3s": 170.595,
+      "soil_moisture_0_to_7cm": 0.42
+    },
+    "8": {
+      "rainfall_30d_mm": 341.3,
+      "discharge_lag_1d_m3s": 196.24,
+      "soil_moisture_0_to_7cm": 0.42
+    },
+    "9": {
+      "rainfall_30d_mm": 281.85,
+      "discharge_lag_1d_m3s": 129.62,
+      "soil_moisture_0_to_7cm": 0.414
+    },
+    "10": {
+      "rainfall_30d_mm": 202.85000000000002,
+      "discharge_lag_1d_m3s": 58.7,
+      "soil_moisture_0_to_7cm": 0.395
+    },
+    "11": {
+      "rainfall_30d_mm": 88.39999999999999,
+      "discharge_lag_1d_m3s": 6.52,
+      "soil_moisture_0_to_7cm": 0.283
+    },
+    "12": {
+      "rainfall_30d_mm": 4.400000000000015,
+      "discharge_lag_1d_m3s": 0.28,
+      "soil_moisture_0_to_7cm": 0.162
+    }
+  },
+  "nattalin": {
+    "1": {
+      "rainfall_30d_mm": 1.085,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.2
+    },
+    "2": {
+      "rainfall_30d_mm": 0.19,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.16
+    },
+    "3": {
+      "rainfall_30d_mm": 0.39,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "4": {
+      "rainfall_30d_mm": 3.27,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "5": {
+      "rainfall_30d_mm": 29.86,
+      "discharge_lag_1d_m3s": 0.22,
+      "soil_moisture_0_to_7cm": 0.4
+    },
+    "6": {
+      "rainfall_30d_mm": 65.84,
+      "discharge_lag_1d_m3s": 14.05,
+      "soil_moisture_0_to_7cm": 0.56
+    },
+    "7": {
+      "rainfall_30d_mm": 127.41499999999999,
+      "discharge_lag_1d_m3s": 45.03,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "8": {
+      "rainfall_30d_mm": 125.705,
+      "discharge_lag_1d_m3s": 51.54,
+      "soil_moisture_0_to_7cm": 0.68
+    },
+    "9": {
+      "rainfall_30d_mm": 85.725,
+      "discharge_lag_1d_m3s": 33.91,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "10": {
+      "rainfall_30d_mm": 64.97999999999999,
+      "discharge_lag_1d_m3s": 14.05,
+      "soil_moisture_0_to_7cm": 0.58
+    },
+    "11": {
+      "rainfall_30d_mm": 33.975,
+      "discharge_lag_1d_m3s": 1.335,
+      "soil_moisture_0_to_7cm": 0.5
+    },
+    "12": {
+      "rainfall_30d_mm": 3.44,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.27
+    }
+  },
+  "nyaunglebin": {
+    "1": {
+      "rainfall_30d_mm": 1.2000000000000002,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.136
+    },
+    "2": {
+      "rainfall_30d_mm": 0.0,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.124
+    },
+    "3": {
+      "rainfall_30d_mm": 0.29999999999999644,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.122
+    },
+    "4": {
+      "rainfall_30d_mm": 7.0,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.1295
+    },
+    "5": {
+      "rainfall_30d_mm": 102.19999999999999,
+      "discharge_lag_1d_m3s": 0.34,
+      "soil_moisture_0_to_7cm": 0.347
+    },
+    "6": {
+      "rainfall_30d_mm": 351.55,
+      "discharge_lag_1d_m3s": 19.775,
+      "soil_moisture_0_to_7cm": 0.421
+    },
+    "7": {
+      "rainfall_30d_mm": 461.3,
+      "discharge_lag_1d_m3s": 34.65,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "8": {
+      "rainfall_30d_mm": 512.8,
+      "discharge_lag_1d_m3s": 37.37,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "9": {
+      "rainfall_30d_mm": 404.79999999999995,
+      "discharge_lag_1d_m3s": 21.884999999999998,
+      "soil_moisture_0_to_7cm": 0.42
+    },
+    "10": {
+      "rainfall_30d_mm": 251.55,
+      "discharge_lag_1d_m3s": 6.890000000000001,
+      "soil_moisture_0_to_7cm": 0.397
+    },
+    "11": {
+      "rainfall_30d_mm": 79.19999999999999,
+      "discharge_lag_1d_m3s": 0.19,
+      "soil_moisture_0_to_7cm": 0.2835
+    },
+    "12": {
+      "rainfall_30d_mm": 5.3500000000000005,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.163
+    }
+  },
+  "okpo": {
+    "1": {
+      "rainfall_30d_mm": 0.5000000000000071,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.215
+    },
+    "2": {
+      "rainfall_30d_mm": 0.1999999999999858,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.214
+    },
+    "3": {
+      "rainfall_30d_mm": 0.2,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.214
+    },
+    "4": {
+      "rainfall_30d_mm": 4.999999999999999,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.214
+    },
+    "5": {
+      "rainfall_30d_mm": 72.65000000000003,
+      "discharge_lag_1d_m3s": 0.06,
+      "soil_moisture_0_to_7cm": 0.4025
+    },
+    "6": {
+      "rainfall_30d_mm": 316.70000000000005,
+      "discharge_lag_1d_m3s": 2.4,
+      "soil_moisture_0_to_7cm": 0.4815
+    },
+    "7": {
+      "rainfall_30d_mm": 410.6,
+      "discharge_lag_1d_m3s": 5.02,
+      "soil_moisture_0_to_7cm": 0.485
+    },
+    "8": {
+      "rainfall_30d_mm": 417.6,
+      "discharge_lag_1d_m3s": 5.555,
+      "soil_moisture_0_to_7cm": 0.484
+    },
+    "9": {
+      "rainfall_30d_mm": 336.45000000000005,
+      "discharge_lag_1d_m3s": 3.55,
+      "soil_moisture_0_to_7cm": 0.48
+    },
+    "10": {
+      "rainfall_30d_mm": 224.7,
+      "discharge_lag_1d_m3s": 1.63,
+      "soil_moisture_0_to_7cm": 0.467
+    },
+    "11": {
+      "rainfall_30d_mm": 98.60000000000001,
+      "discharge_lag_1d_m3s": 0.16,
+      "soil_moisture_0_to_7cm": 0.341
+    },
+    "12": {
+      "rainfall_30d_mm": 6.800000000000028,
+      "discharge_lag_1d_m3s": 0.01,
+      "soil_moisture_0_to_7cm": 0.228
+    }
+  },
+  "oktwin": {
+    "1": {
+      "rainfall_30d_mm": 2.55,
+      "discharge_lag_1d_m3s": 109.92,
+      "soil_moisture_0_to_7cm": 0.266
+    },
+    "2": {
+      "rainfall_30d_mm": 1.2,
+      "discharge_lag_1d_m3s": 83.53,
+      "soil_moisture_0_to_7cm": 0.257
+    },
+    "3": {
+      "rainfall_30d_mm": 0.5,
+      "discharge_lag_1d_m3s": 59.81,
+      "soil_moisture_0_to_7cm": 0.253
+    },
+    "4": {
+      "rainfall_30d_mm": 21.000000000000004,
+      "discharge_lag_1d_m3s": 55.82,
+      "soil_moisture_0_to_7cm": 0.279
+    },
+    "5": {
+      "rainfall_30d_mm": 128.65,
+      "discharge_lag_1d_m3s": 62.025000000000006,
+      "soil_moisture_0_to_7cm": 0.457
+    },
+    "6": {
+      "rainfall_30d_mm": 353.95,
+      "discharge_lag_1d_m3s": 255.155,
+      "soil_moisture_0_to_7cm": 0.483
+    },
+    "7": {
+      "rainfall_30d_mm": 420.5,
+      "discharge_lag_1d_m3s": 837.495,
+      "soil_moisture_0_to_7cm": 0.485
+    },
+    "8": {
+      "rainfall_30d_mm": 438.75000000000006,
+      "discharge_lag_1d_m3s": 1212.39,
+      "soil_moisture_0_to_7cm": 0.484
+    },
+    "9": {
+      "rainfall_30d_mm": 369.65,
+      "discharge_lag_1d_m3s": 1123.61,
+      "soil_moisture_0_to_7cm": 0.481
+    },
+    "10": {
+      "rainfall_30d_mm": 230.6,
+      "discharge_lag_1d_m3s": 779.73,
+      "soil_moisture_0_to_7cm": 0.469
+    },
+    "11": {
+      "rainfall_30d_mm": 92.64999999999999,
+      "discharge_lag_1d_m3s": 380.94,
+      "soil_moisture_0_to_7cm": 0.3585
+    },
+    "12": {
+      "rainfall_30d_mm": 13.5,
+      "discharge_lag_1d_m3s": 182.865,
+      "soil_moisture_0_to_7cm": 0.292
+    }
+  },
+  "padaung": {
+    "1": {
+      "rainfall_30d_mm": 0.78,
+      "discharge_lag_1d_m3s": 0.06,
+      "soil_moisture_0_to_7cm": 0.2
+    },
+    "2": {
+      "rainfall_30d_mm": 0.04000000000000533,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.15
+    },
+    "3": {
+      "rainfall_30d_mm": 0.19999999999999912,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.13
+    },
+    "4": {
+      "rainfall_30d_mm": 3.050000000000007,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "5": {
+      "rainfall_30d_mm": 25.420000000000005,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.375
+    },
+    "6": {
+      "rainfall_30d_mm": 66.745,
+      "discharge_lag_1d_m3s": 0.12,
+      "soil_moisture_0_to_7cm": 0.49
+    },
+    "7": {
+      "rainfall_30d_mm": 148.98000000000002,
+      "discharge_lag_1d_m3s": 1.19,
+      "soil_moisture_0_to_7cm": 0.6
+    },
+    "8": {
+      "rainfall_30d_mm": 132.95,
+      "discharge_lag_1d_m3s": 1.5,
+      "soil_moisture_0_to_7cm": 0.65
+    },
+    "9": {
+      "rainfall_30d_mm": 85.07000000000001,
+      "discharge_lag_1d_m3s": 1.3,
+      "soil_moisture_0_to_7cm": 0.59
+    },
+    "10": {
+      "rainfall_30d_mm": 61.41000000000001,
+      "discharge_lag_1d_m3s": 0.75,
+      "soil_moisture_0_to_7cm": 0.53
+    },
+    "11": {
+      "rainfall_30d_mm": 29.09500000000001,
+      "discharge_lag_1d_m3s": 0.17,
+      "soil_moisture_0_to_7cm": 0.46
+    },
+    "12": {
+      "rainfall_30d_mm": 2.8,
+      "discharge_lag_1d_m3s": 0.07,
+      "soil_moisture_0_to_7cm": 0.28
+    }
+  },
+  "paukkaung": {
+    "1": {
+      "rainfall_30d_mm": 1.149999999999999,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.21
+    },
+    "2": {
+      "rainfall_30d_mm": 0.15999999999999467,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "3": {
+      "rainfall_30d_mm": 0.36000000000000004,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "4": {
+      "rainfall_30d_mm": 3.65,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.19
+    },
+    "5": {
+      "rainfall_30d_mm": 31.689999999999998,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.42
+    },
+    "6": {
+      "rainfall_30d_mm": 64.315,
+      "discharge_lag_1d_m3s": 1.545,
+      "soil_moisture_0_to_7cm": 0.56
+    },
+    "7": {
+      "rainfall_30d_mm": 124.14,
+      "discharge_lag_1d_m3s": 4.7,
+      "soil_moisture_0_to_7cm": 0.64
+    },
+    "8": {
+      "rainfall_30d_mm": 123.43,
+      "discharge_lag_1d_m3s": 5.365,
+      "soil_moisture_0_to_7cm": 0.68
+    },
+    "9": {
+      "rainfall_30d_mm": 84.315,
+      "discharge_lag_1d_m3s": 4.135,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "10": {
+      "rainfall_30d_mm": 63.97,
+      "discharge_lag_1d_m3s": 2.21,
+      "soil_moisture_0_to_7cm": 0.59
+    },
+    "11": {
+      "rainfall_30d_mm": 31.444999999999993,
+      "discharge_lag_1d_m3s": 0.08499999999999999,
+      "soil_moisture_0_to_7cm": 0.51
+    },
+    "12": {
+      "rainfall_30d_mm": 2.9599999999999964,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.26
+    }
+  },
+  "paungde": {
+    "1": {
+      "rainfall_30d_mm": 1.085,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.2
+    },
+    "2": {
+      "rainfall_30d_mm": 0.19,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.16
+    },
+    "3": {
+      "rainfall_30d_mm": 0.39,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "4": {
+      "rainfall_30d_mm": 3.27,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "5": {
+      "rainfall_30d_mm": 29.86,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.4
+    },
+    "6": {
+      "rainfall_30d_mm": 65.84,
+      "discharge_lag_1d_m3s": 1.545,
+      "soil_moisture_0_to_7cm": 0.56
+    },
+    "7": {
+      "rainfall_30d_mm": 127.41499999999999,
+      "discharge_lag_1d_m3s": 4.7,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "8": {
+      "rainfall_30d_mm": 125.705,
+      "discharge_lag_1d_m3s": 5.365,
+      "soil_moisture_0_to_7cm": 0.68
+    },
+    "9": {
+      "rainfall_30d_mm": 85.725,
+      "discharge_lag_1d_m3s": 4.135,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "10": {
+      "rainfall_30d_mm": 64.97999999999999,
+      "discharge_lag_1d_m3s": 2.21,
+      "soil_moisture_0_to_7cm": 0.58
+    },
+    "11": {
+      "rainfall_30d_mm": 33.975,
+      "discharge_lag_1d_m3s": 0.08499999999999999,
+      "soil_moisture_0_to_7cm": 0.5
+    },
+    "12": {
+      "rainfall_30d_mm": 3.44,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.27
+    }
+  },
+  "pyay": {
+    "1": {
+      "rainfall_30d_mm": 1.149999999999999,
+      "discharge_lag_1d_m3s": 0.06,
+      "soil_moisture_0_to_7cm": 0.21
+    },
+    "2": {
+      "rainfall_30d_mm": 0.15999999999999467,
+      "discharge_lag_1d_m3s": 0.05,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "3": {
+      "rainfall_30d_mm": 0.36000000000000004,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "4": {
+      "rainfall_30d_mm": 3.65,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.19
+    },
+    "5": {
+      "rainfall_30d_mm": 31.689999999999998,
+      "discharge_lag_1d_m3s": 0.09,
+      "soil_moisture_0_to_7cm": 0.42
+    },
+    "6": {
+      "rainfall_30d_mm": 64.315,
+      "discharge_lag_1d_m3s": 0.91,
+      "soil_moisture_0_to_7cm": 0.56
+    },
+    "7": {
+      "rainfall_30d_mm": 124.14,
+      "discharge_lag_1d_m3s": 2.78,
+      "soil_moisture_0_to_7cm": 0.64
+    },
+    "8": {
+      "rainfall_30d_mm": 123.43,
+      "discharge_lag_1d_m3s": 3.2300000000000004,
+      "soil_moisture_0_to_7cm": 0.68
+    },
+    "9": {
+      "rainfall_30d_mm": 84.315,
+      "discharge_lag_1d_m3s": 2.755,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "10": {
+      "rainfall_30d_mm": 63.97,
+      "discharge_lag_1d_m3s": 1.4849999999999999,
+      "soil_moisture_0_to_7cm": 0.59
+    },
+    "11": {
+      "rainfall_30d_mm": 31.444999999999993,
+      "discharge_lag_1d_m3s": 0.255,
+      "soil_moisture_0_to_7cm": 0.51
+    },
+    "12": {
+      "rainfall_30d_mm": 2.9599999999999964,
+      "discharge_lag_1d_m3s": 0.1,
+      "soil_moisture_0_to_7cm": 0.26
+    }
+  },
+  "pyu": {
+    "1": {
+      "rainfall_30d_mm": 2.1499999999999853,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.207
+    },
+    "2": {
+      "rainfall_30d_mm": 1.2000000000000002,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.194
+    },
+    "3": {
+      "rainfall_30d_mm": 0.8,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.1925
+    },
+    "4": {
+      "rainfall_30d_mm": 17.549999999999997,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.236
+    },
+    "5": {
+      "rainfall_30d_mm": 139.35,
+      "discharge_lag_1d_m3s": 0.09,
+      "soil_moisture_0_to_7cm": 0.4275
+    },
+    "6": {
+      "rainfall_30d_mm": 392.29999999999995,
+      "discharge_lag_1d_m3s": 2.62,
+      "soil_moisture_0_to_7cm": 0.456
+    },
+    "7": {
+      "rainfall_30d_mm": 465.75,
+      "discharge_lag_1d_m3s": 4.15,
+      "soil_moisture_0_to_7cm": 0.457
+    },
+    "8": {
+      "rainfall_30d_mm": 494.15000000000003,
+      "discharge_lag_1d_m3s": 4.355,
+      "soil_moisture_0_to_7cm": 0.456
+    },
+    "9": {
+      "rainfall_30d_mm": 409.0,
+      "discharge_lag_1d_m3s": 2.08,
+      "soil_moisture_0_to_7cm": 0.453
+    },
+    "10": {
+      "rainfall_30d_mm": 244.64999999999998,
+      "discharge_lag_1d_m3s": 0.28,
+      "soil_moisture_0_to_7cm": 0.439
+    },
+    "11": {
+      "rainfall_30d_mm": 98.80000000000001,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.339
+    },
+    "12": {
+      "rainfall_30d_mm": 13.599999999999993,
+      "discharge_lag_1d_m3s": 0.01,
+      "soil_moisture_0_to_7cm": 0.257
+    }
+  },
+  "shwedaung": {
+    "1": {
+      "rainfall_30d_mm": 0.78,
+      "discharge_lag_1d_m3s": 0.06,
+      "soil_moisture_0_to_7cm": 0.2
+    },
+    "2": {
+      "rainfall_30d_mm": 0.04000000000000533,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.15
+    },
+    "3": {
+      "rainfall_30d_mm": 0.19999999999999912,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.13
+    },
+    "4": {
+      "rainfall_30d_mm": 3.050000000000007,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "5": {
+      "rainfall_30d_mm": 25.420000000000005,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.375
+    },
+    "6": {
+      "rainfall_30d_mm": 66.745,
+      "discharge_lag_1d_m3s": 0.12,
+      "soil_moisture_0_to_7cm": 0.49
+    },
+    "7": {
+      "rainfall_30d_mm": 148.98000000000002,
+      "discharge_lag_1d_m3s": 1.19,
+      "soil_moisture_0_to_7cm": 0.6
+    },
+    "8": {
+      "rainfall_30d_mm": 132.95,
+      "discharge_lag_1d_m3s": 1.5,
+      "soil_moisture_0_to_7cm": 0.65
+    },
+    "9": {
+      "rainfall_30d_mm": 85.07000000000001,
+      "discharge_lag_1d_m3s": 1.3,
+      "soil_moisture_0_to_7cm": 0.59
+    },
+    "10": {
+      "rainfall_30d_mm": 61.41000000000001,
+      "discharge_lag_1d_m3s": 0.75,
+      "soil_moisture_0_to_7cm": 0.53
+    },
+    "11": {
+      "rainfall_30d_mm": 29.09500000000001,
+      "discharge_lag_1d_m3s": 0.17,
+      "soil_moisture_0_to_7cm": 0.46
+    },
+    "12": {
+      "rainfall_30d_mm": 2.8,
+      "discharge_lag_1d_m3s": 0.07,
+      "soil_moisture_0_to_7cm": 0.28
+    }
+  },
+  "shwegyin": {
+    "1": {
+      "rainfall_30d_mm": 1.5000000000000002,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.21
+    },
+    "2": {
+      "rainfall_30d_mm": 0.6,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.183
+    },
+    "3": {
+      "rainfall_30d_mm": 1.3,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.174
+    },
+    "4": {
+      "rainfall_30d_mm": 15.1,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.204
+    },
+    "5": {
+      "rainfall_30d_mm": 154.75,
+      "discharge_lag_1d_m3s": 1.69,
+      "soil_moisture_0_to_7cm": 0.402
+    },
+    "6": {
+      "rainfall_30d_mm": 486.70000000000005,
+      "discharge_lag_1d_m3s": 94.61,
+      "soil_moisture_0_to_7cm": 0.436
+    },
+    "7": {
+      "rainfall_30d_mm": 654.9000000000001,
+      "discharge_lag_1d_m3s": 191.31,
+      "soil_moisture_0_to_7cm": 0.437
+    },
+    "8": {
+      "rainfall_30d_mm": 734.35,
+      "discharge_lag_1d_m3s": 206.97,
+      "soil_moisture_0_to_7cm": 0.436
+    },
+    "9": {
+      "rainfall_30d_mm": 523.55,
+      "discharge_lag_1d_m3s": 110.69,
+      "soil_moisture_0_to_7cm": 0.432
+    },
+    "10": {
+      "rainfall_30d_mm": 302.79999999999995,
+      "discharge_lag_1d_m3s": 40.254999999999995,
+      "soil_moisture_0_to_7cm": 0.413
+    },
+    "11": {
+      "rainfall_30d_mm": 95.6,
+      "discharge_lag_1d_m3s": 3.665,
+      "soil_moisture_0_to_7cm": 0.3325
+    },
+    "12": {
+      "rainfall_30d_mm": 9.0,
+      "discharge_lag_1d_m3s": 0.14500000000000002,
+      "soil_moisture_0_to_7cm": 0.256
+    }
+  },
+  "taungoo": {
+    "1": {
+      "rainfall_30d_mm": 2.0,
+      "discharge_lag_1d_m3s": 109.66,
+      "soil_moisture_0_to_7cm": 0.267
+    },
+    "2": {
+      "rainfall_30d_mm": 0.8999999999999999,
+      "discharge_lag_1d_m3s": 83.14,
+      "soil_moisture_0_to_7cm": 0.256
+    },
+    "3": {
+      "rainfall_30d_mm": 0.9999999999999858,
+      "discharge_lag_1d_m3s": 59.95,
+      "soil_moisture_0_to_7cm": 0.251
+    },
+    "4": {
+      "rainfall_30d_mm": 15.0,
+      "discharge_lag_1d_m3s": 55.165,
+      "soil_moisture_0_to_7cm": 0.274
+    },
+    "5": {
+      "rainfall_30d_mm": 128.89999999999998,
+      "discharge_lag_1d_m3s": 61.66,
+      "soil_moisture_0_to_7cm": 0.4585
+    },
+    "6": {
+      "rainfall_30d_mm": 333.65,
+      "discharge_lag_1d_m3s": 161.93,
+      "soil_moisture_0_to_7cm": 0.484
+    },
+    "7": {
+      "rainfall_30d_mm": 437.75,
+      "discharge_lag_1d_m3s": 565.89,
+      "soil_moisture_0_to_7cm": 0.483
+    },
+    "8": {
+      "rainfall_30d_mm": 460.4,
+      "discharge_lag_1d_m3s": 903.69,
+      "soil_moisture_0_to_7cm": 0.484
+    },
+    "9": {
+      "rainfall_30d_mm": 362.79999999999995,
+      "discharge_lag_1d_m3s": 887.1800000000001,
+      "soil_moisture_0_to_7cm": 0.479
+    },
+    "10": {
+      "rainfall_30d_mm": 166.5,
+      "discharge_lag_1d_m3s": 640.95,
+      "soil_moisture_0_to_7cm": 0.466
+    },
+    "11": {
+      "rainfall_30d_mm": 62.099999999999994,
+      "discharge_lag_1d_m3s": 358.75,
+      "soil_moisture_0_to_7cm": 0.361
+    },
+    "12": {
+      "rainfall_30d_mm": 10.84999999999999,
+      "discharge_lag_1d_m3s": 178.06,
+      "soil_moisture_0_to_7cm": 0.3015
+    }
+  },
+  "thanatpin": {
+    "1": {
+      "rainfall_30d_mm": 0.8,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.136
+    },
+    "2": {
+      "rainfall_30d_mm": 0.49999999999999645,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.125
+    },
+    "3": {
+      "rainfall_30d_mm": 0.8,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.124
+    },
+    "4": {
+      "rainfall_30d_mm": 12.4,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.1335
+    },
+    "5": {
+      "rainfall_30d_mm": 133.35,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.374
+    },
+    "6": {
+      "rainfall_30d_mm": 450.1,
+      "discharge_lag_1d_m3s": 3.72,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "7": {
+      "rainfall_30d_mm": 562.0,
+      "discharge_lag_1d_m3s": 4.83,
+      "soil_moisture_0_to_7cm": 0.426
+    },
+    "8": {
+      "rainfall_30d_mm": 585.4,
+      "discharge_lag_1d_m3s": 4.75,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "9": {
+      "rainfall_30d_mm": 473.20000000000005,
+      "discharge_lag_1d_m3s": 3.15,
+      "soil_moisture_0_to_7cm": 0.421
+    },
+    "10": {
+      "rainfall_30d_mm": 266.5,
+      "discharge_lag_1d_m3s": 0.92,
+      "soil_moisture_0_to_7cm": 0.392
+    },
+    "11": {
+      "rainfall_30d_mm": 71.39999999999998,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.258
+    },
+    "12": {
+      "rainfall_30d_mm": 4.3,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.157
+    }
+  },
+  "thayarwady": {
+    "1": {
+      "rainfall_30d_mm": 1.15,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.198
+    },
+    "2": {
+      "rainfall_30d_mm": 0.0,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.191
+    },
+    "3": {
+      "rainfall_30d_mm": 0.0,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.19
+    },
+    "4": {
+      "rainfall_30d_mm": 4.4,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.205
+    },
+    "5": {
+      "rainfall_30d_mm": 80.85,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.394
+    },
+    "6": {
+      "rainfall_30d_mm": 366.15,
+      "discharge_lag_1d_m3s": 1.94,
+      "soil_moisture_0_to_7cm": 0.457
+    },
+    "7": {
+      "rainfall_30d_mm": 437.1,
+      "discharge_lag_1d_m3s": 3.69,
+      "soil_moisture_0_to_7cm": 0.459
+    },
+    "8": {
+      "rainfall_30d_mm": 459.45000000000005,
+      "discharge_lag_1d_m3s": 3.65,
+      "soil_moisture_0_to_7cm": 0.459
+    },
+    "9": {
+      "rainfall_30d_mm": 365.6,
+      "discharge_lag_1d_m3s": 2.37,
+      "soil_moisture_0_to_7cm": 0.454
+    },
+    "10": {
+      "rainfall_30d_mm": 231.8,
+      "discharge_lag_1d_m3s": 0.91,
+      "soil_moisture_0_to_7cm": 0.442
+    },
+    "11": {
+      "rainfall_30d_mm": 83.95,
+      "discharge_lag_1d_m3s": 0.08,
+      "soil_moisture_0_to_7cm": 0.33
+    },
+    "12": {
+      "rainfall_30d_mm": 5.3,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.236
+    }
+  },
+  "thegon": {
+    "1": {
+      "rainfall_30d_mm": 1.085,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.2
+    },
+    "2": {
+      "rainfall_30d_mm": 0.19,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.16
+    },
+    "3": {
+      "rainfall_30d_mm": 0.39,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "4": {
+      "rainfall_30d_mm": 3.27,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "5": {
+      "rainfall_30d_mm": 29.86,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.4
+    },
+    "6": {
+      "rainfall_30d_mm": 65.84,
+      "discharge_lag_1d_m3s": 1.545,
+      "soil_moisture_0_to_7cm": 0.56
+    },
+    "7": {
+      "rainfall_30d_mm": 127.41499999999999,
+      "discharge_lag_1d_m3s": 4.7,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "8": {
+      "rainfall_30d_mm": 125.705,
+      "discharge_lag_1d_m3s": 5.365,
+      "soil_moisture_0_to_7cm": 0.68
+    },
+    "9": {
+      "rainfall_30d_mm": 85.725,
+      "discharge_lag_1d_m3s": 4.135,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "10": {
+      "rainfall_30d_mm": 64.97999999999999,
+      "discharge_lag_1d_m3s": 2.21,
+      "soil_moisture_0_to_7cm": 0.58
+    },
+    "11": {
+      "rainfall_30d_mm": 33.975,
+      "discharge_lag_1d_m3s": 0.08499999999999999,
+      "soil_moisture_0_to_7cm": 0.5
+    },
+    "12": {
+      "rainfall_30d_mm": 3.44,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.27
+    }
+  },
+  "waw": {
+    "1": {
+      "rainfall_30d_mm": 1.199999999999986,
+      "discharge_lag_1d_m3s": 7.79,
+      "soil_moisture_0_to_7cm": 0.133
+    },
+    "2": {
+      "rainfall_30d_mm": 0.3999999999999432,
+      "discharge_lag_1d_m3s": 7.75,
+      "soil_moisture_0_to_7cm": 0.119
+    },
+    "3": {
+      "rainfall_30d_mm": 0.6000000000000001,
+      "discharge_lag_1d_m3s": 7.75,
+      "soil_moisture_0_to_7cm": 0.119
+    },
+    "4": {
+      "rainfall_30d_mm": 14.099999999999987,
+      "discharge_lag_1d_m3s": 7.71,
+      "soil_moisture_0_to_7cm": 0.128
+    },
+    "5": {
+      "rainfall_30d_mm": 125.39999999999993,
+      "discharge_lag_1d_m3s": 7.79,
+      "soil_moisture_0_to_7cm": 0.3655
+    },
+    "6": {
+      "rainfall_30d_mm": 431.24999999999994,
+      "discharge_lag_1d_m3s": 30.295,
+      "soil_moisture_0_to_7cm": 0.424
+    },
+    "7": {
+      "rainfall_30d_mm": 539.8499999999999,
+      "discharge_lag_1d_m3s": 118.535,
+      "soil_moisture_0_to_7cm": 0.426
+    },
+    "8": {
+      "rainfall_30d_mm": 584.9,
+      "discharge_lag_1d_m3s": 160.81,
+      "soil_moisture_0_to_7cm": 0.425
+    },
+    "9": {
+      "rainfall_30d_mm": 481.15,
+      "discharge_lag_1d_m3s": 105.66,
+      "soil_moisture_0_to_7cm": 0.421
+    },
+    "10": {
+      "rainfall_30d_mm": 264.8499999999999,
+      "discharge_lag_1d_m3s": 29.69,
+      "soil_moisture_0_to_7cm": 0.3955
+    },
+    "11": {
+      "rainfall_30d_mm": 76.59999999999998,
+      "discharge_lag_1d_m3s": 8.04,
+      "soil_moisture_0_to_7cm": 0.263
+    },
+    "12": {
+      "rainfall_30d_mm": 4.799999999999972,
+      "discharge_lag_1d_m3s": 7.79,
+      "soil_moisture_0_to_7cm": 0.157
+    }
+  },
+  "yedashe": {
+    "1": {
+      "rainfall_30d_mm": 1.4,
+      "discharge_lag_1d_m3s": 1.26,
+      "soil_moisture_0_to_7cm": 0.267
+    },
+    "2": {
+      "rainfall_30d_mm": 0.8999999999999867,
+      "discharge_lag_1d_m3s": 1.12,
+      "soil_moisture_0_to_7cm": 0.256
+    },
+    "3": {
+      "rainfall_30d_mm": 0.2999999999999982,
+      "discharge_lag_1d_m3s": 1.0,
+      "soil_moisture_0_to_7cm": 0.253
+    },
+    "4": {
+      "rainfall_30d_mm": 11.200000000000006,
+      "discharge_lag_1d_m3s": 0.91,
+      "soil_moisture_0_to_7cm": 0.268
+    },
+    "5": {
+      "rainfall_30d_mm": 108.9,
+      "discharge_lag_1d_m3s": 1.06,
+      "soil_moisture_0_to_7cm": 0.4475
+    },
+    "6": {
+      "rainfall_30d_mm": 299.1,
+      "discharge_lag_1d_m3s": 2.83,
+      "soil_moisture_0_to_7cm": 0.482
+    },
+    "7": {
+      "rainfall_30d_mm": 392.3,
+      "discharge_lag_1d_m3s": 8.89,
+      "soil_moisture_0_to_7cm": 0.484
+    },
+    "8": {
+      "rainfall_30d_mm": 415.45000000000005,
+      "discharge_lag_1d_m3s": 13.39,
+      "soil_moisture_0_to_7cm": 0.485
+    },
+    "9": {
+      "rainfall_30d_mm": 330.95000000000005,
+      "discharge_lag_1d_m3s": 12.3,
+      "soil_moisture_0_to_7cm": 0.481
+    },
+    "10": {
+      "rainfall_30d_mm": 160.85000000000002,
+      "discharge_lag_1d_m3s": 7.89,
+      "soil_moisture_0_to_7cm": 0.4605
+    },
+    "11": {
+      "rainfall_30d_mm": 64.0,
+      "discharge_lag_1d_m3s": 3.9850000000000003,
+      "soil_moisture_0_to_7cm": 0.3535
+    },
+    "12": {
+      "rainfall_30d_mm": 9.999999999999986,
+      "discharge_lag_1d_m3s": 1.6949999999999998,
+      "soil_moisture_0_to_7cm": 0.298
+    }
+  },
+  "zigon": {
+    "1": {
+      "rainfall_30d_mm": 1.085,
+      "discharge_lag_1d_m3s": 0.02,
+      "soil_moisture_0_to_7cm": 0.2
+    },
+    "2": {
+      "rainfall_30d_mm": 0.19,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.16
+    },
+    "3": {
+      "rainfall_30d_mm": 0.39,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.14
+    },
+    "4": {
+      "rainfall_30d_mm": 3.27,
+      "discharge_lag_1d_m3s": 0.0,
+      "soil_moisture_0_to_7cm": 0.17
+    },
+    "5": {
+      "rainfall_30d_mm": 29.86,
+      "discharge_lag_1d_m3s": 0.22,
+      "soil_moisture_0_to_7cm": 0.4
+    },
+    "6": {
+      "rainfall_30d_mm": 65.84,
+      "discharge_lag_1d_m3s": 14.05,
+      "soil_moisture_0_to_7cm": 0.56
+    },
+    "7": {
+      "rainfall_30d_mm": 127.41499999999999,
+      "discharge_lag_1d_m3s": 45.03,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "8": {
+      "rainfall_30d_mm": 125.705,
+      "discharge_lag_1d_m3s": 51.54,
+      "soil_moisture_0_to_7cm": 0.68
+    },
+    "9": {
+      "rainfall_30d_mm": 85.725,
+      "discharge_lag_1d_m3s": 33.91,
+      "soil_moisture_0_to_7cm": 0.63
+    },
+    "10": {
+      "rainfall_30d_mm": 64.97999999999999,
+      "discharge_lag_1d_m3s": 14.05,
+      "soil_moisture_0_to_7cm": 0.58
+    },
+    "11": {
+      "rainfall_30d_mm": 33.975,
+      "discharge_lag_1d_m3s": 1.335,
+      "soil_moisture_0_to_7cm": 0.5
+    },
+    "12": {
+      "rainfall_30d_mm": 3.44,
+      "discharge_lag_1d_m3s": 0.03,
+      "soil_moisture_0_to_7cm": 0.27
+    }
+  }
+}

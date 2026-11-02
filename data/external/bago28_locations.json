@@ -1,0 +1,263 @@
+[
+  {
+    "township": "Bago",
+    "township_id": "bago",
+    "latitude": 17.570395361798607,
+    "longitude": 96.33504760670985,
+    "discharge_latitude": 17.32501,
+    "discharge_longitude": 96.4812,
+    "official": true
+  },
+  {
+    "township": "Kawa",
+    "township_id": "kawa",
+    "latitude": 17.04815197465191,
+    "longitude": 96.68327300427934,
+    "discharge_latitude": 17.1,
+    "discharge_longitude": 96.53,
+    "official": true
+  },
+  {
+    "township": "Thanatpin",
+    "township_id": "thanatpin",
+    "latitude": 17.25456503784306,
+    "longitude": 96.72071313601116,
+    "discharge_latitude": 17.28,
+    "discharge_longitude": 96.56,
+    "official": true
+  },
+  {
+    "township": "Waw",
+    "township_id": "waw",
+    "latitude": 17.504130905101487,
+    "longitude": 96.74654134996725,
+    "discharge_latitude": 17.47,
+    "discharge_longitude": 96.65,
+    "official": true
+  },
+  {
+    "township": "Nyaunglebin",
+    "township_id": "nyaunglebin",
+    "latitude": 17.92347627841142,
+    "longitude": 96.73823997754738,
+    "discharge_latitude": 17.94,
+    "discharge_longitude": 96.71,
+    "official": true
+  },
+  {
+    "township": "Kyauktaga",
+    "township_id": "kyauktaga",
+    "latitude": 18.188651328016427,
+    "longitude": 96.34957868372372,
+    "discharge_latitude": 18.19,
+    "discharge_longitude": 96.59,
+    "official": true
+  },
+  {
+    "township": "Daik-U",
+    "township_id": "daik_u",
+    "latitude": 17.76784149612279,
+    "longitude": 96.57618414113416,
+    "discharge_latitude": 17.79,
+    "discharge_longitude": 96.655,
+    "official": true
+  },
+  {
+    "township": "Shwegyin",
+    "township_id": "shwegyin",
+    "latitude": 17.891639443009378,
+    "longitude": 97.00454569686656,
+    "discharge_latitude": 17.92,
+    "discharge_longitude": 96.86,
+    "official": true
+  },
+  {
+    "township": "Kyaukkyi",
+    "township_id": "kyaukkyi",
+    "latitude": 18.39371040276118,
+    "longitude": 96.83735826854517,
+    "discharge_latitude": 18.34,
+    "discharge_longitude": 96.78,
+    "official": true
+  },
+  {
+    "township": "Taungoo",
+    "township_id": "taungoo",
+    "latitude": 19.004711753731076,
+    "longitude": 96.22142782037143,
+    "discharge_latitude": 18.92,
+    "discharge_longitude": 96.42,
+    "official": true
+  },
+  {
+    "township": "Oktwin",
+    "township_id": "oktwin",
+    "latitude": 18.79886341311957,
+    "longitude": 96.20324127573201,
+    "discharge_latitude": 18.83,
+    "discharge_longitude": 96.415,
+    "official": true
+  },
+  {
+    "township": "Yedashe",
+    "township_id": "yedashe",
+    "latitude": 19.281980945028508,
+    "longitude": 96.15369699881886,
+    "discharge_latitude": 19.15,
+    "discharge_longitude": 96.33,
+    "official": true
+  },
+  {
+    "township": "Pyu",
+    "township_id": "pyu",
+    "latitude": 18.52680919056462,
+    "longitude": 96.27687676061822,
+    "discharge_latitude": 18.47,
+    "discharge_longitude": 96.41,
+    "official": true
+  },
+  {
+    "township": "Htantabin",
+    "township_id": "htantabin",
+    "latitude": 18.743144264351674,
+    "longitude": 96.53806052214632,
+    "discharge_latitude": 18.71,
+    "discharge_longitude": 96.5,
+    "official": true
+  },
+  {
+    "township": "Thayarwady",
+    "township_id": "thayarwady",
+    "latitude": 17.6914844874731,
+    "longitude": 95.83286715133937,
+    "discharge_latitude": 17.65,
+    "discharge_longitude": 95.783,
+    "official": true
+  },
+  {
+    "township": "Letpadan",
+    "township_id": "letpadan",
+    "latitude": 17.882012793324133,
+    "longitude": 95.82370822701833,
+    "discharge_latitude": 17.967,
+    "discharge_longitude": 95.733,
+    "official": true
+  },
+  {
+    "township": "Minhla",
+    "township_id": "minhla",
+    "latitude": 17.972436425989216,
+    "longitude": 95.74043541668001,
+    "discharge_latitude": 17.967,
+    "discharge_longitude": 95.733,
+    "official": true
+  },
+  {
+    "township": "Monyo",
+    "township_id": "monyo",
+    "latitude": 18.110918131454934,
+    "longitude": 95.46179715655278,
+    "discharge_latitude": 18.017,
+    "discharge_longitude": 95.517,
+    "official": true
+  },
+  {
+    "township": "Okpo",
+    "township_id": "okpo",
+    "latitude": 18.16449853785131,
+    "longitude": 95.84137454790626,
+    "discharge_latitude": 18.117,
+    "discharge_longitude": 95.667,
+    "official": true
+  },
+  {
+    "township": "Gyobingauk",
+    "township_id": "gyobingauk",
+    "latitude": 18.28655333228018,
+    "longitude": 95.7520740244613,
+    "discharge_latitude": 18.333,
+    "discharge_longitude": 95.633,
+    "official": true
+  },
+  {
+    "township": "Nattalin",
+    "township_id": "nattalin",
+    "latitude": 18.505078799088487,
+    "longitude": 95.70164511810947,
+    "discharge_latitude": 18.333,
+    "discharge_longitude": 95.633,
+    "official": true
+  },
+  {
+    "township": "Zigon",
+    "township_id": "zigon",
+    "latitude": 18.345341206928104,
+    "longitude": 95.66334626785623,
+    "discharge_latitude": 18.333,
+    "discharge_longitude": 95.633,
+    "official": true
+  },
+  {
+    "township": "Thegon",
+    "township_id": "thegon",
+    "latitude": 18.62294255633997,
+    "longitude": 95.39967349903364,
+    "discharge_latitude": 18.65,
+    "discharge_longitude": 95.417,
+    "official": true
+  },
+  {
+    "township": "Paungde",
+    "township_id": "paungde",
+    "latitude": 18.64056376953037,
+    "longitude": 95.62129054964574,
+    "discharge_latitude": 18.65,
+    "discharge_longitude": 95.417,
+    "official": true
+  },
+  {
+    "township": "Pyay",
+    "township_id": "pyay",
+    "latitude": 18.91979781907066,
+    "longitude": 95.3177107581342,
+    "discharge_latitude": 18.817,
+    "discharge_longitude": 95.217,
+    "official": true
+  },
+  {
+    "township": "Paukkaung",
+    "township_id": "paukkaung",
+    "latitude": 18.98086825406999,
+    "longitude": 95.62226133990539,
+    "discharge_latitude": 18.65,
+    "discharge_longitude": 95.417,
+    "official": true
+  },
+  {
+    "township": "Padaung",
+    "township_id": "padaung",
+    "latitude": 18.68405842617122,
+    "longitude": 94.92724144997781,
+    "discharge_latitude": 18.7,
+    "discharge_longitude": 95.217,
+    "official": true
+  },
+  {
+    "township": "Shwedaung",
+    "township_id": "shwedaung",
+    "latitude": 18.56612161401315,
+    "longitude": 95.21242676447105,
+    "discharge_latitude": 18.7,
+    "discharge_longitude": 95.217,
+    "official": true
+  },
+  {
+    "township": "Madauk",
+    "township_id": "madauk",
+    "latitude": 17.9,
+    "longitude": 96.7,
+    "discharge_latitude": 17.9,
+    "discharge_longitude": 96.7,
+    "official": false
+  }
+]

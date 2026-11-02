@@ -1,0 +1,105 @@
+Chapter 4
+System Design and Implementation
+
+4.1  Overview of the Proposed System
+
+HydroFlow V2 is organised as a machine-learning package, a FastAPI application, a React dashboard, and file-based data and model artifacts. The API performs inference only. It loads a saved flood artifact and does not refit that artifact when a user opens a page. PostgreSQL stores the operational records when the stack is run with Docker: locations, observations, alerts, allocation plans, and depot stock. A local development run can use SQLite for the same role. Source tables and model files stay on the filesystem. A change of model is a change of those files, followed by a reload of the process.
+
+The dashboard has four primary pages: Home, Flood Prediction, Resource Allocation, and Inventory Management. The map is a Leaflet view centred on Bago Region. District chips filter townships. The flood page selects a planning date and a township and shows the outlook assembled for that pair. The allocation page requests a plan limited to high and severe priority and can show a route from the depot side associated with the township. The two sides are Bago East and Bago West. The inventory page switches between those same two sides, lists balances by class, and offers a manual entry or a camera suggestion. A camera count is a suggestion until the user confirms it.
+
+External calls are bounded. Forecast rainfall and GloFAS discharge are read for the outlook. NASA POWER remains the source named in the model metadata for retrospective humidity, with temperature and wind taken from NASA POWER and completed from the Open-Meteo archive only where NASA is missing. Keys for services that require them stay in the environment file. They are not written into source, logs, or API responses.
+
+Route geometry is an illustration in both route calls. The allocation page sends township centroids. The path is built on a flood-aware graph and, when that corridor is clear, requested from OSRM. A straight line remains when no road path is returned. A separate route call accepts the stops the caller supplies and orders them through Kardinal. The Kardinal key stays in the environment and is not returned in the response. Neither line is a surveyed site route.
+
+4.2  Scope of the Project
+
+The geographical scope is Bago Region, Myanmar. The served flood artifact names twenty-two townships: Bago, Daik-U, Htantabin, Kawa, Kyauktaga, Madauk, Minhla, Monyo, Okpho, Oktwin, Pantaung, Pyay, Pyu, Shwedaung, Shwegyin, Taungoo, Thanatpin, Thayarwady, Thegon, Waw, Yedashe, and Zigon. The unit of analysis is the township-day. The learned flood output is a probability and a class for that township and date. It is not a street-level inundation map.
+
+The functional scope covers the served histogram flood model, the logistic file kept beside it for comparison, the academic risk heuristic, the humanitarian help illustration, the allocation plan and its planning ratios, centroid routes between the two depots and the townships, and camera recognition for four goods classes. Fund is entered by hand. The four dashboard pages are the user-facing boundary of that scope. The API answers those pages from saved artifacts and from the external series named in Section 4.1. It does not retrain when a request arrives.
+
+A high or severe academic level can be stored as an in-app prototype alert. That record stays inside the application. Public dissemination, a siren, a short message, and an official bulletin are outside the project. GloFAS discharge is a modeled field. Measured gauge height is outside the project. The relief flood flag is the label that exists in the available records. A complete flood inventory for every township-day is outside the project. Help counts, planning ratios, and stock suggestions are academic illustrations. They are not a field assessment, and they are not a sole basis for evacuation or procurement.
+
+An extension that needs a public warning, a measured river stage, or a verified caseload needs new labels and an authority outside this codebase. Until that review, the scores remain a demonstration of the workflow.
+
+4.3  Dataset Description
+
+The learning table is a township-day panel. Each row identifies a township and a date and carries the hydrometeorological fields, the coordinates, and the relief-derived label. The metadata describes the label as an observed relief flood flag and states that no synthetic flood rows were added. That constraint matters. Filling quiet years with invented floods would make the test block look easier and would hide the real concentration of labels in 2024.
+
+The source table holds 40,172 township-days and 220 positive flood rows. Those positives are concentrated in time: 167 fall in 2024, 11 fall in 2025, and none fall in the available 2026 rows. After the fifteen features are built, 39,534 rows still have every served input and the flood flag. Six hundred and thirty-eight rows are removed because a required feature or the flag is missing. The saved chronological assignment then places 8,030 of the complete rows in validation, including 167 flood days, and 8,052 in the untouched test block, including 11 flood days. Household counts and affected-people counts sit on the source row as impact fields. They are not columns of the flood classifier.
+
+Two other collections sit beside this panel and are not rows of it. The 2024 Bago census extract supplies population, age, and dwelling context. The inventory photographs are separate image sets for foods, clothing, kitchenware, and utilities. A detection count is a count of boxes in a picture. It is not a township-day in the flood table.
+
+4.3.1  Source Files and External Data
+
+Table 1 lists the sources and the role each one is allowed to play.
+
+Source                          Role in HydroFlow V2                                      Not used as
+Bago relief workbooks           Flood-day labels and impact counts                        A complete flood inventory
+Open-Meteo                      Reanalysis and forecast rainfall; archive fill only       A local rain-gauge network
+                                where a NASA weather field is missing
+GloFAS via Open-Meteo           Modelled discharge                                         Measured river height
+NASA POWER                      Retrospective humidity, temperature, and wind             A substitute for a future gauge
+                                named in the model metadata
+Copernicus GLO-30               Display elevation                                          A model feature
+2024 census, Bago extract       Population, sex, urban and rural residence,               A model feature
+                                household size, and dwelling type
+Open admin geography            District and township points                               A parcel or building map
+Local item photographs          Detector training and scan suggestions                     A stock count
+Kardinal                        Ordering of stops the caller supplies                      A surveyed road plan
+
+Table 1. Data sources and the role each source is allowed to play.
+
+Hindcast reconstruction from 1 January 2010 can use a local hydrology store that merges the Open-Meteo archive and GloFAS discharge, with optional CHIRPS rainfall and optional CEMS GloFAS when those credentials are configured. Static raster summaries for flood hazard, height above nearest drainage, hydrobasins, and land cover can be attached by a separate ingest script. Copernicus flood-mapping imagery is reserved for validation when a token is set. Supervised labels remain the relief archive. The served fifteen-feature model does not take the raster summaries as inputs.
+
+The allocation page draws its own depot-to-centroid line, as Section 4.1 describes. That line is not a Kardinal plan. Age groups in the census extract are published for the region and the districts. They are not published as a figure for every township.
+
+4.3.2  Data Preprocessing
+
+Preprocessing is a fixed sequence.
+
+1. Copy the approved daily table into the immutable raw location and record its provenance.
+2. Reject invalid dates, duplicate township-date keys, non-binary labels, coordinates outside a valid range, and negative rainfall or discharge.
+3. Rebuild lag and accumulation features inside each township. A rainfall window uses the current day and earlier days of that township only, and it is kept only when every day of the window is present. Discharge is shifted back by one day before a discharge feature is formed, so the discharge on the label’s own day stays out of those columns.
+4. Drop rows that still lack a required model field or the flood flag. The served-model metadata records 638 such rows. The 39,534 rows that remain are the learning table.
+5. Assign dates to train, validation, and test in chronological order: the first 60 percent of dates, the next 20 percent, and the last 20 percent. The flood trainer reads that saved assignment. It does not redraw the split at fit time, and it stops if a block is missing or out of date order.
+6. Fit the histogram candidates on the training block. Choose the candidate by validation average precision, fit the isotonic calibrator on the validation scores, and choose the flood-class threshold on those calibrated scores by F1. Fit the logistic pipeline on the same training rows. Its median imputer and its standard scaler are fit on that block only and stored inside the pipeline. Its threshold maximises flood-class F1 on validation. The help model, when it is trained, chooses its threshold by help-class F1 on its own validation block.
+7. Evaluate by loading the saved artifact. Do not refit. The API follows the same rule: a request scores the loaded file and does not train a new one.
+
+4.4  Technical Stack and Configuration
+
+The development of HydroFlow V2 requires a robust integration of chronological flood modelling, hydrometeorological data access, and an interactive map dashboard. To keep training separate from serving, a specialised technical stack was selected to fit and store the classifiers, to score a township-day without refitting, and to present the result beside planning and inventory screens. The following table details the core libraries and tools used to implement the flood pipeline and the user interface. The project files do not record a processor model or a memory size, so this report does not invent a hardware specification. The software that the repository pins or names is listed in Table 2. The configuration that changes the meaning of a score is listed in Table 3.
+
+Category            Tool
+Language            Python 3.12 for training and the API
+Classical models    scikit-learn 1.9.1, including logistic regression, Ridge, and histogram gradient boosting
+Tables              pandas 3.0.6 and NumPy 2.5.3
+API                 FastAPI 0.141.1 and Uvicorn 0.54.0
+Database            SQLAlchemy 2.1.1 and Alembic 1.16.5; PostgreSQL 16 in Docker; SQLite for local development
+HTTP client         httpx 0.28.1
+Detection           Ultralytics, with YOLOv8m named in the training command, and OpenCV
+Frontend            React 19, TypeScript 5.9, Vite 7, Leaflet 1.9
+Tests               pytest 9.1.1 for Python; Vitest 3.2 for the dashboard
+Deployment          Docker Compose; the frontend is published on port 8080
+Inventory database  A separate compose file runs PostgreSQL 16 and publishes port 5433
+
+Table 2. Software used to build and run HydroFlow V2.
+
+The main application compose file runs one PostgreSQL 16 database, from the PostGIS 16 image, for the API. It does not publish port 5433. The inventory compose file under the inventory data directory is the one that publishes port 5433. Local development can point both roles at SQLite.
+
+Parameter                         Value
+Date split                        60 percent train, 20 percent validation, 20 percent test
+Served flood model                Histogram gradient boosting, candidate hgb-depth3
+Served features                   15 numeric fields listed in Section 3.3
+Served flood threshold            0.05, chosen on validation
+Secondary logistic threshold      0.87, chosen on validation
+Help version name                 flood-help-v2
+Ridge alpha for magnitudes        1.0
+Shelter                           1 kit per expected household
+Food                              3 rations per expected person, three days
+Drinking water                    15 litres per expected person per day, three days
+Priority bands                    0 none; above 0 low; at least 100 moderate; at least 500 high; at least 2,000 severe
+Allocation screen                 High and severe rows
+Detector image size               640 pixels, as named in the training command
+Detector classes excluded         Fund, which is manual only
+
+Table 3. Configuration that defines the reported models and the planning illustration.

@@ -1,0 +1,11 @@
+**/.venv
+**/__pycache__
+**/.pytest_cache
+frontend/node_modules
+frontend/dist
+data/*
+!data/external
+data/external/*
+!data/external/bago_census_2024.json
+.git
+hydroflow.db

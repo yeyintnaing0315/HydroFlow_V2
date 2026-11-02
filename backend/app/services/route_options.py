@@ -179,15 +179,19 @@ def _target(
     planning_date = _planning_date_for(session, plan, context)
     saved_map = context.get("townships") if isinstance(context.get("townships"), dict) else {}
     saved = saved_map.get(township_id) if isinstance(saved_map.get(township_id), dict) else {}
+    located = next((item for item in _iter_townships(session, [township_id]) if item.id == township_id), None)
     if saved.get("latitude") is not None and saved.get("longitude") is not None:
         latitude = float(saved["latitude"])
         longitude = float(saved["longitude"])
-    else:
-        located = next((item for item in _iter_townships(session, [township_id]) if item.id == township_id), None)
-        if located is None:
-            raise AllocationStateError(f"No coordinates are stored for {township_id}")
+    elif located is not None:
         latitude = located.latitude
         longitude = located.longitude
+    else:
+        raise AllocationStateError(f"No coordinates are stored for {township_id}")
+    name = str(saved.get("name") or (located.name_en if located is not None else township_id))
+    from app.services.township_map_coords import resolve_township_map_coords
+
+    latitude, longitude = resolve_township_map_coords(name, latitude, longitude)
     depot_region = saved.get("depot_region")
     if depot_region not in {"east", "west"}:
         depot_region = _depot_region(latitude, longitude)
@@ -341,9 +345,9 @@ async def compare_township_routes(
         roads = await asyncio.wait_for(
             osrm.driving_alternatives(
                 [(depot.latitude, depot.longitude), (latitude, longitude), (depot.latitude, depot.longitude)],
-                timeout=4,
+                timeout=18,
             ),
-            timeout=4.5,
+            timeout=20,
         )
     except (TimeoutError, asyncio.TimeoutError):
         roads = []

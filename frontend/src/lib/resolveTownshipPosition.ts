@@ -1,43 +1,46 @@
 import type { Geometry } from "geojson";
-import bago28 from "../data/bago28_locations.json";
+import mapPoints from "../data/township_map_points.json";
 import { geometryCenter } from "./geometryCenter";
 
-type Bago28Row = {
-  township: string;
-  township_id: string;
-  latitude: number;
-  longitude: number;
-  discharge_latitude: number;
-  discharge_longitude: number;
+type MapPointRow = { name_en: string; latitude: number; longitude: number };
+
+const NAME_ALIASES: Record<string, string> = {
+  okpho: "okpo",
+  paukkhaung: "paukkaung",
+  phyu: "pyu",
 };
 
-const bago28ByName = new Map<string, Bago28Row>(
-  (bago28 as Bago28Row[]).map((row) => [row.township.trim().toLowerCase(), row]),
+function nameKey(name: string): string {
+  const compact = name.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+  return NAME_ALIASES[compact] ?? compact;
+}
+
+const mapLabelByKey = new Map<string, MapPointRow>(
+  (mapPoints.townships as MapPointRow[]).map((row) => [nameKey(row.name_en), row]),
 );
 
-/** Pin and OSRM legs share one point: official bago28, then polygon centroid, then admin. */
+/** Map pins and OSRM preview legs: town seats (Open Admin), then admin API, then polygon average. */
 export function resolveTownshipPosition(
   nameEn: string,
   adminLat: number,
   adminLon: number,
   geometry?: Geometry | null,
 ): { latitude: number; longitude: number } {
-  const reference = bago28ByName.get(nameEn.trim().toLowerCase());
-  if (reference) {
-    return { latitude: reference.latitude, longitude: reference.longitude };
+  const label = mapLabelByKey.get(nameKey(nameEn));
+  if (label) {
+    return { latitude: label.latitude, longitude: label.longitude };
+  }
+  if (Number.isFinite(adminLat) && Number.isFinite(adminLon)) {
+    return { latitude: adminLat, longitude: adminLon };
   }
   const fromGeometry = geometryCenter(geometry ?? undefined);
   if (fromGeometry) return fromGeometry;
   return { latitude: adminLat, longitude: adminLon };
 }
 
+/** Inventory depots (discharge / warehouse), not township town seats. */
 export function depotReferenceCoords(region: "east" | "west"): { latitude: number; longitude: number } {
-  const name = region === "east" ? "bago" : "pyay";
-  const row = (bago28 as Bago28Row[]).find((item) => item.township_id === name);
-  if (!row) {
-    return region === "east"
-      ? { latitude: 17.335, longitude: 96.481 }
-      : { latitude: 18.817, longitude: 95.217 };
-  }
-  return { latitude: row.discharge_latitude, longitude: row.discharge_longitude };
+  return region === "east"
+    ? { latitude: 17.335, longitude: 96.481 }
+    : { latitude: 18.817, longitude: 95.217 };
 }

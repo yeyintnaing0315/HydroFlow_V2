@@ -36,6 +36,8 @@ interface AllocationOverviewMapProps {
   routes: OverviewRoute[];
   focusTownshipId?: string | null;
   onSelectTownship?: (townshipId: string) => void;
+  /** Separate Leaflet instances (dashboard vs print) must not mount at the same time. */
+  instanceKey?: string;
 }
 
 const ROUTE_COLORS = { east: "#0b5873", west: "#c45a1a" } as const;
@@ -105,6 +107,7 @@ export default function AllocationOverviewMap({
   routes,
   focusTownshipId,
   onSelectTownship,
+  instanceKey = "allocation-overview-map",
 }: AllocationOverviewMapProps) {
   const routeById = new Map(routes.map((route) => [route.id, route]));
   const routeByName = new Map(routes.map((route) => [route.label.trim().toLowerCase(), route]));
@@ -112,6 +115,7 @@ export default function AllocationOverviewMap({
   return (
     <div className="allocation-map-frame">
       <MapContainer
+        key={instanceKey}
         center={[18.26, 96.07]}
         zoom={8}
         scrollWheelZoom={false}

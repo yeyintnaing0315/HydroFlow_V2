@@ -5,7 +5,6 @@ import { api } from "./api";
 import BasemapTileLayer from "./components/map/BasemapTileLayer";
 import MapViewportFix from "./components/map/MapViewportFix";
 import { districtColor, floodFillLevel, formatPercent, riskColor, riskLabel } from "./components/prediction/mapUtils";
-import HomeFloodHistory from "./components/home/HomeFloodHistory";
 import { PageControls, ViewDialog } from "./components/ViewDialog";
 import { needsResourceAllocation, type AllocationFocus } from "./lib/allocationFocus";
 import { fillRatio, itemCapacity, statusFor, statusSlug, type StockStatus } from "./lib/stockStatus";

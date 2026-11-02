@@ -158,6 +158,10 @@ async def create_allocation_plan(
         geo_session.rollback()
         inventory_session.rollback()
         raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except AllocationStateError as exc:
+        geo_session.rollback()
+        inventory_session.rollback()
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception:
         geo_session.rollback()
         inventory_session.rollback()

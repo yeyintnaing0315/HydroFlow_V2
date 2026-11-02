@@ -178,6 +178,12 @@ vi.mock("./api", () => ({
         },
       ],
     }),
+    floodCasesHighSevere: vi.fn().mockResolvedValue({
+      counts: { total: 0, severe: 0, high: 0, recorded: 0, model: 0 },
+      by_year: [],
+      disclaimer: "",
+      events: [],
+    }),
     floodHistory: vi.fn().mockResolvedValue({
       source: "Bago relief records",
       disclaimer: "Recorded impacts, not model predictions.",
@@ -475,9 +481,9 @@ describe("dashboard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Resource Allocation" }));
     expect(await screen.findByRole("heading", { name: "Route map" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "In stock" })).not.toBeInTheDocument();
-    expect(screen.getByText(/Create a plan to draw routes/)).toBeInTheDocument();
+    expect(screen.getByText(/create a plan for high and severe deliveries/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Create plan" })).toBeInTheDocument();
-    expect(screen.getByText("High and severe only")).toBeInTheDocument();
+    expect(screen.getAllByText("High and severe only").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByRole("combobox")).toHaveLength(1);
     expect(screen.getByRole("combobox", { name: "Region" })).toBeInTheDocument();
   }, 30000);

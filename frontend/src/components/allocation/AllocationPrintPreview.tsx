@@ -1,6 +1,8 @@
 import { createPortal } from "react-dom";
 import type { AllocationPlanResponse } from "../../types";
 import { buildAllocationReport, downloadAllocationPlanPdf } from "../../allocationPlanPdf";
+import { depotsFromPlan, routesFromPlan, townshipsFromPlan } from "../../lib/allocationPlanMap";
+import AllocationOverviewMap from "./AllocationOverviewMap";
 
 interface AllocationPrintPreviewProps {
   plan: AllocationPlanResponse;
@@ -36,6 +38,9 @@ function ReportTable({ label, head, body }: { label: string; head: string[]; bod
 
 export default function AllocationPrintPreview({ plan, onClose }: AllocationPrintPreviewProps) {
   const report = buildAllocationReport(plan);
+  const depots = depotsFromPlan(plan);
+  const townships = townshipsFromPlan(plan);
+  const routes = routesFromPlan(plan, depots);
   return createPortal(
     <div className="allocation-print-backdrop" role="presentation" onClick={onClose}>
       <div
@@ -63,6 +68,15 @@ export default function AllocationPrintPreview({ plan, onClose }: AllocationPrin
           {report.depots ? <p>{report.depots}</p> : null}
         </header>
         <p className="allocation-print-summary">{report.summary}</p>
+        <section className="allocation-print-map" aria-label="Delivery routes">
+          <h3>Route map</h3>
+          <AllocationOverviewMap
+            instanceKey="allocation-print-map"
+            townships={townships}
+            depots={depots}
+            routes={routes}
+          />
+        </section>
         {plan.unverified_stores?.length ? (
           <p className="allocation-alert">
             Unverified depots: {plan.unverified_stores.map((store) => store.name).join(", ")}

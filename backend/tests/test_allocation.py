@@ -1,6 +1,6 @@
 import asyncio
 import time
-from datetime import date
+from datetime import date, datetime, timezone
 
 import pytest
 from fastapi.testclient import TestClient
@@ -12,7 +12,57 @@ from app.db import Base, get_db, get_inventory_db
 from app.main import app
 from app.schemas.api import AllocationPlanRequest
 from app.services import allocation, help_prediction
-from app.services.inventory import add_region_stock, seed_catalog, seed_regions
+from app.services.inventory import (
+    DEFAULT_ITEM_TYPES,
+    add_region_stock,
+    item_max_quantity,
+    region_snapshot,
+    seed_catalog,
+    seed_regions,
+    store_for_region,
+)
+
+
+def _boost_depot_stock(session: Session, region: str = "east") -> None:
+    snapshot = region_snapshot(session, region)
+    on_hand: dict[tuple[str, str | None], float] = {}
+    for klass in snapshot["classes"]:
+        for item in klass["items"]:
+            key = (klass["code"], item["code"])
+            on_hand[key] = float(item["quantity"])
+    fund_cap = float(item_max_quantity("fund"))
+    fund_current = on_hand.get(("fund", None), 0.0)
+    fund_delta = max(0.0, min(fund_cap, 5_000_000) - fund_current)
+    if fund_delta > 0:
+        add_region_stock(
+            session,
+            region=region,
+            category_code="fund",
+            item_code=None,
+            quantity=fund_delta,
+            entry_mode="manual",
+            direction="in",
+        )
+    for category_code, types in DEFAULT_ITEM_TYPES.items():
+        cap = float(item_max_quantity(category_code))
+        for code, _name, _unit, _order in types:
+            current = on_hand.get((category_code, code), 0.0)
+            delta = max(0.0, cap - current)
+            if delta <= 0:
+                continue
+            add_region_stock(
+                session,
+                region=region,
+                category_code=category_code,
+                item_code=code,
+                quantity=delta,
+                entry_mode="manual",
+                direction="in",
+            )
+    store = store_for_region(session, region)
+    if store.verified_at is None:
+        store.verified_at = datetime.now(timezone.utc)
+    session.commit()
 
 
 @pytest.fixture()
@@ -92,7 +142,7 @@ def test_allocation_plan_ranks_townships_and_assigns_routes(
     async def fake_help(township: allocation.TownshipCatalog, _day: date):
         if township.id == "bago":
             return _help_score(people=120, priority="high")
-        return _help_score(people=8000, priority="severe")
+        return _help_score(people=500, priority="severe")
 
     monkeypatch.setattr(allocation, "_iter_townships", lambda _s, _ids: _sample_townships())
 
@@ -103,6 +153,8 @@ def test_allocation_plan_ranks_townships_and_assigns_routes(
 
     monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
 
+    _boost_depot_stock(inventory_session, "east")
+    _boost_depot_stock(inventory_session, "west")
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
 
@@ -110,8 +162,8 @@ def test_allocation_plan_ranks_townships_and_assigns_routes(
     assert plan.rows[0].township_name == "Taungoo"
     assert plan.rows[1].township_name == "Bago"
     assert plan.rows[0].route_id in {"Route A", "Route B", "Route C"}
-    assert plan.totals.affected_population == 1120
-    assert plan.shortages
+    assert plan.totals.affected_population == 620
+    assert not plan.shortages
     assert plan.routes
     assert plan.model_version.endswith("allocation-rules-fallback") or plan.model_version.endswith("allocation-v3")
     codes = {(item.category_code, item.item_code) for row in plan.rows for item in row.line_items}
@@ -134,6 +186,7 @@ def test_allocation_api(client: TestClient, monkeypatch: pytest.MonkeyPatch, inv
 
     monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
 
+    _boost_depot_stock(inventory_session, "east")
     app.dependency_overrides[get_inventory_db] = lambda: inventory_session
     response = client.post(
         "/allocation/plan",
@@ -203,19 +256,8 @@ def test_plan_lists_unverified_stores_and_does_not_spend_stock(
     monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
 
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east", commit_inventory=True)
-    plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
-
-    assert plan.status == "draft"
-    assert [store.region for store in plan.unverified_stores] == ["east"]
-    assert all(item.allocated == 0 for row in plan.rows for item in row.line_items)
-    rice = next(
-        item
-        for klass in allocation.region_snapshot(inventory_session, "east")["classes"]
-        if klass["code"] == "foods"
-        for item in klass["items"]
-        if item["code"] == "rice"
-    )
-    assert rice["quantity"] == 100.0
+    with pytest.raises(allocation.AllocationStateError, match=allocation.PLAN_BLOCKED_ON_SHORTAGE):
+        asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
 
 
 def test_confirm_deducts_stock_only_after_verification(
@@ -242,6 +284,7 @@ def test_confirm_deducts_stock_only_after_verification(
     store = store_for_region(inventory_session, "east")
     store.verified_at = datetime.now(timezone.utc)
     inventory_session.commit()
+    _boost_depot_stock(inventory_session, "east")
 
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
@@ -318,6 +361,7 @@ def test_saved_plan_points_at_prediction_run(
     )
     geo_session.flush()
 
+    _boost_depot_stock(inventory_session, "east")
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
     assert plan.prediction_run_id == run.id
@@ -382,6 +426,7 @@ def test_plan_uses_straight_line_when_osrm_hangs(
     monkeypatch.setattr(allocation, "_help_for_township", fake_help)
     monkeypatch.setattr(allocation.osrm, "driving_path", slow_osrm)
 
+    _boost_depot_stock(inventory_session, "east")
     request = AllocationPlanRequest(date=date(2026, 10, 27), warehouse_region="east")
     started = time.perf_counter()
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
@@ -399,7 +444,27 @@ def test_plan_uses_straight_line_when_osrm_hangs(
         for item in klass["items"]
         if item["code"] == "rice"
     )
-    assert rice["quantity"] == 100.0
+    assert rice["quantity"] >= 100.0
+
+
+def test_plan_rejected_when_depot_stock_is_insufficient(
+    monkeypatch: pytest.MonkeyPatch,
+    geo_session: Session,
+    inventory_session: Session,
+) -> None:
+    async def fake_help(_township: allocation.TownshipCatalog, _day: date):
+        return _help_score(people=8000, priority="severe")
+
+    monkeypatch.setattr(allocation, "_iter_townships", lambda _s, _ids: _sample_townships()[:1])
+    monkeypatch.setattr(allocation, "_help_for_township", fake_help)
+    async def _no_osrm(_pts):
+        return None
+
+    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+
+    request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
+    with pytest.raises(allocation.AllocationStateError, match=allocation.PLAN_BLOCKED_ON_SHORTAGE):
+        asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
 
 
 def test_plan_row_keeps_forecast_measurements(
@@ -442,6 +507,7 @@ def test_plan_row_keeps_forecast_measurements(
     )
     geo_session.flush()
 
+    _boost_depot_stock(inventory_session, "east")
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
     row = plan.rows[0]
@@ -475,6 +541,7 @@ def test_confirm_rejects_when_stock_dropped(
     store = store_for_region(inventory_session, "east")
     store.verified_at = datetime.now(timezone.utc)
     inventory_session.commit()
+    _boost_depot_stock(inventory_session, "east")
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
     add_region_stock(

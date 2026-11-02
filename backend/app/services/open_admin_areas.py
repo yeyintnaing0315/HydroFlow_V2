@@ -73,6 +73,7 @@ def clear_cache() -> None:
     global _cache
     _cache = None
     _township_boundaries.cache_clear()
+    _township_map_labels.cache_clear()
 
 
 def _first_existing(*paths: Path) -> Path:
@@ -90,6 +91,38 @@ def _boundary_path() -> Path:
         Path("/app/data/external/geography/bago_township_boundaries.geojson"),
         Path("/data/geography/bago_township_boundaries.geojson"),
     )
+
+
+def _map_points_path() -> Path:
+    here = Path(__file__).resolve()
+    return _first_existing(
+        here.parents[3] / "data" / "external" / "geography" / "township_map_points.json",
+        here.parents[2] / "data" / "external" / "geography" / "township_map_points.json",
+        Path("/app/data/external/geography/township_map_points.json"),
+        Path("/data/geography/township_map_points.json"),
+    )
+
+
+@lru_cache
+def _township_map_labels() -> dict[str, tuple[float, float]]:
+    path = _map_points_path()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rows = payload.get("townships")
+    if not isinstance(rows, list):
+        raise ValueError("township_map_points.json must contain a townships array")
+    labels: dict[str, tuple[float, float]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        name = str(row.get("name_en") or "").strip()
+        lat = row.get("latitude")
+        lon = row.get("longitude")
+        if not name or not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)):
+            continue
+        labels[_name_key(name)] = (float(lat), float(lon))
+    if len(labels) < 28:
+        raise ValueError("township_map_points.json is incomplete for Bago map labels")
+    return labels
 
 
 def _point(raw: dict[str, Any]) -> dict[str, Any]:
@@ -291,8 +324,12 @@ def _local_township(
     geometry: dict[str, Any],
     name_local: str | None = None,
 ) -> dict[str, Any]:
-    latitude, longitude = _geometry_centroid(geometry)
+    labels = _township_map_labels()
     slug = _name_key(name_en)
+    if slug in labels:
+        latitude, longitude = labels[slug]
+    else:
+        latitude, longitude = _geometry_centroid(geometry)
     return {
         "id": slug,
         "slug": slug,

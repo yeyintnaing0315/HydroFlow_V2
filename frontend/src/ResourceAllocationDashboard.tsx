@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { api } from "./api";
+import AllocationFloodHistory from "./components/allocation/AllocationFloodHistory";
 import AllocationOverviewMap from "./components/allocation/AllocationOverviewMap";
 import AllocationPrintPreview from "./components/allocation/AllocationPrintPreview";
 import RouteComparison from "./components/allocation/RouteComparison";
@@ -7,9 +8,9 @@ import { formatMeters, routeMethodLabel } from "./components/allocation/routeFor
 import TownshipAllocationDetail from "./components/allocation/TownshipAllocationDetail";
 import { PageControls, ViewDialog } from "./components/ViewDialog";
 import { errorText } from "./lib/formatError";
-import { haversineMeters } from "./lib/haversine";
 import type { AllocationFocus } from "./lib/allocationFocus";
 import { depotRegionForCoordinates, type DepotRegion } from "./lib/depotRegion";
+import { depotsFromPlan, routesFromPlan, townshipsFromPlan } from "./lib/allocationPlanMap";
 import { depotReferenceCoords, resolveTownshipPosition } from "./lib/resolveTownshipPosition";
 import { floodBandLabel, floodFillLevel, riskLabel } from "./components/prediction/mapUtils";
 import type {
@@ -298,6 +299,7 @@ export default function ResourceAllocationDashboard({
 
   const confirmPlan = async () => {
     if (!plan.data || plan.data.status === "confirmed") return;
+    setPrintOpen(false);
     setConfirming(true);
     setConfirmError(undefined);
     try {
@@ -456,10 +458,10 @@ export default function ResourceAllocationDashboard({
     );
   }, [areaResource.data]);
 
-  const overviewMapTownships = useMemo(
-    () => overviewTownships.filter((township) => !isDepotTownship(township.name)),
-    [overviewTownships],
-  );
+  const overviewMapTownships = useMemo(() => {
+    if (planReady && plan.data) return townshipsFromPlan(plan.data);
+    return overviewTownships.filter((township) => !isDepotTownship(township.name));
+  }, [planReady, plan.data, overviewTownships]);
 
   const scoreMap = useMemo(() => {
     const map = new Map<string, TownshipMapScore>();
@@ -468,14 +470,8 @@ export default function ResourceAllocationDashboard({
   }, [mapScores.data]);
 
   const overviewDepots = useMemo((): OverviewDepot[] => {
-    if (plan.data?.warehouses?.length === 2) {
-      return plan.data.warehouses.map((warehouse) => ({
-        id: warehouse.id,
-        name: warehouse.name,
-        latitude: warehouse.latitude,
-        longitude: warehouse.longitude,
-        region: warehouse.region,
-      }));
+    if (planReady && plan.data) {
+      return depotsFromPlan(plan.data);
     }
     const eastStore = stores.find((store) => store.region === "east");
     const westStore = stores.find((store) => store.region === "west");
@@ -497,7 +493,7 @@ export default function ResourceAllocationDashboard({
         region: "west",
       },
     ];
-  }, [plan.data, stores]);
+  }, [planReady, plan.data, stores]);
 
   const highlightedTownshipId = planReady ? selectedRowId : (selectedTownshipId ?? focus?.townshipId ?? null);
 
@@ -582,27 +578,18 @@ export default function ResourceAllocationDashboard({
         });
     }
 
-    return listedRows.map((row) => {
-      const depot = depotFor(row.depot_region);
-      const saved = (plan.data?.routes ?? []).find((item) => item.route_id === row.route_id && item.path.length >= 2);
-      const alternative = row.township_id === selectedRowId ? activeAlternative : undefined;
-      const path =
-        alternative && alternative.path.length >= 2
-          ? alternative.path
-          : saved && saved.path.length >= 2
-            ? saved.path
-            : [
-                { latitude: depot.latitude, longitude: depot.longitude },
-                { latitude: row.latitude, longitude: row.longitude },
-              ];
-      const straight = haversineMeters(depot.latitude, depot.longitude, row.latitude, row.longitude);
+    if (!plan.data) return [];
+    const planDepots = depotsFromPlan(plan.data);
+    const baseRoutes = routesFromPlan(plan.data, planDepots, highlightedTownshipId);
+    return baseRoutes.map((route) => {
+      if (route.id !== selectedRowId || !activeAlternative || activeAlternative.path.length < 2) {
+        return route;
+      }
       return {
-        id: row.township_id,
-        label: row.township_name,
-        depotRegion: row.depot_region,
-        distanceM: alternative?.distance_m ?? saved?.distance_m ?? straight,
-        emphasized: row.township_id === selectedRowId,
-        path,
+        ...route,
+        path: activeAlternative.path,
+        distanceM: activeAlternative.distance_m ?? route.distanceM,
+        emphasized: true,
       };
     });
   }, [
@@ -772,16 +759,22 @@ export default function ResourceAllocationDashboard({
               : `Bago east · Pyay west · ${roadRouteCount || overviewRoutes.length} road routes`}
           </span>
         </div>
-        <AllocationOverviewMap
-          townships={overviewMapTownships}
-          depots={overviewDepots}
-          routes={overviewRoutes}
-          focusTownshipId={highlightedTownshipId}
-          onSelectTownship={(townshipId) => {
-            if (planReady && !listedRows.some((row) => row.township_id === townshipId)) return;
-            selectTownship(townshipId);
-          }}
-        />
+        {!printOpen ? (
+          <AllocationOverviewMap
+            instanceKey="allocation-dashboard-map"
+            townships={overviewMapTownships}
+            depots={overviewDepots}
+            routes={overviewRoutes}
+            focusTownshipId={highlightedTownshipId}
+            onSelectTownship={(townshipId) => {
+              if (planReady && !listedRows.some((row) => row.township_id === townshipId)) return;
+              selectTownship(townshipId);
+            }}
+          />
+        ) : (
+          <div className="allocation-map-frame allocation-map-sleep" aria-hidden />
+        )}
+        <AllocationFloodHistory />
         <ul className="legend" aria-label="Map legend">
           <li><i style={{ background: "#0b5873" }} />East depot routes</li>
           <li><i style={{ background: "#c45a1a" }} />West depot routes</li>

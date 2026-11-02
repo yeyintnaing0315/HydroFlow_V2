@@ -66,6 +66,12 @@ vi.mock("./api", () => ({
     }),
     helpSummary: vi.fn(),
     allocationNetworkRoutes: vi.fn().mockResolvedValue({ routes: [], disclaimer: "test" }),
+    floodCasesHighSevere: vi.fn().mockResolvedValue({
+      counts: { total: 0, severe: 0, high: 0, recorded: 0, model: 0 },
+      by_year: [],
+      disclaimer: "",
+      events: [],
+    }),
   },
 }));
 
@@ -125,7 +131,9 @@ describe("ResourceAllocationDashboard", () => {
       <ResourceAllocationDashboard startDate="2026-10-20" onStartDate={() => undefined} focus={null} />,
     );
 
-    expect(screen.getByText("High and severe only")).toBeInTheDocument();
+    const priorityScope = screen.getByText("Priority scope").parentElement;
+    expect(priorityScope).toBeTruthy();
+    expect(within(priorityScope!).getByText("High and severe only")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "High and severe townships" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Township" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Affected people" })).toBeInTheDocument();
@@ -165,7 +173,9 @@ describe("ResourceAllocationDashboard", () => {
       />,
     );
 
-    expect(screen.getByText("High risk")).toBeInTheDocument();
+    const priorityScope = screen.getByText("Priority scope").parentElement;
+    expect(priorityScope).toBeTruthy();
+    expect(within(priorityScope!).getByText("High risk")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Create plan" }));
     await waitFor(() => expect(api.allocationPlan).toHaveBeenCalled());
     expect(api.allocationPlan).toHaveBeenCalledWith(

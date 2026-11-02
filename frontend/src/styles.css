@@ -1088,6 +1088,36 @@ button.allocation-affected-row.is-selected {
   height: 100%;
   min-height: 0;
 }
+.allocation-map-flood-history {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--hf-border, var(--line));
+}
+.allocation-map-flood-history-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.allocation-map-flood-history-state {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.allocation-map-flood-history-table {
+  max-height: min(14rem, 28vh);
+  overflow: auto;
+}
+.allocation-map-flood-history-table table {
+  font-size: 0.82rem;
+}
+.allocation-map-flood-history-table th,
+.allocation-map-flood-history-table td {
+  padding: 0.35rem 0.45rem;
+}
 .allocation-rail {
   min-height: 0;
   display: grid;
@@ -1863,20 +1893,25 @@ button.allocation-affected-row.is-selected {
 .allocation-print-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 5000;
   display: grid;
   place-items: center;
   padding: 1.5rem;
-  background: rgba(8, 16, 28, 0.72);
+  background: rgba(8, 16, 28, 0.88);
+  overflow: auto;
 }
 .allocation-print-sheet {
   width: min(920px, 100%);
-  max-height: none;
-  overflow: hidden;
+  max-height: min(92vh, 960px);
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 1.25rem 1.4rem;
   color: #1c2833;
   background: #fff;
   border-radius: 12px;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
 }
 .allocation-print-sheet h2, .allocation-print-sheet h3, .allocation-print-sheet p { color: #1c2833; }
 .allocation-print-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-bottom: 0.6rem; }
@@ -1887,6 +1922,28 @@ button.allocation-affected-row.is-selected {
 .allocation-print-sheet table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
 .allocation-print-sheet th, .allocation-print-sheet td { padding: 0.35rem 0.4rem; border-bottom: 1px solid #e4ebf2; text-align: left; }
 .allocation-print-disclaimer { margin-top: 1rem; color: #5d6e82; font-size: 0.75rem; }
+.allocation-print-map { margin: 0.9rem 0; }
+.allocation-print-map h3 { margin: 0 0 0.35rem; font-size: 0.95rem; }
+.allocation-print-map .allocation-map-frame {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
+}
+.allocation-print-map .leaflet-container {
+  min-height: 0 !important;
+  height: 100% !important;
+}
+.allocation-map-sleep {
+  min-height: 280px;
+  background: #d7e4ee;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+}
+@media print {
+  .allocation-print-map .allocation-map-frame { height: 220px; break-inside: avoid; }
+}
 .workspace.hf-theme .allocation-township-list button span,
 .workspace.hf-theme .allocation-route-cards button span,
 .workspace.hf-theme .allocation-context-line { color: var(--hf-muted); }

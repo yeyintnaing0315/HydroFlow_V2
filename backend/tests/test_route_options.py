@@ -12,6 +12,8 @@ from app.schemas.api import AllocationPlanRequest
 from app.services import allocation
 from app.services.flood_routing import DeliveryCorridor
 from app.services.inventory import add_region_stock, seed_catalog, seed_regions, store_for_region
+
+from tests.test_allocation import _boost_depot_stock
 from app.services.route_options import compare_township_routes, select_township_route
 
 
@@ -96,6 +98,7 @@ async def _plan(geo_session: Session, inventory_session: Session, monkeypatch: p
     monkeypatch.setattr(allocation, "_iter_townships", lambda _s, _ids: _sample())
     monkeypatch.setattr(allocation, "_help_for_township", fake_help)
     monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    _boost_depot_stock(inventory_session, "east")
     return await allocation.build_allocation_plan(
         geo_session,
         inventory_session,

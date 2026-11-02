@@ -20,7 +20,7 @@ async def _route_leg(
     township_lon: float,
 ) -> dict:
     points = [(depot_lat, depot_lon), (township_lat, township_lon)]
-    routed = await osrm.driving_route(points, timeout=8.0)
+    routed = await osrm.driving_route(points, timeout=20.0)
     if routed and len(routed["path"]) >= 2:
         return {
             "township_id": township_id,

@@ -151,6 +151,9 @@ class AllocationStateError(ValueError):
     """The plan or store cannot accept this action."""
 
 
+PLAN_BLOCKED_ON_SHORTAGE = "We cannot create a plan if there is a shortage of resources."
+
+
 @dataclass(frozen=True)
 class TownshipCatalog:
     id: str
@@ -386,6 +389,8 @@ def _bago_areas_payload(session: Session) -> dict:
 
 
 def _iter_townships(session: Session, township_ids: list[str] | None) -> list[TownshipCatalog]:
+    from app.services.township_map_coords import resolve_township_map_coords
+
     payload = _bago_areas_payload(session)
     catalog: list[TownshipCatalog] = []
     allowed = None if township_ids is None else set(township_ids)
@@ -393,12 +398,15 @@ def _iter_townships(session: Session, township_ids: list[str] | None) -> list[To
         for township in district["townships"]:
             if allowed is not None and township["id"] not in allowed:
                 continue
+            lat = float(township["latitude"])
+            lon = float(township["longitude"])
+            lat, lon = resolve_township_map_coords(str(township["name_en"]), lat, lon)
             catalog.append(
                 TownshipCatalog(
                     id=str(township["id"]),
                     name_en=str(township["name_en"]),
-                    latitude=float(township["latitude"]),
-                    longitude=float(township["longitude"]),
+                    latitude=lat,
+                    longitude=lon,
                 )
             )
     return catalog
@@ -910,6 +918,9 @@ def get_allocation_plan(
         else:
             continue
         name = str(saved.get("name") or (located.name_en if located is not None else township_id))
+        from app.services.township_map_coords import resolve_township_map_coords
+
+        latitude, longitude = resolve_township_map_coords(name, latitude, longitude)
         if "affected_people" in saved and saved.get("affected_people") is not None:
             population = int(saved["affected_people"])
             if saved.get("affected_male") is not None and saved.get("affected_female") is not None:
@@ -1260,6 +1271,9 @@ async def _build_allocation_plan(
         shortages.extend(
             _shortages_for_depot(requested_totals, stock_by_region[region], region)
         )
+
+    if shortages:
+        raise AllocationStateError(PLAN_BLOCKED_ON_SHORTAGE)
 
     allocated_rows.sort(
         key=lambda row: rank_by_township.get(row.township_id, (0.0, float(row.population), 0.0)),

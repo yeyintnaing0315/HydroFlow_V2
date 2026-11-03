@@ -532,6 +532,8 @@ export interface AllocationPlanRequest {
   include_all_high_severe?: boolean;
   commit_inventory?: boolean;
   vehicle_profile?: "car" | "truck" | "fly";
+  /** Township id → affected people from dashboard estimate (matches help summary / prediction). */
+  expected_affected_overrides?: Record<string, number>;
 }
 
 export interface AllocationLineItem {

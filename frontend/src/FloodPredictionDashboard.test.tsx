@@ -3,6 +3,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import FloodPredictionDashboard from "./FloodPredictionDashboard";
 import { BASEMAP_ATTRIBUTION, BASEMAP_TILE_URL } from "./components/map/BasemapTileLayer";
 import { riskLabel } from "./components/prediction/mapUtils";
+const { calendarSelectMax } = vi.hoisted(() => {
+  const day = new Date();
+  const calendarSelectMax = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
+  return { calendarSelectMax };
+});
 
 vi.mock("react-leaflet", () => ({
   MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map">{children}</div>,
@@ -92,7 +97,10 @@ vi.mock("./api", () => ({
           hydrology_risk_level: "high",
           rainfall_mm: 30,
           discharge_m3_s: 70,
+          temperature_c: 31.2,
           relative_humidity_pct: 71,
+          wind_speed_m_s: 3.5,
+          rainfall_7d_mm: 118.4,
           impact_level: "unknown",
           potentially_exposed_population: 1000,
           potentially_affected_population: null,
@@ -113,8 +121,8 @@ vi.mock("./api", () => ({
       operational_start: "2010-01-01",
       labeled_start: "2021-04-01",
       history_end: "2026-10-20",
-      forecast_end: "2026-10-27",
-      select_max: "2026-10-27",
+      forecast_end: calendarSelectMax,
+      select_max: calendarSelectMax,
     }),
     predictionHazardSurface: vi.fn().mockResolvedValue({
       township_id: "bago",
@@ -243,7 +251,7 @@ describe("FloodPredictionDashboard", () => {
     expect(screen.getByRole("group", { name: "Bago districts" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Next 7 days" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "Previous 7 days" })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("textbox", { name: "Selected date" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Selected date")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toBeInTheDocument();
     expect(screen.getByTestId("basemap")).toHaveAttribute("data-url", BASEMAP_TILE_URL);
     expect(screen.getByTestId("basemap")).toHaveAttribute("data-attribution", BASEMAP_ATTRIBUTION);
@@ -262,7 +270,13 @@ describe("FloodPredictionDashboard", () => {
     expect(within(metrics).getByText(/70\.0/)).toBeInTheDocument();
     expect(within(metrics).queryByText("Humidity")).not.toBeInTheDocument();
     expect(within(metrics).queryByText("Lead time")).not.toBeInTheDocument();
-    expect(screen.queryByText("Temperature")).not.toBeInTheDocument();
+    const weather = screen.getByRole("table", { name: "Weather conditions" });
+    expect(within(weather).getByText("Temperature")).toBeInTheDocument();
+    expect(within(weather).getByText("31.2 °C")).toBeInTheDocument();
+    expect(within(weather).getByText("Humidity")).toBeInTheDocument();
+    expect(within(weather).getByText("71%")).toBeInTheDocument();
+    expect(within(weather).getByText("3.5 m/s")).toBeInTheDocument();
+    expect(within(weather).getByText("118.4 mm")).toBeInTheDocument();
     expect(screen.queryByText("Heuristic risk")).not.toBeInTheDocument();
     expect(screen.queryByText("Flood in next 3 days")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Plan resource allocation" })).toBeInTheDocument();

@@ -132,19 +132,14 @@ def relief_features(township_name_en: str) -> dict[str, float]:
     }
 
 
-# One township plan stays within a depot that holds 20,000 of each item.
-# The relief rule issues one unit per person, so the headcount is capped here.
-PLANNING_PEOPLE_CAP = 1000
-
-
 def cap_planning_headcount(people: int, households: int) -> tuple[int, int]:
-    """Keep a township plan at or under 1,000 people. Households scale with that cap."""
+    """Normalize headcount/households without an artificial per-township cap.
+
+    Census limits are applied in ``merge_planning_baseline``; stock checks enforce depot limits.
+    """
     safe_people = max(0, int(people))
     safe_households = max(0, int(households))
-    if safe_people <= PLANNING_PEOPLE_CAP:
-        return safe_people, safe_households
-    ratio = PLANNING_PEOPLE_CAP / safe_people
-    return PLANNING_PEOPLE_CAP, int(round(safe_households * ratio))
+    return safe_people, safe_households
 
 
 def affected_people_for_rank(scored: dict[str, Any]) -> float:

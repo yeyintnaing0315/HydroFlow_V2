@@ -32,7 +32,7 @@ def _boost_depot_stock(session: Session, region: str = "east") -> None:
             on_hand[key] = float(item["quantity"])
     fund_cap = float(item_max_quantity("fund"))
     fund_current = on_hand.get(("fund", None), 0.0)
-    fund_delta = max(0.0, min(fund_cap, 5_000_000) - fund_current)
+    fund_delta = max(0.0, fund_cap - fund_current)
     if fund_delta > 0:
         add_region_stock(
             session,
@@ -165,7 +165,7 @@ def test_allocation_plan_ranks_townships_and_assigns_routes(
     assert plan.totals.affected_population == 620
     assert not plan.shortages
     assert plan.routes
-    assert plan.model_version.endswith("allocation-rules-fallback") or plan.model_version.endswith("allocation-v3")
+    assert "allocation-per-person" in plan.model_version
     codes = {(item.category_code, item.item_code) for row in plan.rows for item in row.line_items}
     assert ("foods", "rice") in codes
     assert ("utilities", "blanket") in codes
@@ -290,6 +290,12 @@ def test_confirm_deducts_stock_only_after_verification(
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
     assert plan.unverified_stores == []
     assert plan.rows[0].township_name == "Bago"
+    saved = geo_session.get(AllocationPlan, int(plan.plan_id))
+    assert saved is not None and saved.status == "draft"
+    lines = list(geo_session.scalars(select(AllocationLine).where(AllocationLine.plan_id == saved.id)))
+    rice_line = next(line for line in lines if line.item_code == "rice" and line.township_id == "bago")
+    assert float(rice_line.requested) == 80
+    assert float(rice_line.allocated) == 80
     rice_before = next(
         item
         for klass in allocation.region_snapshot(inventory_session, "east")["classes"]
@@ -297,13 +303,7 @@ def test_confirm_deducts_stock_only_after_verification(
         for item in klass["items"]
         if item["code"] == "rice"
     )
-    assert rice_before["quantity"] == 100.0
-    saved = geo_session.get(AllocationPlan, int(plan.plan_id))
-    assert saved is not None and saved.status == "draft"
-    lines = list(geo_session.scalars(select(AllocationLine).where(AllocationLine.plan_id == saved.id)))
-    rice_line = next(line for line in lines if line.item_code == "rice" and line.township_id == "bago")
-    assert float(rice_line.requested) == 80
-    assert float(rice_line.allocated) == 80
+    rice_before_qty = float(rice_before["quantity"])
 
     result = allocation.confirm_allocation_plan(geo_session, inventory_session, saved.id)
     assert result.status == "confirmed"
@@ -314,13 +314,73 @@ def test_confirm_deducts_stock_only_after_verification(
         for item in klass["items"]
         if item["code"] == "rice"
     )
-    assert rice_after["quantity"] == 20.0
+    assert rice_after["quantity"] == rice_before_qty - float(rice_line.allocated)
     movement = inventory_session.scalar(
         select(StockMovement).where(StockMovement.allocation_line_id == rice_line.id)
     )
     assert movement is not None
     assert movement.direction == "out"
     assert float(movement.quantity) == 80
+
+
+def test_confirm_with_split_inventory_database(
+    monkeypatch: pytest.MonkeyPatch,
+    geo_session: Session,
+    inventory_session: Session,
+) -> None:
+    from datetime import datetime, timezone
+
+    from sqlalchemy import event, select
+
+    from app.models import AllocationLine, AllocationPlan, StockMovement
+    from app.services.inventory import store_for_region
+
+    @event.listens_for(inventory_session.bind, "connect")
+    def _enable_sqlite_foreign_keys(dbapi_connection, _connection_record) -> None:
+        dbapi_connection.execute("PRAGMA foreign_keys=ON")
+
+    monkeypatch.setattr(allocation, "inventory_shares_operational_db", lambda: False)
+
+    async def fake_help(_township: allocation.TownshipCatalog, _day: date):
+        return _help_score(people=80, priority="severe")
+
+    monkeypatch.setattr(allocation, "_iter_townships", lambda _s, _ids: _sample_townships()[:1])
+    monkeypatch.setattr(allocation, "_help_for_township", fake_help)
+
+    async def _no_osrm(_pts):
+        return [{"latitude": 17.3, "longitude": 96.4}, {"latitude": 18.9, "longitude": 96.4}]
+
+    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    store = store_for_region(inventory_session, "east")
+    store.verified_at = datetime.now(timezone.utc)
+    inventory_session.commit()
+    _boost_depot_stock(inventory_session, "east")
+
+    request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
+    plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
+    saved = geo_session.get(AllocationPlan, int(plan.plan_id))
+    assert saved is not None
+
+    result = allocation.confirm_allocation_plan(geo_session, inventory_session, saved.id)
+    assert result.status == "confirmed"
+
+    rice_line = geo_session.scalar(
+        select(AllocationLine).where(
+            AllocationLine.plan_id == saved.id,
+            AllocationLine.item_code == "rice",
+        )
+    )
+    assert rice_line is not None
+    movement = inventory_session.scalar(
+        select(StockMovement).where(
+            StockMovement.note == f"Allocation plan {saved.id} → bago",
+            StockMovement.category_code == "foods",
+            StockMovement.item_code == "rice",
+            StockMovement.direction == "out",
+        )
+    )
+    assert movement is not None
+    assert movement.allocation_line_id is None
 
 
 def test_saved_plan_points_at_prediction_run(
@@ -544,12 +604,32 @@ def test_confirm_rejects_when_stock_dropped(
     _boost_depot_stock(inventory_session, "east")
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
     plan = asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
+    saved = geo_session.get(AllocationPlan, int(plan.plan_id))
+    assert saved is not None
+    from sqlalchemy import select
+
+    from app.models import AllocationLine
+
+    rice_line = next(
+        line
+        for line in geo_session.scalars(select(AllocationLine).where(AllocationLine.plan_id == saved.id))
+        if line.item_code == "rice"
+    )
+    allocated = float(rice_line.allocated)
+    rice_on_hand = next(
+        item
+        for klass in allocation.region_snapshot(inventory_session, "east")["classes"]
+        if klass["code"] == "foods"
+        for item in klass["items"]
+        if item["code"] == "rice"
+    )
+    drain = float(rice_on_hand["quantity"]) - allocated + 1
     add_region_stock(
         inventory_session,
         region="east",
         category_code="foods",
         item_code="rice",
-        quantity=90,
+        quantity=drain,
         entry_mode="manual",
         direction="out",
     )
@@ -567,4 +647,4 @@ def test_confirm_rejects_when_stock_dropped(
         for item in klass["items"]
         if item["code"] == "rice"
     )
-    assert rice["quantity"] == 10.0
+    assert rice["quantity"] == allocated - 1

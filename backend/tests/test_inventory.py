@@ -153,7 +153,7 @@ def test_receipt_stops_at_the_stock_ceiling(inventory_session: Session) -> None:
         region="east",
         category_code="foods",
         item_code="rice",
-        quantity=20000,
+        quantity=100000,
         entry_mode="manual",
     )
     add_region_stock(
@@ -161,10 +161,10 @@ def test_receipt_stops_at_the_stock_ceiling(inventory_session: Session) -> None:
         region="east",
         category_code="foods",
         item_code="oil",
-        quantity=20000,
+        quantity=100000,
         entry_mode="manual",
     )
-    with pytest.raises(InventoryError, match="Rice is limited to 20000"):
+    with pytest.raises(InventoryError, match="Rice is limited to 100000"):
         add_region_stock(
             inventory_session,
             region="east",
@@ -175,16 +175,16 @@ def test_receipt_stops_at_the_stock_ceiling(inventory_session: Session) -> None:
         )
     east = region_snapshot(inventory_session, "east")
     foods = next(row for row in east["classes"] if row["code"] == "foods")
-    assert foods["quantity"] == 40_000
-    assert foods["capacity"] == 60_000
-    assert foods["items"][0]["capacity"] == 20000
+    assert foods["quantity"] == 200_000
+    assert foods["capacity"] == 300_000
+    assert foods["items"][0]["capacity"] == 100000
 
     add_region_stock(
         inventory_session,
         region="west",
         category_code="foods",
         item_code="rice",
-        quantity=20000,
+        quantity=100000,
         entry_mode="manual",
     )
     add_region_stock(

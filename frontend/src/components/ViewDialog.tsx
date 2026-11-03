@@ -47,8 +47,8 @@ export function ViewDialog({
       <div className="inv-modal hf-modal view-dialog" role="dialog" aria-modal="true" aria-label={title}>
         <div className="modal-head">
           <h2>{title}</h2>
-          <button type="button" className="modal-close" onClick={onClose}>
-            Close
+          <button type="button" className="modal-close" aria-label="Close" onClick={onClose}>
+            <span aria-hidden="true">×</span>
           </button>
         </div>
         {children}

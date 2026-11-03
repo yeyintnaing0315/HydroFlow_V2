@@ -12,3 +12,6 @@ def test_per_person_items_and_gender_clothes() -> None:
         + by_code[("clothing", "f_longyi")].requested
         == 100
     )
+    assert len(items) == 19
+    assert by_code[("kitchenware", "bowl")].requested == 100
+    assert by_code[("utilities", "bednet")].requested == 100

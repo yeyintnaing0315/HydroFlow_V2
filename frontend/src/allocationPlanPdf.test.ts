@@ -9,22 +9,12 @@ const plan: AllocationPlanResponse = {
   warehouses: [
     { id: "depot-bago", name: "Bago depot (east)", region: "east", latitude: 17.3, longitude: 96.4 },
   ],
-  totals: { affected_population: 30, available_stock_units: 100, resources_needed_units: 20010 },
-  shortages: [
-    {
-      category_code: "fund",
-      item_code: null,
-      name: "Fund",
-      unit: "mmk",
-      requested: 20000,
-      available: 0,
-      unmet: 20000,
-      depot_region: "east",
-    },
-  ],
+  totals: { affected_population: 20, available_stock_units: 100, resources_needed_units: 20010 },
+  shortages: [],
   routes: [],
-  model_version: "allocation-v3",
+  model_version: "allocation-per-person",
   disclaimer: "Academic allocation illustration.",
+  status: "confirmed",
   rows: [
     {
       township_id: "bago",
@@ -32,33 +22,34 @@ const plan: AllocationPlanResponse = {
       latitude: 17.33,
       longitude: 96.48,
       population: 20,
+      affected_male: 9,
+      affected_female: 11,
       priority: "high",
       resources_label: "Rice",
       quantities_label: "10 bag",
       route_id: "Route A",
       depot_region: "east",
-      has_shortage: true,
+      has_shortage: false,
       line_items: [
-        { category_code: "foods", item_code: "rice", name: "Rice", unit: "bag", requested: 20, allocated: 10 },
-        { category_code: "fund", item_code: null, name: "Fund", unit: "mmk", requested: 20000, allocated: 0 },
+        { category_code: "foods", item_code: "rice", name: "Rice", unit: "bag", requested: 20, allocated: 20 },
+        { category_code: "clothing", item_code: "m_longyi", name: "Men longyi", unit: "piece", requested: 9, allocated: 9 },
+        { category_code: "clothing", item_code: "f_longyi", name: "Women longyi", unit: "piece", requested: 11, allocated: 11 },
       ],
     },
   ],
 };
 
 describe("buildAllocationReport", () => {
-  it("keeps each item in its own unit and does not add bags to kyat", () => {
+  it("builds a single supply table for print", () => {
     const report = buildAllocationReport(plan);
-    expect(report.summary).toBe("Affected people: 30 · Townships: 1 · Shortage lines: 1");
-    expect(report.summary).not.toContain("20,010");
-    expect(report.townshipHead).not.toContain("Requested");
-    expect(report.townshipBody[0]).toEqual(["Bago", "Bago depot (east)", "20", "high", "Route A"]);
-    const fund = (20000).toLocaleString();
-    expect(report.itemBody).toEqual([
-      ["Bago", "Rice", "bag", "20", "10"],
-      ["Bago", "Fund", "MMK", fund, "0"],
-    ]);
-    expect(report.shortageBody[0]).toEqual(["Fund", "MMK", "Bago depot (east)", fund, "0", fund]);
+    expect(report.title).toBe("Resource allocation plan");
+    expect(report.subtitle).toContain("2026-10-20");
+    expect(report.subtitle).toContain("Confirmed");
+    expect(report.tableHead[0]).toBe("Township");
+    expect(report.tableHead).toContain("Male");
+    expect(report.tableBody[0][0]).toBe("Bago");
+    expect(report.tableBody[0]).toContain("9");
+    expect(report.tableBody[0]).toContain("11");
     expect(report.filename).toBe("allocation-plan-2026-10-20-p-1.pdf");
   });
 });

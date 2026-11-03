@@ -44,6 +44,20 @@ function initialStartDate(): string {
   return `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
 }
 
+function apiHealthIndicator(health: Resource<HealthResponse>): { className: string; label: string } {
+  if (health.state === "loading") {
+    return { className: "loading", label: "API checking connection" };
+  }
+  if (health.state === "error") {
+    return { className: "offline", label: `API unavailable: ${health.error}` };
+  }
+  if (health.data?.status === "ok") {
+    return { className: "online", label: "API connected" };
+  }
+  const status = health.data?.status ?? "unavailable";
+  return { className: "warning", label: `API status: ${status}` };
+}
+
 function NavIcon({ page }: { page: PageId }) {
   const common = {
     fill: "none",
@@ -173,6 +187,8 @@ function App() {
     areas.state === "error" ? "Bago map layers could not be loaded." : null,
   ].filter((item): item is string => Boolean(item));
 
+  const apiStatus = apiHealthIndicator(health);
+
   return (
     <div className={sidebarOpen ? "shell" : "shell sidebar-closed"}>
       <aside className="sidebar">
@@ -206,14 +222,12 @@ function App() {
         </nav>
 
         <div className="sidebar-foot">
-          <div className={`status ${health.data?.status === "ok" ? "online" : ""}`}>
+          <div
+            className={`status status-dot-only ${apiStatus.className}`}
+            role="status"
+            aria-label={apiStatus.label}
+          >
             <span aria-hidden="true" />
-            API {health.state === "loading" ? "checking" : health.data?.status ?? "unavailable"}
-            {health.data && (
-              <small>
-                {health.data.service} v{health.data.version}
-              </small>
-            )}
           </div>
         </div>
       </aside>

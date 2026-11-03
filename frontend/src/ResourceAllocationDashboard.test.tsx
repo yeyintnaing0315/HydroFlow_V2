@@ -72,6 +72,11 @@ vi.mock("./api", () => ({
       disclaimer: "",
       events: [],
     }),
+    confirmAllocationPlan: vi.fn().mockResolvedValue({
+      plan_id: "p1",
+      status: "confirmed",
+      prediction_run_id: null,
+    }),
   },
 }));
 
@@ -85,6 +90,7 @@ const samplePlan = {
   routes: [],
   model_version: "test",
   disclaimer: "Academic allocation illustration. Not an operational dispatch plan.",
+  status: "draft" as const,
   rows: [
     {
       township_id: "bago",
@@ -92,6 +98,8 @@ const samplePlan = {
       latitude: 17.33,
       longitude: 96.48,
       population: 20,
+      affected_male: 9,
+      affected_female: 11,
       priority: "high" as const,
       resources_label: "Rice",
       quantities_label: "10 bag",
@@ -108,6 +116,8 @@ const samplePlan = {
       latitude: 18.93,
       longitude: 96.43,
       population: 10,
+      affected_male: 5,
+      affected_female: 5,
       priority: "severe" as const,
       resources_label: "Oil",
       quantities_label: "4 bottle",
@@ -131,25 +141,26 @@ describe("ResourceAllocationDashboard", () => {
       <ResourceAllocationDashboard startDate="2026-10-20" onStartDate={() => undefined} focus={null} />,
     );
 
-    const priorityScope = screen.getByText("Priority scope").parentElement;
-    expect(priorityScope).toBeTruthy();
-    expect(within(priorityScope!).getByText("High and severe only")).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "High and severe townships" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Township" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Affected people" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Allocation plan" })).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "East and west stock" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Bago (east)" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Pyay (west)" })).toBeInTheDocument();
-    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(screen.getByText(/High and severe only/)).toBeInTheDocument();
+    expect(screen.getByLabelText("Allocation summary")).toBeInTheDocument();
+    const planTable = screen.getByRole("region", { name: "Allocation plan table" });
+    expect(within(planTable).getByRole("columnheader", { name: "Township" })).toBeInTheDocument();
+    expect(within(planTable).getByRole("columnheader", { name: "Male" })).toBeInTheDocument();
+    expect(within(planTable).getByRole("columnheader", { name: "Female" })).toBeInTheDocument();
+    expect(within(planTable).getByRole("columnheader", { name: "People" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Create Allocation Plan" })).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "East and west stock" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Plans need verified depot stock/)).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Route map context")).toBeInTheDocument();
+    expect(screen.getByText("All high and severe")).toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "Township allocations" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Inventory unavailable/)).not.toBeInTheDocument();
-    expect(api.census).not.toHaveBeenCalled();
+    await waitFor(() => expect(api.census).toHaveBeenCalled());
     await waitFor(() => expect(api.inventory).toHaveBeenCalledWith("east"));
     expect(api.inventory).toHaveBeenCalledWith("west");
     expect(api.helpSummary).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Create plan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
 
     await waitFor(() => expect(api.allocationPlan).toHaveBeenCalled());
     expect(api.allocationPlan).toHaveBeenCalledWith(
@@ -173,31 +184,47 @@ describe("ResourceAllocationDashboard", () => {
       />,
     );
 
-    const priorityScope = screen.getByText("Priority scope").parentElement;
-    expect(priorityScope).toBeTruthy();
-    expect(within(priorityScope!).getByText("High risk")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Create plan" }));
+    expect(within(screen.getByLabelText("Route map context")).getByText("Bago")).toBeInTheDocument();
+    expect(
+      within(screen.getByLabelText("Allocation details")).getAllByText("High").length,
+    ).toBeGreaterThan(0);
+    expect(
+      within(screen.getByRole("region", { name: "Allocation plan table" })).getAllByText("Bago").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: "Estimate" })).toBeInTheDocument();
+    expect(screen.queryByText(/No high or severe townships for this date/)).not.toBeInTheDocument();
+    vi.mocked(api.helpSummary).mockResolvedValueOnce({ expected_affected_people: 120 } as never);
+    fireEvent.click(screen.getByRole("button", { name: "Estimate" }));
+    await waitFor(() => expect(api.helpSummary).toHaveBeenCalled());
+    await waitFor(() => {
+      const panel = screen.getByRole("region", { name: "Allocation plan table" });
+      expect(within(panel).queryByText(/No high or severe townships for this date/)).not.toBeInTheDocument();
+      expect(within(panel).getByRole("table")).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
     await waitFor(() => expect(api.allocationPlan).toHaveBeenCalled());
     expect(api.allocationPlan).toHaveBeenCalledWith(
       expect.objectContaining({
         min_priority: "high",
         include_all_high_severe: false,
         township_ids: ["MMR007001701"],
+        expected_affected_overrides: { MMR007001701: 120 },
       }),
     );
   });
 
-  it("shows line items for the selected township", async () => {
+  it("shows compact plan columns on the dashboard after planning", async () => {
     vi.mocked(api.allocationPlan).mockResolvedValueOnce(samplePlan);
     render(
       <ResourceAllocationDashboard startDate="2026-10-20" onStartDate={() => undefined} focus={null} />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Create plan" }));
-    expect(await screen.findByText("Rice")).toBeInTheDocument();
-    expect(screen.getByText(/10 \/ 20 bag/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Taungoo/ }));
-    expect(await screen.findByText("Oil")).toBeInTheDocument();
-    expect(screen.queryByText("Rice")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
+    const supplies = await screen.findByRole("region", { name: "Allocation plan table" });
+    expect(within(supplies).getByRole("cell", { name: "Bago" })).toBeInTheDocument();
+    expect(within(supplies).getByRole("columnheader", { name: "Date" })).toBeInTheDocument();
+    expect(within(supplies).getByRole("columnheader", { name: "Route" })).toBeInTheDocument();
+    expect(within(supplies).queryByRole("columnheader", { name: /Rice/ })).not.toBeInTheDocument();
+    expect(within(supplies).getAllByRole("cell", { name: "2026-10-20" }).length).toBeGreaterThan(0);
   });
 
   it("renders only the routes the comparison returned", async () => {
@@ -245,15 +272,12 @@ describe("ResourceAllocationDashboard", () => {
     render(
       <ResourceAllocationDashboard startDate="2026-10-20" onStartDate={() => undefined} focus={null} />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Create plan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
     expect(await screen.findByRole("button", { name: /Taungoo/ })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Option 1/ })).not.toBeInTheDocument();
     expect(api.compareTownshipRoutes).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: "Other roads" }));
-    expect(await screen.findByRole("button", { name: /Option 1/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Option 2/ })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Option 3/ })).not.toBeInTheDocument();
-    expect(screen.queryByText(/Only one route is available/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Routes" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Other roads/i })).not.toBeInTheDocument();
   });
 
   it("opens the print preview for a ready plan", async () => {
@@ -261,18 +285,23 @@ describe("ResourceAllocationDashboard", () => {
     render(
       <ResourceAllocationDashboard startDate="2026-10-20" onStartDate={() => undefined} focus={null} />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Create plan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
+    const printButton = await screen.findByRole("button", { name: "Print preview" });
+    expect(printButton).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Confirm plan" }));
+    await waitFor(() => expect(api.confirmAllocationPlan).toHaveBeenCalled());
     await waitFor(() => expect(screen.getByRole("button", { name: "Print preview" })).toBeEnabled());
+    const deductions = screen.getByLabelText("Depot stock reduced");
+    expect(within(deductions).getByText("Rice")).toBeInTheDocument();
+    expect(within(deductions).getByText(/−10 bag/)).toBeInTheDocument();
+    expect(within(deductions).getByText("Oil")).toBeInTheDocument();
+    expect(within(deductions).getByText(/−4 bottle/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Print preview" }));
     const dialog = screen.getByRole("dialog", { name: "Allocation report" });
-    expect(within(dialog).getByText("Resource allocation report")).toBeInTheDocument();
-    const townships = within(dialog).getByRole("table", { name: "Townships" });
-    expect(within(townships).getByRole("cell", { name: "Taungoo" })).toBeInTheDocument();
-    expect(within(dialog).queryByText("Needed")).not.toBeInTheDocument();
-    const items = within(dialog).getByRole("table", { name: "Line items" });
-    const rice = within(items).getByRole("row", { name: /Rice/ });
-    expect(rice).toHaveTextContent("bag");
-    expect(rice).toHaveTextContent("20");
-    expect(rice).toHaveTextContent("10");
+    expect(within(dialog).getByText("Resource allocation plan")).toBeInTheDocument();
+    const table = within(dialog).getByRole("table", { name: "Township supplies" });
+    expect(within(table).getByRole("cell", { name: "Taungoo" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("heading", { name: "Route map" })).toBeInTheDocument();
+    expect(within(dialog).getByText(/Fund allocated/i)).toBeInTheDocument();
   });
 });

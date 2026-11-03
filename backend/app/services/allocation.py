@@ -54,6 +54,7 @@ from app.services.inventory import (
     region_snapshot,
     store_for_region,
 )
+from app.db import inventory_shares_operational_db
 from app.services.population_split import split_affected_by_sex
 from app.services.prediction_timeline import map_scores_for_date
 PRIORITY_WEIGHT: dict[str, int] = {
@@ -561,6 +562,49 @@ def _allocate_from_stock(
     return rows, needed_units, remaining
 
 
+def _validate_per_person_plan(rows: list[AllocationTownshipRow]) -> None:
+    from app.services.allocation_rules import FUND_MMK_PER_PERSON
+
+    from app.services.inventory import DEFAULT_ITEM_TYPES
+
+    per_person_skus: set[tuple[str, str | None]] = set()
+    for category_code, types in DEFAULT_ITEM_TYPES.items():
+        for code, _name, _unit, _sort in types:
+            if code in ("m_longyi", "f_longyi"):
+                continue
+            per_person_skus.add((category_code, code))
+    for row in rows:
+        people = int(row.population)
+        if people <= 0:
+            continue
+        longyi_requested = 0
+        for item in row.line_items:
+            requested = int(round(float(item.requested)))
+            allocated = int(round(float(item.allocated)))
+            key = (item.category_code, item.item_code)
+            if item.category_code == "fund" and item.item_code is None:
+                expected = people * FUND_MMK_PER_PERSON
+                if requested != expected:
+                    raise AllocationStateError(
+                        f"{row.township_name}: fund requested {requested}, expected {expected} for {people} people"
+                    )
+            elif key in per_person_skus:
+                if requested != people:
+                    raise AllocationStateError(
+                        f"{row.township_name}: {item.name} requested {requested}, expected {people}"
+                    )
+            elif item.item_code in ("m_longyi", "f_longyi"):
+                longyi_requested += requested
+            if allocated != requested:
+                raise AllocationStateError(
+                    f"{row.township_name}: {item.name} allocated {allocated} but requested {requested}"
+                )
+        if longyi_requested > 0 and longyi_requested != people:
+            raise AllocationStateError(
+                f"{row.township_name}: longyi requested {longyi_requested}, expected {people} total"
+            )
+
+
 def _shortages_for_depot(
     requested_totals: dict[tuple[str, str | None], float],
     stock: dict[tuple[str, str | None], tuple[float, str, str]],
@@ -1050,6 +1094,55 @@ def get_allocation_plan(
     )
 
 
+def _allocation_line_movement_exists(
+    inventory_session: Session,
+    plan_id: int,
+    line: AllocationLine,
+    *,
+    link_allocation_line: bool,
+) -> bool:
+    if link_allocation_line:
+        return (
+            inventory_session.scalar(
+                select(StockMovement.id).where(
+                    StockMovement.allocation_line_id == line.id,
+                    StockMovement.direction == "out",
+                )
+            )
+            is not None
+        )
+    note = f"Allocation plan {plan_id} → {line.township_id}"
+    statement = select(StockMovement.id).where(
+        StockMovement.direction == "out",
+        StockMovement.note == note,
+        StockMovement.category_code == line.category_code,
+    )
+    if line.item_code is None:
+        statement = statement.where(StockMovement.item_code.is_(None))
+    else:
+        statement = statement.where(StockMovement.item_code == line.item_code)
+    return inventory_session.scalar(statement) is not None
+
+
+def _depot_region_for_township(
+    plan: AllocationPlan,
+    township_id: str,
+    township_region: dict[str, str],
+) -> str | None:
+    mapped = township_region.get(township_id)
+    if mapped in ("east", "west"):
+        return mapped
+    ctx = _as_dict(plan.plan_context)
+    townships = ctx.get("townships")
+    if isinstance(townships, dict):
+        entry = townships.get(township_id)
+        if isinstance(entry, dict):
+            saved = entry.get("depot_region")
+            if saved in ("east", "west"):
+                return saved
+    return None
+
+
 def confirm_allocation_plan(
     geo_session: Session,
     inventory_session: Session,
@@ -1076,44 +1169,50 @@ def confirm_allocation_plan(
     for line in lines:
         if Decimal(line.allocated) <= 0:
             continue
-        region = township_region.get(line.township_id)
+        region = _depot_region_for_township(plan, line.township_id, township_region)
         if region is None:
             raise AllocationStateError(f"No depot route for {line.township_id}")
+        township_region[line.township_id] = region
         regions_needed.add(region)
     for region in sorted(regions_needed):
         store = store_for_region(inventory_session, region)
         if store.verified_at is None:
             raise AllocationStateError(f"{store.name} is not verified")
+    link_allocation_line = inventory_shares_operational_db()
     pending: list[tuple[AllocationLine, Decimal]] = []
     needed: dict[tuple[str, str, str | None], Decimal] = {}
     for line in lines:
         quantity = Decimal(line.allocated)
         if quantity <= 0:
             continue
-        already = inventory_session.scalar(
-            select(StockMovement.id).where(
-                StockMovement.allocation_line_id == line.id,
-                StockMovement.direction == "out",
-            )
-        )
-        if already is not None:
+        if _allocation_line_movement_exists(
+            inventory_session,
+            plan.id,
+            line,
+            link_allocation_line=link_allocation_line,
+        ):
             continue
         pending.append((line, quantity))
-        region = township_region[line.township_id]
+        region = _depot_region_for_township(plan, line.township_id, township_region)
+        if region is None:
+            raise AllocationStateError(f"No depot route for {line.township_id}")
         key = (region, line.category_code, line.item_code)
         needed[key] = needed.get(key, Decimal("0")) + quantity
     _assert_stock_covers(inventory_session, needed)
     for line, quantity in pending:
+        region = _depot_region_for_township(plan, line.township_id, township_region)
+        if region is None:
+            raise AllocationStateError(f"No depot route for {line.township_id}")
         add_region_stock(
             inventory_session,
-            region=township_region[line.township_id],
+            region=region,
             category_code=line.category_code,
             item_code=line.item_code,
             quantity=quantity,
             entry_mode="manual",
             direction="out",
             note=f"Allocation plan {plan.id} → {line.township_id}",
-            allocation_line_id=line.id,
+            allocation_line_id=line.id if link_allocation_line else None,
         )
     plan.status = "confirmed"
     geo_session.flush()
@@ -1179,6 +1278,10 @@ async def _build_allocation_plan(
         scored = await _help_for_township(township, request.date)
         if scored is None:
             return None
+        if request.expected_affected_overrides:
+            override = request.expected_affected_overrides.get(township.id)
+            if override is not None and int(override) > 0:
+                scored = {**scored, "expected_affected_people": int(override)}
         priority = str(scored["assistance_priority"])
         people = int(scored["expected_affected_people"])
         if not _meets_min_priority(priority, request.min_priority):
@@ -1203,7 +1306,10 @@ async def _build_allocation_plan(
         merged["_source_flood_probability"] = source_flood
         merged["_source_rainfall_mm"] = source_rain
         merged["_source_discharge_m3_s"] = source_discharge
-        items, sku_version = predict_sku_demand(merged)
+        from app.services.allocation_rules import line_items_per_served_person
+
+        items = line_items_per_served_person(merged, township.name_en)
+        sku_version = "allocation-per-person"
         if not items:
             return None
         return (township, merged, items, sku_version)
@@ -1274,6 +1380,9 @@ async def _build_allocation_plan(
 
     if shortages:
         raise AllocationStateError(PLAN_BLOCKED_ON_SHORTAGE)
+
+    if sku_model_version == "allocation-per-person":
+        _validate_per_person_plan(allocated_rows)
 
     allocated_rows.sort(
         key=lambda row: rank_by_township.get(row.township_id, (0.0, float(row.population), 0.0)),

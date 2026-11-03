@@ -2,23 +2,30 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { api } from "./api";
 import HomeDashboard from "./HomeDashboard";
-import type {
-  AllocationPlanResponse,
-  BagoAreasResponse,
-  InventorySnapshot,
-  RegionForecastResponse,
-  RegionForecastScore,
-} from "./types";
+import { localToday } from "./lib/dates";
+import type { AllocationPlanResponse, BagoAreasResponse, InventorySnapshot } from "./types";
 
 vi.mock("react-leaflet", () => ({
-  MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map">{children}</div>,
+  MapContainer: ({
+    children,
+    "aria-label": ariaLabel,
+  }: {
+    children: React.ReactNode;
+    "aria-label"?: string;
+  }) => (
+    <div data-testid="map" aria-label={ariaLabel}>
+      {children}
+    </div>
+  ),
   TileLayer: () => null,
   CircleMarker: () => null,
+  Polyline: () => null,
   Popup: () => null,
-  GeoJSON: () => null,
+  Tooltip: () => null,
   Pane: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
   useMap: () => ({
     fitBounds: () => undefined,
+    setView: () => undefined,
     invalidateSize: () => undefined,
     getSize: () => ({ x: 800, y: 600 }),
     getContainer: () => document.createElement("div"),
@@ -27,12 +34,24 @@ vi.mock("react-leaflet", () => ({
 
 vi.mock("./api", () => ({
   api: {
-    predictionRegionForecast: vi.fn(),
+    predictionTimeline: vi.fn(),
+    predictionCalendarBounds: vi.fn(),
+    predictionMapScores: vi.fn(),
     allocationPlans: vi.fn(),
     allocationPlanDetail: vi.fn(),
     inventoryLocations: vi.fn(),
+    allocationNetworkRoutes: vi.fn(),
+    allocationStores: vi.fn().mockResolvedValue([]),
+    floodCasesHighSevere: vi.fn().mockResolvedValue({
+      counts: { total: 0, severe: 0, high: 0, recorded: 0, model: 0 },
+      by_year: [],
+      disclaimer: "",
+      events: [],
+    }),
   },
 }));
+
+const today = localToday();
 
 const areas: BagoAreasResponse = {
   latitude: 18.26,
@@ -69,94 +88,6 @@ const areas: BagoAreasResponse = {
         },
       ],
     },
-  ],
-};
-
-function score(
-  overrides: Partial<RegionForecastScore> & Pick<RegionForecastScore, "township_id" | "township_name" | "lead_days">,
-): RegionForecastScore {
-  return {
-    district_id: "d1",
-    latitude: 17.33,
-    longitude: 96.48,
-    target_date: "2026-10-31",
-    flood_probability: 0.2,
-    risk_band: "low",
-    probability_risk_level: "low",
-    risk_level: "low",
-    rainfall_mm: 10,
-    discharge_m3_s: 100,
-    static_hazard: null,
-    early_warning: false,
-    warning_reason: null,
-    warning_level: null,
-    drivers: { rain: "low", discharge: "low", floodplain_or_river_distance: "far" },
-    data_status: "model_estimate",
-    ...overrides,
-  };
-}
-
-const forecast: RegionForecastResponse = {
-  as_of: "2026-10-31",
-  run_id: 1,
-  model_version: "test",
-  feature_version: "v2",
-  disclaimer: "Academic estimate.",
-  cached: true,
-  labels_found: false,
-  label_file: null,
-  missing_inputs: [],
-  scores: [
-    score({
-      township_id: "t1",
-      township_name: "Bago",
-      lead_days: 0,
-      flood_probability: 0.82,
-      risk_band: "very_high",
-      probability_risk_level: "severe",
-      risk_level: "severe",
-      rainfall_mm: 40,
-      discharge_m3_s: 1200,
-      early_warning: true,
-      warning_level: "severe",
-      district_id: "d1",
-    }),
-    score({
-      township_id: "t1",
-      township_name: "Bago",
-      lead_days: 1,
-      target_date: "2026-11-01",
-      flood_probability: 0.4,
-      risk_band: "moderate",
-      probability_risk_level: "moderate",
-      risk_level: "moderate",
-      rainfall_mm: 80,
-      discharge_m3_s: 900,
-    }),
-    score({
-      township_id: "t2",
-      township_name: "Pyay",
-      district_id: "d2",
-      latitude: 18.82,
-      longitude: 95.22,
-      lead_days: 0,
-      flood_probability: 0.61,
-      risk_band: "high",
-      probability_risk_level: "high",
-      risk_level: "high",
-      rainfall_mm: 20,
-      discharge_m3_s: 400,
-    }),
-    score({
-      township_id: "t3",
-      township_name: "Taungoo",
-      district_id: "d1",
-      lead_days: 0,
-      flood_probability: 0.1,
-      risk_level: "low",
-      rainfall_mm: 5,
-      discharge_m3_s: 100,
-    }),
   ],
 };
 
@@ -251,6 +182,58 @@ const westStock: InventorySnapshot = {
   movements: [],
 };
 
+function mockPredictionPanelApis(severeToday = true) {
+  vi.mocked(api.predictionCalendarBounds).mockResolvedValue({
+    history_start: "2010-01-01",
+    operational_start: "2010-01-01",
+    labeled_start: "2021-04-01",
+    history_end: today,
+    forecast_end: today,
+    select_max: today,
+  });
+  vi.mocked(api.predictionMapScores).mockResolvedValue({ scores: [] });
+  vi.mocked(api.predictionTimeline).mockResolvedValue({
+    township_id: "t1",
+    as_of: today,
+    timezone: "Asia/Yangon",
+    model_version: "test",
+    in_training_set: true,
+    generated_at: "2026-10-10T00:00:00Z",
+    potentially_exposed_population: 1000,
+    disclaimer: "Test",
+    days: [
+      {
+        date: today,
+        period_type: "current",
+        flood_probability: severeToday ? 0.82 : 0.12,
+        predicted_flood: severeToday,
+        probability_risk_level: severeToday ? "severe" : "low",
+        risk_level: severeToday ? "severe" : "low",
+        hydrology_risk_score: 20,
+        hydrology_risk_level: severeToday ? "severe" : "low",
+        rainfall_mm: 6.5,
+        discharge_m3_s: 0.1,
+        temperature_c: 28.3,
+        relative_humidity_pct: 84,
+        wind_speed_m_s: 1.6,
+        rainfall_7d_mm: 29.4,
+        impact_level: "unknown",
+        potentially_exposed_population: 1000,
+        potentially_affected_population: null,
+        observed_flood: null,
+        recorded_affected_people: null,
+        data_status: "model_estimate",
+        evidence_type: "model_prediction",
+        probability_status: "uncalibrated_academic_score",
+        forecast_horizon_hours: 0,
+        input_freshness: {},
+        uncertainty: "",
+        key_factors: [],
+      },
+    ],
+  });
+}
+
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
@@ -258,7 +241,7 @@ afterEach(() => {
 
 describe("HomeDashboard", () => {
   it("summarizes flood risk, the latest plan, and depot stock", async () => {
-    vi.mocked(api.predictionRegionForecast).mockResolvedValue(forecast);
+    mockPredictionPanelApis(true);
     vi.mocked(api.allocationPlans).mockResolvedValue([
       {
         plan_id: "old",
@@ -277,6 +260,7 @@ describe("HomeDashboard", () => {
     ]);
     vi.mocked(api.allocationPlanDetail).mockResolvedValue(plan);
     vi.mocked(api.inventoryLocations).mockResolvedValue({ locations: [eastStock, westStock] });
+    vi.mocked(api.allocationNetworkRoutes).mockResolvedValue({ routes: [] });
     const onOpenPage = vi.fn();
     const onPlanResources = vi.fn();
 
@@ -288,37 +272,67 @@ describe("HomeDashboard", () => {
       />,
     );
 
-    const overview = screen.getByRole("region", { name: "Overview" });
-    expect(await within(overview).findByText("Severe")).toBeInTheDocument();
-    expect(within(overview).getByText("High or severe in 2 districts")).toBeInTheDocument();
-    expect(within(overview).getByText("5–80 mm")).toBeInTheDocument();
-    expect(within(overview).getByText("1,200 m³/s")).toBeInTheDocument();
-    expect(within(overview).getByText("Bago")).toBeInTheDocument();
-    expect(await within(overview).findByText("8,500")).toBeInTheDocument();
-    expect(within(overview).getByText("Latest plan · 2026-10-31")).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Overview" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Flood Prediction" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Resource Allocation" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Inventory Management" })).toBeInTheDocument();
 
-    expect(await screen.findByText("Draft · 2026-10-31 · 1 unmet line")).toBeInTheDocument();
-    expect(screen.getByText("40 allocated of 100 requested")).toBeInTheDocument();
-    expect(screen.getByText("50 allocated of 50 requested")).toBeInTheDocument();
-    expect(screen.getByText("Rainfall · Bago: day 0 40 mm, day 1 80 mm")).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Forecast rainfall sparkline" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Route map" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Route map context")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("Route map context")).getByText(today)).toBeInTheDocument();
+    expect(within(screen.getByLabelText("Route map context")).getByText("All high and severe")).toBeInTheDocument();
+    expect(screen.getByTestId("map")).toBeInTheDocument();
+    expect(screen.getByLabelText("Map legend")).toBeInTheDocument();
+    expect(screen.getByText("East depot routes")).toBeInTheDocument();
+    expect(screen.queryByText(/high or severe$/)).not.toBeInTheDocument();
 
-    const counts = screen.getByRole("group", { name: "Stock counts" });
-    expect(within(counts).getByText("3")).toBeInTheDocument();
-    expect(within(counts).getByText("Items")).toBeInTheDocument();
-    expect(within(counts).getAllByText("1")).toHaveLength(3);
-    expect(screen.getByText("Consider restocking Rice (Bago East) and Life Jackets (Bago West).")).toBeInTheDocument();
-    expect(screen.getByText("0 kg · Bago East")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Selected date")).toBeInTheDocument();
+    expect(screen.getByLabelText("Selected date")).toHaveValue(today);
+    expect(screen.getByLabelText("Selected township")).toBeInTheDocument();
+    expect(await screen.findByText("Flood chance")).toBeInTheDocument();
+    expect(screen.getByText("82%")).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: "Forecast rainfall sparkline" })).not.toBeInTheDocument();
+
+    expect(screen.getByRole("group", { name: "Inventory depot" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Both depots" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText(/Showing inventory for/i)).toHaveTextContent("Bago East & Bago West");
+
+    const totals = await screen.findByLabelText("Inventory totals");
+    expect(within(totals).getByText("Total items")).toBeInTheDocument();
+    expect(within(totals).getByText("5,000")).toBeInTheDocument();
+    expect(within(totals).getByText("Food")).toBeInTheDocument();
+    expect(within(totals).getByText("4,000")).toBeInTheDocument();
+    expect(within(totals).getByText("Utilities")).toBeInTheDocument();
+    expect(within(totals).getByText("1,000")).toBeInTheDocument();
+    const inventoryItems = await screen.findByLabelText("Inventory items");
+    expect(within(inventoryItems).getByText("Rice")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("Clean Water")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("Life Jackets")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("0 kg · Bago East")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("4,000 L · Bago East")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("1,000 pcs · Bago West")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Bago East" }));
+    expect(screen.getByRole("button", { name: "Bago East" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText(/Showing inventory for/i)).toHaveTextContent("Bago East");
+    expect(within(await screen.findByLabelText("Inventory items")).queryByText("Life Jackets")).not.toBeInTheDocument();
+    expect(within(screen.getByLabelText("Inventory items")).getByText("Rice")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Both depots" }));
+    expect(within(screen.getByLabelText("Inventory items")).getByText("Life Jackets")).toBeInTheDocument();
+
+    expect(screen.queryByRole("button", { name: "View stock" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Consider restocking/i)).not.toBeInTheDocument();
 
     expect(api.allocationPlanDetail).toHaveBeenCalledWith("p1");
     expect(api.allocationPlanDetail).not.toHaveBeenCalledWith("old");
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Plan resources" })[0]);
+    fireEvent.click(screen.getByRole("button", { name: "Plan resource allocation" }));
     expect(onPlanResources).toHaveBeenCalledWith(
       expect.objectContaining({
         townshipId: "t1",
         townshipName: "Bago",
-        date: "2026-10-31",
+        date: today,
         riskLevel: "severe",
         latitude: 17.33,
         longitude: 96.48,
@@ -326,18 +340,21 @@ describe("HomeDashboard", () => {
       }),
     );
 
+    fireEvent.click(screen.getByRole("button", { name: "Prediction details" }));
     fireEvent.click(screen.getByRole("button", { name: "Open flood prediction" }));
     fireEvent.click(screen.getByRole("button", { name: "Open resource allocation" }));
     fireEvent.click(screen.getByRole("button", { name: "Open inventory" }));
     expect(onOpenPage).toHaveBeenNthCalledWith(1, "prediction");
-    expect(onOpenPage).toHaveBeenNthCalledWith(2, "allocation");
-    expect(onOpenPage).toHaveBeenNthCalledWith(3, "inventory");
+    expect(onOpenPage).toHaveBeenNthCalledWith(2, "prediction");
+    expect(onOpenPage).toHaveBeenNthCalledWith(3, "allocation");
+    expect(onOpenPage).toHaveBeenNthCalledWith(4, "inventory");
   });
 
   it("keeps allocation and inventory when the flood forecast fails and no plan exists", async () => {
-    vi.mocked(api.predictionRegionForecast).mockRejectedValue(new Error("forecast down"));
+    mockPredictionPanelApis(false);
     vi.mocked(api.allocationPlans).mockResolvedValue([]);
     vi.mocked(api.inventoryLocations).mockResolvedValue({ locations: [eastStock] });
+    vi.mocked(api.allocationNetworkRoutes).mockResolvedValue({ routes: [] });
     const onOpenPage = vi.fn();
 
     render(
@@ -348,11 +365,17 @@ describe("HomeDashboard", () => {
       />,
     );
 
-    expect(await screen.findByText("Flood forecast could not be loaded. forecast down")).toBeInTheDocument();
-    expect(screen.getAllByText("Forecast unavailable").length).toBeGreaterThan(0);
+    expect(await screen.findByText("No allocation needed.")).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Overview" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Flood forecast could not be loaded. forecast down")).not.toBeInTheDocument();
     expect(await screen.findByText("No allocation plan yet. Create one from Resource Allocation.")).toBeInTheDocument();
-    expect(await screen.findByText("Consider restocking Rice (Bago East).")).toBeInTheDocument();
-    expect(screen.getByText("0 kg · Bago East")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Route map" })).toBeInTheDocument();
+    expect(screen.getByTestId("map")).toBeInTheDocument();
+    const inventoryItems = await screen.findByLabelText("Inventory items");
+    expect(within(inventoryItems).getByText("Rice")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("Clean Water")).toBeInTheDocument();
+    expect(within(inventoryItems).getByText("0 kg · Bago East")).toBeInTheDocument();
+    expect(screen.queryByText(/Consider restocking/i)).not.toBeInTheDocument();
     expect(screen.queryByText("1,200 m³/s")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole("button", { name: "Open resource allocation" })[0]);

@@ -4,12 +4,15 @@ import BasemapTileLayer from "./components/map/BasemapTileLayer";
 import MapViewportFix from "./components/map/MapViewportFix";
 import type { GeoJsonObject } from "geojson";
 import AllocationPrompt from "./components/prediction/AllocationPrompt";
-import DailyDetailPanel from "./components/prediction/DailyDetailPanel";
+import FloodPredictionNowPanel from "./components/prediction/FloodPredictionNowPanel";
+import LoadingSpinner from "./components/prediction/LoadingSpinner";
 import HazardDepthPanel from "./components/prediction/HazardDepthPanel";
-import { PageControls, ViewDialog } from "./components/ViewDialog";
+import { ViewDialog } from "./components/ViewDialog";
 import type { AllocationFocus } from "./lib/allocationFocus";
 import { districtColor, displayRiskLevel, floodBandLabel, floodFillLevel, formatPercent, riskColor } from "./components/prediction/mapUtils";
 import { usePredictionTimeline } from "./hooks/usePredictionTimeline";
+import { outlookFromForecast } from "./lib/outlookFromForecast";
+import { preferredTownshipId } from "./lib/preferredTownship";
 import type {
   BagoAreasResponse,
   HealthResponse,
@@ -25,12 +28,6 @@ interface Resource<T> {
   state: LoadState;
   data?: T;
   error?: string;
-}
-
-function preferredTownshipId(districts: BagoAreasResponse["districts"]): string {
-  const bagoDistrict = districts.find((district) => district.name_en === "Bago");
-  const bagoTownship = bagoDistrict?.townships.find((township) => township.name_en === "Bago");
-  return bagoTownship?.id ?? districts[0]?.townships[0]?.id ?? "";
 }
 
 function FitPoints({ points }: { points: [number, number][] }) {
@@ -62,38 +59,6 @@ function FitPoints({ points }: { points: [number, number][] }) {
     };
   }, [map, points]);
   return null;
-}
-
-function outlookFromForecast(score: RegionForecastScore): PredictionTimelineDay {
-  const level = score.probability_risk_level;
-  return {
-    date: score.target_date,
-    period_type: score.lead_days > 0 ? "forecast" : "current",
-    flood_probability: score.flood_probability,
-    predicted_flood: score.flood_probability == null ? null : score.flood_probability >= 0.5,
-    probability_risk_level: level,
-    risk_level: level ?? "unknown",
-    hydrology_risk_score: null,
-    hydrology_risk_level: null,
-    rainfall_mm: score.rainfall_mm,
-    discharge_m3_s: score.discharge_m3_s,
-    relative_humidity_pct: null,
-    impact_level: "unknown",
-    potentially_exposed_population: null,
-    potentially_affected_population: null,
-    observed_flood: null,
-    recorded_affected_people: null,
-    data_status: score.data_status,
-    evidence_type: score.data_status === "model_estimate" ? "model_prediction" : "none",
-    probability_status: score.data_status === "model_estimate" ? "uncalibrated_academic_score" : null,
-    forecast_horizon_hours: score.lead_days * 24,
-    input_freshness: {},
-    uncertainty:
-      score.data_status === "unavailable"
-        ? "Hydrology for this township is unavailable."
-        : "Academic model score from saved or local hydrology.",
-    key_factors: [],
-  };
 }
 
 function TownshipPopup({
@@ -157,7 +122,7 @@ function DayGroup({
         <div className="history-row region header" role="row">
           <span>Date</span>
           <span>Rainfall</span>
-          <span>River discharge</span>
+          <span>Discharge</span>
           <span>Risk</span>
         </div>
         {days.map((day) => {
@@ -221,8 +186,7 @@ export default function FloodPredictionDashboard({
   const [districtFilter, setDistrictFilter] = useState("all");
   const [historyView, setHistoryView] = useState<"next" | "past">("next");
   const [outlookOpen, setOutlookOpen] = useState(false);
-  const [historyOpen, setHistoryOpen] = useState(false);
-  const [historyPage, setHistoryPage] = useState(0);
+  const [historyTableReady, setHistoryTableReady] = useState(false);
 
   useEffect(() => {
     if (areas.data && !selectedTownship) {
@@ -230,17 +194,15 @@ export default function FloodPredictionDashboard({
     }
   }, [areas.data, selectedTownship]);
 
+  const timelineControl = usePredictionTimeline(areas.data, selectedTownship, districtFilter);
   const {
     anchorDate,
-    setAnchorDate,
-    dateMin,
-    dateMax,
     selectedDate,
     setSelectedDate,
     timeline,
     selectedDay,
     scoresByTownship,
-  } = usePredictionTimeline(areas.data, selectedTownship, districtFilter);
+  } = timelineControl;
 
   const visibleDistricts = useMemo(() => {
     const districts = areas.data?.districts ?? [];
@@ -311,7 +273,17 @@ export default function FloodPredictionDashboard({
   const timelineDays = timeline.data?.days ?? [];
   const pastDays = timelineDays.filter((day) => day.period_type === "historical");
   const forecastDays = timelineDays.filter((day) => day.period_type === "forecast");
+  const timelineLoading = timeline.state === "loading";
   const timelineReady = timeline.state === "ready";
+
+  useEffect(() => {
+    setHistoryTableReady(false);
+    if (!timelineReady) return;
+    const timer = window.setTimeout(() => setHistoryTableReady(true), 120);
+    return () => clearTimeout(timer);
+  }, [timelineReady, timeline.data, selectedTownship, anchorDate]);
+
+  const showHistoryLoader = timelineLoading || (timelineReady && !historyTableReady);
   const selectedForecast = scoresByTownship.get(selectedTownship);
   const forecastForDay =
     selectedForecast && "target_date" in selectedForecast && selectedForecast.target_date === selectedDate
@@ -468,106 +440,34 @@ export default function FloodPredictionDashboard({
               ))}
             </MapContainer>
           </div>
-          <p className="hint" role="status">
-            Map colors use the gradient-boosting flood model for{" "}
-            <strong>{selectedDate}</strong>
-            {selectedDate !== anchorDate ? ` (timeline centered on ${anchorDate})` : ""}.
-            Pick another day in the table to update the map.
-          </p>
-          <ul className="legend" aria-label="Flood risk bands">
-            <li><i style={{ background: "#2d9c6c" }} />low</li>
-            <li><i style={{ background: "#c49212" }} />moderate</li>
-            <li><i style={{ background: "#d86a1a" }} />high</li>
-            <li><i style={{ background: "#a83232" }} />severe</li>
-          </ul>
-          <ul className="district-legend">
-            {(areas.data?.districts ?? []).map((district) => (
-              <li key={district.id}>
-                <i style={{ background: districtColor(district.id) }} />
-                {district.name_en} · {district.townships.length} townships
-              </li>
-            ))}
-          </ul>
+          <div className="map-panel-footer">
+            <ul className="legend" aria-label="Flood risk bands">
+              <li><i style={{ background: "#2d9c6c" }} />low</li>
+              <li><i style={{ background: "#c49212" }} />moderate</li>
+              <li><i style={{ background: "#d86a1a" }} />high</li>
+              <li><i style={{ background: "#a83232" }} />severe</li>
+            </ul>
+            <ul className="district-legend">
+              {(areas.data?.districts ?? []).map((district) => (
+                <li key={district.id}>
+                  <i style={{ background: districtColor(district.id) }} />
+                  {district.name_en} · {district.townships.length} townships
+                </li>
+              ))}
+            </ul>
+          </div>
         </article>
 
         <aside className="predict-rail prediction-center">
-          <article className="panel flood-now">
-            <div className="prediction-title-row">
-              <h2 className="prediction-panel-title">Flood prediction</h2>
-              <p className="prediction-year">
-                <span className="field-label">Year</span>
-                <strong>{(selectedDate || anchorDate).slice(0, 4)}</strong>
-              </p>
-            </div>
-            <div className="prediction-choices">
-              <label className="township-side prediction-plan-date">
-                <span className="field-label">Selected date</span>
-                <input
-                  type="date"
-                  value={anchorDate}
-                  min={dateMin}
-                  max={dateMax}
-                  onChange={(event) => setAnchorDate(event.target.value)}
-                  aria-label="Selected date"
-                />
-              </label>
-              <label className="township-side township-choice">
-                <span className="field-label">Selected township</span>
-                <select
-                  id="selected-township-name"
-                  aria-label="Selected township"
-                  value={selectedTownship}
-                  disabled={!areas.data}
-                  onChange={(event) => chooseTownship(event.target.value)}
-                >
-                  {!areas.data ? (
-                    <option value="">Loading…</option>
-                  ) : districtFilter === "all" ? (
-                    visibleDistricts.map((district) => (
-                      <optgroup key={district.id} label={`${district.name_en} District`}>
-                        {district.townships.map((township) => (
-                          <option key={township.id} value={township.id}>
-                            {township.name_en}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))
-                  ) : (
-                    visibleDistricts[0]?.townships.map((township) => (
-                      <option key={township.id} value={township.id}>
-                        {township.name_en}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </label>
-            </div>
-            <button type="button" className="text-link" onClick={() => setOutlookOpen(true)}>
-              Prediction details
-            </button>
-            <DailyDetailPanel day={panelDay} />
-            <AllocationPrompt
-              day={panelDay}
-              townshipName={selectedTownshipMeta?.name ?? "Selected township"}
-              onPlanResources={() => {
-                if (!onPlanResources || !panelDay || !selectedTownshipMeta) return;
-                onPlanResources({
-                  townshipId: selectedTownship,
-                  townshipName: selectedTownshipMeta.name,
-                  date: panelDay.date,
-                  riskLevel: panelDay.probability_risk_level ?? "low",
-                  latitude: selectedTownshipMeta.latitude,
-                  longitude: selectedTownshipMeta.longitude,
-                  expectedAffected:
-                    panelDay.potentially_affected_population ??
-                    panelDay.recorded_affected_people ??
-                    undefined,
-                  floodProbability: panelDay.flood_probability,
-                });
-              }}
-            />
-            {timeline.state === "error" && <p className="state error">Unavailable: {timeline.error}</p>}
-          </article>
+          <FloodPredictionNowPanel
+            areas={areas}
+            selectedTownship={selectedTownship}
+            onSelectTownship={chooseTownship}
+            districtFilter={districtFilter}
+            timelineControl={timelineControl}
+            onPlanResources={onPlanResources}
+            onPredictionDetails={() => setOutlookOpen(true)}
+          />
         </aside>
 
         <article className="panel history-panel">
@@ -590,7 +490,11 @@ export default function FloodPredictionDashboard({
             </button>
           </div>
           <div className="history-scroll">
-            {historyView === "next" ? (
+            {showHistoryLoader ? (
+              <div className="history-panel-loading">
+                <LoadingSpinner label="Loading timeline…" />
+              </div>
+            ) : historyView === "next" ? (
               <DayGroup
                 title="Next 7 days"
                 days={forecastDays}
@@ -609,16 +513,6 @@ export default function FloodPredictionDashboard({
                 onSelect={setSelectedDate}
               />
             )}
-            <button
-              type="button"
-              className="text-link"
-              onClick={() => {
-                setHistoryPage(0);
-                setHistoryOpen(true);
-              }}
-            >
-              View days
-            </button>
           </div>
         </article>
       </div>
@@ -644,24 +538,6 @@ export default function FloodPredictionDashboard({
               floodProbability: panelDay.flood_probability,
             });
           }}
-        />
-      </ViewDialog>
-      <ViewDialog title={historyView === "next" ? "Next 7 days" : "Previous 7 days"} open={historyOpen} onClose={() => setHistoryOpen(false)}>
-        <DayGroup
-          title={historyView === "next" ? "Next 7 days" : "Previous 7 days"}
-          days={(historyView === "next" ? forecastDays : pastDays).slice(historyPage * 4, historyPage * 4 + 4)}
-          selectedDate={selectedDate}
-          showEmpty={timelineReady}
-          empty="No scores for this township."
-          onSelect={(date) => {
-            setSelectedDate(date);
-            setHistoryOpen(false);
-          }}
-        />
-        <PageControls
-          page={historyPage}
-          pages={Math.max(1, Math.ceil((historyView === "next" ? forecastDays : pastDays).length / 4))}
-          onPage={setHistoryPage}
         />
       </ViewDialog>
     </main>

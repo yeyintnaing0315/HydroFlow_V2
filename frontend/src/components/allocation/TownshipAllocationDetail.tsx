@@ -27,7 +27,15 @@ export default function TownshipAllocationDetail({ row, depotLabel }: TownshipAl
         <div className="allocation-detail-scroll">
           <div className="allocation-sex-grid" aria-label="Affected people and flood context">
             <div>
-              <span>People</span>
+              <span>Male</span>
+              <strong>{(row.affected_male ?? 0).toLocaleString()}</strong>
+            </div>
+            <div>
+              <span>Female</span>
+              <strong>{(row.affected_female ?? 0).toLocaleString()}</strong>
+            </div>
+            <div>
+              <span>Total</span>
               <strong>{row.population.toLocaleString()}</strong>
             </div>
             <div>

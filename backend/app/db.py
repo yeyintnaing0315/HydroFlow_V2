@@ -2,7 +2,8 @@ import os
 from collections.abc import Generator
 from pathlib import Path
 
-from sqlalchemy import Column, Table, create_engine, inspect, text
+from fastapi import Depends
+from sqlalchemy import Column, Table, create_engine, event, inspect, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.engine.url import make_url
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
@@ -22,6 +23,11 @@ DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{_project_db}")
 INVENTORY_DATABASE_URL = os.getenv("INVENTORY_DATABASE_URL", DATABASE_URL)
 
 
+def inventory_shares_operational_db() -> bool:
+    """True when depot stock and allocation plans live in the same database."""
+    return INVENTORY_DATABASE_URL == DATABASE_URL
+
+
 def _is_postgresql_url(url: str) -> bool:
     scheme = url.split(":", 1)[0].lower()
     return scheme == "postgres" or scheme == "postgresql" or scheme.startswith("postgresql+")
@@ -38,6 +44,16 @@ def _safe_database_target(url: str) -> str:
     return f"{parsed.drivername}://{parsed.host or ''}{port}{database}"
 
 
+def _sqlite_on_connect(dbapi_connection, _connection_record) -> None:
+    if dbapi_connection.__class__.__module__.split(".", 1)[0] != "sqlite3":
+        return
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA journal_mode=WAL")
+    cursor.execute("PRAGMA busy_timeout=5000")
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
 def _build_engine(url: str) -> Engine:
     if _is_postgresql_url(url):
         return create_engine(
@@ -45,11 +61,13 @@ def _build_engine(url: str) -> Engine:
             connect_args={"connect_timeout": 5},
             pool_pre_ping=True,
         )
-    return create_engine(
+    built = create_engine(
         url,
         connect_args={"check_same_thread": False},
         poolclass=NullPool,
     )
+    event.listen(built, "connect", _sqlite_on_connect)
+    return built
 
 
 engine = _build_engine(DATABASE_URL)
@@ -219,5 +237,13 @@ def get_db() -> Generator[Session, None, None]:
     yield from _open_session(SessionLocal)
 
 
-def get_inventory_db() -> Generator[Session, None, None]:
+def get_inventory_db(geo_session: Session = Depends(get_db)) -> Generator[Session, None, None]:
+    """Depot stock session. Reuses the operational session when both URLs match.
+
+    Two SQLite connections on one file deadlock during plan confirm (inventory
+    writes, then plan status update). A single session avoids that lock.
+    """
+    if inventory_shares_operational_db():
+        yield geo_session
+        return
     yield from _open_session(InventorySession)

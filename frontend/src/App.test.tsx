@@ -452,7 +452,8 @@ describe("dashboard", () => {
   it("renders the HydroFlow shell and opens flood prediction", async () => {
     render(<App />);
 
-    expect(await screen.findByText("API ok", {}, { timeout: 8000 })).toBeInTheDocument();
+    expect(await screen.findByRole("status", { name: "API connected" }, { timeout: 8000 })).toBeInTheDocument();
+    expect(screen.queryByText(/^API /i)).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Home" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Home" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Flood Prediction" })).toBeInTheDocument();
@@ -461,12 +462,12 @@ describe("dashboard", () => {
     expect(screen.queryByRole("button", { name: "Dashboard" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Flood Prediction" }));
-    expect(await screen.findByRole("heading", { name: "Districts" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Flood Prediction" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Flood prediction" })).toBeInTheDocument();
     expect(screen.getByTestId("map")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Next 7 days" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Previous 7 days" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Flood prediction" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All districts" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Close sidebar" }));
     expect(screen.getByRole("button", { name: "Open sidebar" })).toBeInTheDocument();
@@ -481,10 +482,8 @@ describe("dashboard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Resource Allocation" }));
     expect(await screen.findByRole("heading", { name: "Route map" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "In stock" })).not.toBeInTheDocument();
-    expect(screen.getByText(/create a plan for high and severe deliveries/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Create plan" })).toBeInTheDocument();
-    expect(screen.getAllByText("High and severe only").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByRole("combobox")).toHaveLength(1);
+    expect(await screen.findByRole("button", { name: "Create Allocation Plan" })).toBeInTheDocument();
+    expect(await screen.findByText(/High and severe only/i)).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: "Region" })).toBeInTheDocument();
   }, 30000);
 });

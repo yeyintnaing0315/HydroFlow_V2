@@ -12,6 +12,8 @@ import {
   statusSlug,
   type StockStatus,
 } from "./lib/stockStatus";
+import InventoryStatsCards from "./components/inventory/InventoryStatsCards";
+import { ClassGlyph, TotalItemsIcon } from "./components/inventory/InventoryStatGlyphs";
 import { PageControls, ViewDialog } from "./components/ViewDialog";
 import type { InventorySnapshot } from "./types";
 
@@ -58,6 +60,26 @@ interface DetectionView {
   tracks: DetectionTrackView[];
 }
 
+interface ManualLine {
+  key: string;
+  item: string;
+  quantity: string;
+}
+
+interface PreparedManualLine {
+  key: string;
+  item: string | null;
+  name: string;
+  quantity: number;
+}
+
+let manualLineSeq = 0;
+
+function blankManualLine(): ManualLine {
+  manualLineSeq += 1;
+  return { key: `manual-${manualLineSeq}`, item: "", quantity: "" };
+}
+
 const LOCATIONS: { region: RegionCode; label: "Bago East" | "Bago West" }[] = [
   { region: "east", label: "Bago East" },
   { region: "west", label: "Bago West" },
@@ -74,8 +96,6 @@ function formatWhen(value: string): string {
     month: "short",
     day: "numeric",
     year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   }).format(date);
 }
 
@@ -86,15 +106,6 @@ function pillClass(code: string): string {
   if (code === "utilities") return "cat-utility";
   if (code === "fund") return "cat-fund";
   return "cat-other";
-}
-
-function toneClass(code: string): string {
-  if (code === "clothing") return "tone-clothes";
-  if (code === "foods") return "tone-foods";
-  if (code === "kitchenware") return "tone-kitchenware";
-  if (code === "utilities") return "tone-utility";
-  if (code === "fund") return "tone-fund";
-  return "tone-total";
 }
 
 function unitLabel(unit: string): string {
@@ -117,41 +128,6 @@ function Glyph({ tone, compact, children }: { tone: string; compact?: boolean; c
     <span className={`item-glyph tone-${tone}${compact ? " is-compact" : ""}`} aria-hidden="true">
       <svg viewBox="0 0 24 24">{children}</svg>
     </span>
-  );
-}
-
-function TotalItemsIcon({ compact = false }: { compact?: boolean }) {
-  return (
-    <Glyph tone="slate" compact={compact}>
-      <path d="M4 8h7v7H4zM13 8h7v7h-7zM8 15h7v5H8z" />
-    </Glyph>
-  );
-}
-
-function ClassGlyph({ classCode, compact = false }: { classCode: string; compact?: boolean }) {
-  const tone =
-    classCode === "clothing"
-      ? "sky"
-      : classCode === "foods"
-        ? "amber"
-        : classCode === "fund"
-          ? "green"
-          : classCode === "kitchenware"
-            ? "rose"
-            : "orange";
-  return (
-    <Glyph tone={tone} compact={compact}>
-      {classCode === "clothing" && <path d="M8 7l4-3 4 3v3l3 2-2 2-1-1v7H8V13l-1 1-2-2 3-2V7z" />}
-      {classCode === "foods" && <path d="M7 9h10l-1 10H8L7 9zm1-3h8l1 3H7l1-3z" />}
-      {classCode === "fund" && <path d="M5 8h14v9H5zM8 8V6h8v2M9 12h6" />}
-      {classCode === "kitchenware" && <path d="M6 8h12v8H6zM8 8V6h8v2M10 14h4" />}
-      {classCode === "utilities" && <path d="M5 7h14v10H5zM8 7v10M12 7v10M16 7v10" />}
-      {classCode !== "clothing" &&
-        classCode !== "foods" &&
-        classCode !== "fund" &&
-        classCode !== "kitchenware" &&
-        classCode !== "utilities" && <path d="M5 7h14v10H5zM8 7v10M12 7v10M16 7v10" />}
-    </Glyph>
   );
 }
 
@@ -220,7 +196,7 @@ export default function InventoryManagement() {
   const [cameraOpen, setCameraOpen] = useState(false);
   const [cameraError, setCameraError] = useState("");
   const [manualClass, setManualClass] = useState("");
-  const [manualItem, setManualItem] = useState("");
+  const [manualLines, setManualLines] = useState<ManualLine[]>(() => [blankManualLine()]);
   const [manualQuantity, setManualQuantity] = useState("");
   const [detectClass, setDetectClass] = useState("");
   const [detection, setDetection] = useState<DetectionView | null>(null);
@@ -265,7 +241,7 @@ export default function InventoryManagement() {
     setDetecting(false);
     setFormError("");
     setManualClass("");
-    setManualItem("");
+    setManualLines([blankManualLine()]);
     setManualQuantity("");
     setDetectClass("");
     setDetection(null);
@@ -450,7 +426,23 @@ export default function InventoryManagement() {
   ];
   const manualSelected = classes.find((row) => row.code === manualClass);
   const manualIsFund = manualSelected?.code === "fund" || manualSelected?.entry_mode === "manual_only";
+  const manualSubclasses = manualSelected?.items.filter((item) => item.code) ?? [];
+  const canAddManualLine = Boolean(manualSelected && !manualIsFund && manualLines.length < manualSubclasses.length);
   const detectClasses = classes.filter((row) => row.code !== "fund" && row.entry_mode !== "manual_only");
+
+  const updateManualLine = (key: string, patch: Partial<Pick<ManualLine, "item" | "quantity">>) => {
+    setManualLines((current) => current.map((line) => (line.key === key ? { ...line, ...patch } : line)));
+  };
+
+  const addManualLine = () => {
+    setManualLines((current) => (current.length >= manualSubclasses.length ? current : [...current, blankManualLine()]));
+    setFormError("");
+  };
+
+  const removeManualLine = (key: string) => {
+    setManualLines((current) => (current.length <= 1 ? current : current.filter((line) => line.key !== key)));
+    setFormError("");
+  };
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc((current) => !current);
@@ -522,34 +514,102 @@ export default function InventoryManagement() {
       setFormError("Choose a class.");
       return;
     }
-    if (!manualIsFund && !manualItem) {
-      setFormError("Choose a subclass.");
-      return;
+
+    const prepared: PreparedManualLine[] = [];
+    if (manualIsFund) {
+      const quantity = Number(manualQuantity);
+      if (!Number.isFinite(quantity) || quantity <= 0) {
+        setFormError("Enter a quantity greater than zero.");
+        return;
+      }
+      const fundItem = manualSelected.items[0];
+      const fundName = fundItem?.name || manualSelected.name;
+      const itemCap = itemCapacity(manualSelected.code, fundItem);
+      if ((fundItem?.quantity ?? 0) + quantity > itemCap) {
+        setFormError(`${fundName} is limited to ${itemCap.toLocaleString()}.`);
+        return;
+      }
+      const classCap = classCapacity(manualSelected);
+      if (manualSelected.quantity + quantity > classCap) {
+        setFormError(`${manualSelected.name} is limited to ${classCap.toLocaleString()}.`);
+        return;
+      }
+      prepared.push({ key: "fund", item: null, name: fundName, quantity });
+    } else {
+      if (manualSubclasses.length === 0) {
+        setFormError(`${manualSelected.name} has no subclasses to add.`);
+        return;
+      }
+      const seen = new Set<string>();
+      let classAdded = 0;
+      const classCap = classCapacity(manualSelected);
+      for (const [index, line] of manualLines.entries()) {
+        if (!line.item) {
+          setFormError(`Choose a subclass for line ${index + 1}.`);
+          return;
+        }
+        const stock = manualSelected.items.find((row) => row.code === line.item);
+        const name = stock?.name ?? line.item;
+        if (seen.has(line.item)) {
+          setFormError(`${name} is already on another line.`);
+          return;
+        }
+        seen.add(line.item);
+        const quantity = Number(line.quantity);
+        if (!Number.isFinite(quantity) || quantity <= 0) {
+          setFormError(`Enter a quantity greater than zero for ${name}.`);
+          return;
+        }
+        const itemCap = itemCapacity(manualSelected.code, stock);
+        if ((stock?.quantity ?? 0) + quantity > itemCap) {
+          setFormError(`${name} is limited to ${itemCap.toLocaleString()}.`);
+          return;
+        }
+        classAdded += quantity;
+        if (manualSelected.quantity + classAdded > classCap) {
+          setFormError(`${manualSelected.name} is limited to ${classCap.toLocaleString()}.`);
+          return;
+        }
+        prepared.push({ key: line.key, item: line.item, name, quantity });
+      }
     }
-    const quantity = Number(manualQuantity);
-    if (!Number.isFinite(quantity) || quantity <= 0) {
-      setFormError("Enter a quantity greater than zero.");
-      return;
-    }
-    const cap = classCapacity(manualSelected);
-    if (manualSelected.quantity + quantity > cap) {
-      setFormError(`${manualSelected.name} is limited to ${cap.toLocaleString()}.`);
-      return;
-    }
+
     const requested = region;
     setSaving(true);
+    let latest: InventorySnapshot | null = null;
     try {
-      const saved = await api.addInventory(requested, {
-        category_code: manualSelected.code,
-        item_code: manualIsFund ? null : manualItem,
-        quantity,
-        entry_mode: "manual",
-        direction: "in",
-      });
-      applySnapshot(saved, requested);
+      for (let index = 0; index < prepared.length; index += 1) {
+        const line = prepared[index];
+        try {
+          latest = await api.addInventory(requested, {
+            category_code: manualSelected.code,
+            item_code: line.item,
+            quantity: line.quantity,
+            entry_mode: "manual",
+            direction: "in",
+          });
+        } catch (reason) {
+          if (!mounted.current) return;
+          if (latest) applySnapshot(latest, requested);
+          const detail = errorText(reason).trim().replace(/\.+$/, "");
+          const earlier = index > 0
+            ? ` ${index} earlier ${index === 1 ? "line was" : "lines were"} saved.`
+            : "";
+          const later = index < prepared.length - 1 ? " Later lines were not saved." : "";
+          setFormError(`${line.name} could not be added: ${detail}.${earlier}${later}`);
+          if (!manualIsFund) {
+            setManualLines(prepared.slice(index).map((row) => ({
+              key: row.key,
+              item: row.item ?? "",
+              quantity: String(row.quantity),
+            })));
+          }
+          return;
+        }
+        if (!mounted.current) return;
+      }
+      if (latest) applySnapshot(latest, requested);
       closeAdd();
-    } catch (reason) {
-      setFormError(errorText(reason));
     } finally {
       if (mounted.current) setSaving(false);
     }
@@ -674,39 +734,9 @@ export default function InventoryManagement() {
         <p className="state error" role="alert">Inventory unavailable: {resource.error}</p>
       )}
 
-      {resource.state === "ready" && (
+      {resource.state === "ready" && resource.data && (
         <div className="inv-stats-row">
-        <section className="inv-stats" aria-label="Inventory totals">
-          <article className="stat-card tone-total">
-            <div>
-              <p>
-                <span className="stat-icon" aria-hidden="true"><TotalItemsIcon /></span>
-                Total items
-              </p>
-              <strong>{totalQuantity.toLocaleString()}</strong>
-              <small>{totalStatus} · {totalFill}%</small>
-            </div>
-          </article>
-          {classes.map((row) => {
-            const capacity = classCapacity(row);
-            const cardStatus = statusFor(row.quantity, capacity);
-            const fill = displayPercent(row.quantity, capacity);
-            return (
-              <article key={row.code} className={`stat-card ${toneClass(row.code)}`}>
-                <div>
-                  <p>
-                    <span className="stat-icon" aria-hidden="true">
-                      <ClassGlyph classCode={row.code} />
-                    </span>
-                    {row.name}
-                  </p>
-                  <strong>{row.quantity.toLocaleString()}</strong>
-                  <small>{cardStatus} · {fill}%</small>
-                </div>
-              </article>
-            );
-          })}
-        </section>
+        <InventoryStatsCards snapshots={[resource.data]} />
         <div className="catalog-actions inv-stats-actions">
           <button
             type="button"
@@ -904,7 +934,13 @@ export default function InventoryManagement() {
           }}
         >
           <div
-            className={addMode === null ? "inv-modal hf-modal" : "inv-modal is-single hf-modal"}
+            className={
+              addMode === null
+                ? "inv-modal hf-modal"
+                : addMode === "manual"
+                  ? "inv-modal is-single is-manual hf-modal"
+                  : "inv-modal is-single hf-modal"
+            }
             role="dialog"
             aria-modal="true"
             aria-labelledby="add-item-title"
@@ -936,7 +972,7 @@ export default function InventoryManagement() {
                     <svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5M9 13h6M9 17h6" /></svg>
                   </span>
                   <h3>Manual Add</h3>
-                  <p>Type the class, subclass, and quantity. Fund is only here.</p>
+                  <p>Choose a class and add several subclasses with quantities. Fund is only here.</p>
                 </button>
               </div>
             )}
@@ -1069,7 +1105,7 @@ export default function InventoryManagement() {
                 {addMode === "manual" && (
                 <>
                 <h3>Manual Add</h3>
-                <p>Enter a class and quantity. Fund has no subclass.</p>
+                <p>Choose one class, then a subclass and quantity on each line. Fund is a single quantity.</p>
                 <form onSubmit={(event) => void submitManual(event)} noValidate>
                   <label>
                     Class
@@ -1077,7 +1113,9 @@ export default function InventoryManagement() {
                       value={manualClass}
                       onChange={(event) => {
                         setManualClass(event.target.value);
-                        setManualItem("");
+                        setManualQuantity("");
+                        setManualLines([blankManualLine()]);
+                        setFormError("");
                       }}
                     >
                       <option value="">Select class</option>
@@ -1086,30 +1124,79 @@ export default function InventoryManagement() {
                       ))}
                     </select>
                   </label>
-                  {manualSelected && !manualIsFund && (
+                  {manualSelected && manualIsFund && (
                     <label>
-                      Subclass
-                      <select value={manualItem} onChange={(event) => setManualItem(event.target.value)}>
-                        <option value="">Select subclass</option>
-                        {manualSelected.items.filter((item) => item.code).map((item) => (
-                          <option key={item.code} value={item.code ?? ""}>{item.name}</option>
-                        ))}
-                      </select>
+                      Quantity
+                      <input
+                        type="number"
+                        min="0"
+                        step="any"
+                        value={manualQuantity}
+                        onChange={(event) => setManualQuantity(event.target.value)}
+                        placeholder="Enter quantity"
+                      />
                     </label>
                   )}
-                  <label>
-                    Quantity
-                    <input
-                      type="number"
-                      min="0"
-                      step="any"
-                      value={manualQuantity}
-                      onChange={(event) => setManualQuantity(event.target.value)}
-                      placeholder="Enter quantity"
-                    />
-                  </label>
+                  {manualSelected && !manualIsFund && (
+                    <div className="manual-lines">
+                      {manualLines.map((line, index) => {
+                        const taken = new Set(manualLines.map((row) => row.item).filter((code) => code && code !== line.item));
+                        const stock = manualSubclasses.find((item) => item.code === line.item);
+                        const unit = stock?.unit ? unitLabel(stock.unit) : "qty";
+                        return (
+                          <div className="manual-line" key={line.key}>
+                            <label>
+                              Subclass
+                              <select
+                                value={line.item}
+                                aria-label={`Subclass for line ${index + 1}`}
+                                onChange={(event) => updateManualLine(line.key, { item: event.target.value })}
+                              >
+                                <option value="">Select subclass</option>
+                                {manualSubclasses.filter((item) => item.code && !taken.has(item.code)).map((item) => (
+                                  <option key={item.code} value={item.code ?? ""}>{item.name}</option>
+                                ))}
+                              </select>
+                            </label>
+                            <label>
+                              Quantity
+                              <span className="detect-qty-field">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="any"
+                                  value={line.quantity}
+                                  aria-label={`${stock?.name ?? "Subclass"} quantity`}
+                                  onChange={(event) => updateManualLine(line.key, { quantity: event.target.value })}
+                                  placeholder="Enter quantity"
+                                />
+                                <span className="detect-unit">{unit}</span>
+                              </span>
+                            </label>
+                            {manualLines.length > 1 && (
+                              <button
+                                type="button"
+                                className="text-link manual-remove"
+                                onClick={() => removeManualLine(line.key)}
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        className="text-link manual-add"
+                        onClick={addManualLine}
+                        disabled={!canAddManualLine}
+                      >
+                        Add another item
+                      </button>
+                    </div>
+                  )}
                   <button type="submit" disabled={saving}>
-                    {saving ? "Saving…" : "Add Item"}
+                    {saving ? "Saving…" : !manualIsFund && manualLines.length > 1 ? "Add items" : "Add Item"}
                   </button>
                 </form>
                 </>

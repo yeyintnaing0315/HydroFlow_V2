@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.schemas.api import AllocationLineItem
+from app.services.inventory import DEFAULT_ITEM_TYPES
 from app.services.population_split import split_affected_by_sex
 
 FUND_MMK_PER_PERSON = 10_000
@@ -15,24 +16,24 @@ def _count(value: float) -> int:
 
 
 def line_items_per_served_person(scored: dict[str, Any], township_name_en: str) -> list[AllocationLineItem]:
-    """One unit per affected person for standard relief SKUs; gender-specific clothing; fund per person."""
+    """Full 19-SKU plan: one unit per person (fund 10k/person; longyi split by sex)."""
     people = int(scored.get("expected_affected_people", 0))
     if people <= 0:
         return []
     _total, male, female = split_affected_by_sex(township_name_en, people)
-    per_person = people
     fund_mmk = people * FUND_MMK_PER_PERSON
     specs: list[tuple[str, str | None, str, str, int]] = [
-        ("foods", "rice", "Rice", "bag", per_person),
-        ("foods", "canned_fish", "Canned fish", "can", per_person),
-        ("utilities", "blanket", "Blanket", "piece", per_person),
-        ("kitchenware", "water_dipper", "Water dipper", "piece", per_person),
-        ("foods", "oil", "Oil", "bottle", per_person),
-        ("clothing", "tshirt", "T-shirt", "piece", per_person),
-        ("clothing", "m_longyi", "Men longyi", "piece", male),
-        ("clothing", "f_longyi", "Women longyi", "piece", female),
         ("fund", None, "Fund", "mmk", fund_mmk),
     ]
+    for category_code, types in DEFAULT_ITEM_TYPES.items():
+        for code, name, unit, _sort in types:
+            if code == "m_longyi":
+                qty = male
+            elif code == "f_longyi":
+                qty = female
+            else:
+                qty = people
+            specs.append((category_code, code, name, unit, qty))
     items: list[AllocationLineItem] = []
     for category_code, item_code, name, unit, qty in specs:
         if qty <= 0:

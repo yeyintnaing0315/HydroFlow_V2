@@ -2,7 +2,7 @@ import type { InventoryClass } from "../types";
 
 export type StockStatus = "Out of Stock" | "Critical" | "Low Stock" | "In Stock" | "Full";
 
-export const ITEM_CAPACITY = 20_000;
+export const ITEM_CAPACITY = 100_000;
 export const FUND_CAPACITY = 10_000_000_000;
 
 export const STATUS_RANK: Record<StockStatus, number> = {

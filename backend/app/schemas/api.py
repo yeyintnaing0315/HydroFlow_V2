@@ -633,6 +633,10 @@ class AllocationPlanRequest(BaseModel):
     include_all_high_severe: bool = True
     commit_inventory: bool = True
     vehicle_profile: Literal["car", "truck", "fly"] = "truck"
+    expected_affected_overrides: dict[str, int] | None = Field(
+        default=None,
+        description="Optional township_id → affected people from UI estimate (help summary / prediction).",
+    )
 
 
 class AllocationLineItem(BaseModel):

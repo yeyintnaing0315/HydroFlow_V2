@@ -75,7 +75,7 @@ REGION_LABELS = {
 }
 
 
-ITEM_CAPACITY = Decimal("20000")
+ITEM_CAPACITY = Decimal("100000")
 FUND_CAPACITY = Decimal("10000000000")
 
 
@@ -106,7 +106,7 @@ def load_catalog(session: Session) -> tuple[list[InventoryCategory], dict[str, l
 
 
 def item_max_quantity(category_code: str) -> Decimal:
-    """Each subclass (SKU) is capped at 20,000 per depot. Fund uses its own pool."""
+    """Each subclass (SKU) is capped at 100,000 per depot. Fund uses its own pool."""
     return FUND_CAPACITY if category_code == "fund" else ITEM_CAPACITY
 
 

@@ -22,6 +22,8 @@ from app.db import (
     create_tables,
     ensure_operational_connection,
     get_db,
+    get_inventory_db,
+    inventory_shares_operational_db,
 )
 from app.models import AllocationPlan, Location, PredictionRun, TownshipForecast
 
@@ -46,6 +48,15 @@ def test_postgres_down_does_not_fall_back_to_sqlite(monkeypatch, tmp_path: Path)
     assert created
     assert all(item.startswith("postgresql") for item in created)
     assert not (tmp_path / "hydroflow.db").exists()
+
+
+def test_shared_inventory_session_reuses_operational_connection() -> None:
+    assert inventory_shares_operational_db()
+    geo_generator = get_db()
+    geo = next(geo_generator)
+    inventory = next(get_inventory_db(geo))
+    assert inventory is geo
+    geo_generator.close()
 
 
 def test_operational_session_rolls_back_on_error() -> None:

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { CircleMarker, MapContainer, Pane, Polyline, Popup, Tooltip, useMap } from "react-leaflet";
 import BasemapTileLayer from "../map/BasemapTileLayer";
 import MapViewportFix from "../map/MapViewportFix";
-import { formatMeters } from "./routeFormat";
+import { formatDistance } from "./routeFormat";
 import type { Coordinates } from "../../types";
 
 export interface OverviewTownship {
@@ -28,6 +28,7 @@ export interface OverviewRoute {
   depotRegion: "east" | "west";
   distanceM: number | null;
   emphasized?: boolean;
+  dimmed?: boolean;
 }
 
 interface AllocationOverviewMapProps {
@@ -36,6 +37,8 @@ interface AllocationOverviewMapProps {
   routes: OverviewRoute[];
   focusTownshipId?: string | null;
   onSelectTownship?: (townshipId: string) => void;
+  /** Shown over the map while OSRM or route comparison is in flight. */
+  loadingMessage?: string | null;
   /** Separate Leaflet instances (dashboard vs print) must not mount at the same time. */
   instanceKey?: string;
 }
@@ -46,38 +49,85 @@ const DEPOT_STYLE = {
   west: { color: "#4a1730", fillColor: "#e07a2f" },
 } as const;
 
+function fitPointsForOverview(
+  townships: OverviewTownship[],
+  depots: OverviewDepot[],
+  routes: OverviewRoute[],
+  focusTownshipId?: string | null,
+): [number, number][] {
+  const routesForFit =
+    focusTownshipId && routes.some((route) => route.id === focusTownshipId)
+      ? routes.filter((route) => route.id === focusTownshipId)
+      : routes;
+  const routedIds = new Set(routesForFit.map((route) => route.id));
+  const depotRegions = new Set(routesForFit.map((route) => route.depotRegion));
+
+  const points: [number, number][] = [];
+  for (const depot of depots) {
+    if (routesForFit.length === 0 || depotRegions.has(depot.region)) {
+      points.push([depot.latitude, depot.longitude]);
+    }
+  }
+  for (const township of townships) {
+    if (routesForFit.length === 0) continue;
+    if (routedIds.has(township.id) || township.id === focusTownshipId) {
+      points.push([township.latitude, township.longitude]);
+    }
+  }
+  for (const route of routesForFit) {
+    for (const point of route.path) points.push([point.latitude, point.longitude]);
+  }
+  return points;
+}
+
 function FitOverview({
   townships,
   depots,
   routes,
+  focusTownshipId,
 }: {
   townships: OverviewTownship[];
   depots: OverviewDepot[];
   routes: OverviewRoute[];
+  focusTownshipId?: string | null;
 }) {
   const map = useMap();
   useEffect(() => {
     if (typeof map.getContainer !== "function") return;
-    const points: [number, number][] = [
-      ...townships.map((township) => [township.latitude, township.longitude] as [number, number]),
-      ...depots.map((depot) => [depot.latitude, depot.longitude] as [number, number]),
-    ];
-    for (const route of routes) {
-      for (const point of route.path) points.push([point.latitude, point.longitude]);
-    }
+    const container = map.getContainer();
+    const points = fitPointsForOverview(townships, depots, routes, focusTownshipId);
     if (points.length === 0) return;
+
+    const focused = Boolean(
+      focusTownshipId && routes.some((route) => route.id === focusTownshipId),
+    );
+    const maxZoom = focused ? 13 : routes.length > 0 ? 11 : 10;
+    const padding: [number, number] = focused ? [14, 14] : [16, 16];
+
     const fit = () => {
       try {
         map.invalidateSize();
-        if (points.length === 1) map.setView(points[0], 8);
-        else map.fitBounds(points, { padding: [24, 24], maxZoom: 9 });
+        if (points.length === 1) map.setView(points[0], maxZoom);
+        else map.fitBounds(points, { padding, maxZoom });
       } catch {
         // Leaflet can throw if the map is torn down during a reload.
       }
     };
     const frame = requestAnimationFrame(fit);
-    return () => cancelAnimationFrame(frame);
-  }, [map, townships, depots, routes]);
+    if (typeof ResizeObserver === "undefined") {
+      return () => cancelAnimationFrame(frame);
+    }
+    const observer = new ResizeObserver(() => {
+      const size = map.getSize();
+      const box = container.getBoundingClientRect();
+      if (Math.abs(size.x - box.width) > 2 || Math.abs(size.y - box.height) > 2) fit();
+    });
+    observer.observe(container);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [map, townships, depots, routes, focusTownshipId]);
   return null;
 }
 
@@ -107,6 +157,7 @@ export default function AllocationOverviewMap({
   routes,
   focusTownshipId,
   onSelectTownship,
+  loadingMessage = null,
   instanceKey = "allocation-overview-map",
 }: AllocationOverviewMapProps) {
   const routeById = new Map(routes.map((route) => [route.id, route]));
@@ -114,17 +165,28 @@ export default function AllocationOverviewMap({
 
   return (
     <div className="allocation-map-frame">
+      {loadingMessage ? (
+        <div className="allocation-map-loading-overlay" role="status" aria-live="polite">
+          {loadingMessage}
+        </div>
+      ) : null}
       <MapContainer
         key={instanceKey}
         center={[18.26, 96.07]}
-        zoom={8}
+        zoom={10}
         scrollWheelZoom={false}
         className="allocation-map"
         aria-label="Allocation route map"
+        data-testid="map"
       >
         <BasemapTileLayer />
         <MapViewportFix />
-        <FitOverview townships={townships} depots={depots} routes={routes} />
+        <FitOverview
+          townships={townships}
+          depots={depots}
+          routes={routes}
+          focusTownshipId={focusTownshipId}
+        />
         <Pane name="allocation-routes" style={{ zIndex: 450 }}>
           {routes.map((route) => {
             const township =
@@ -141,8 +203,9 @@ export default function AllocationOverviewMap({
                 positions={path.map((point) => [point.latitude, point.longitude] as [number, number])}
                 pathOptions={{
                   color: ROUTE_COLORS[route.depotRegion],
-                  weight: route.emphasized ? 5 : 2.5,
-                  opacity: route.emphasized ? 0.95 : 0.85,
+                  weight: route.emphasized ? 5 : route.dimmed ? 2 : 2.5,
+                  opacity: route.emphasized ? 0.95 : route.dimmed ? 0.5 : 0.85,
+                  dashArray: route.dimmed ? "10 8" : undefined,
                 }}
               />
             );
@@ -172,7 +235,7 @@ export default function AllocationOverviewMap({
                     offset={[0, -6]}
                     className="allocation-distance-tip"
                   >
-                    {formatMeters(route.distanceM)}
+                    {formatDistance(route.distanceM)}
                   </Tooltip>
                 ) : null}
                 <Popup>
@@ -182,7 +245,7 @@ export default function AllocationOverviewMap({
                       <br />
                       {route.depotRegion === "east" ? "Bago depot (east)" : "Pyay depot (west)"}
                       <br />
-                      Road {formatMeters(route.distanceM)}
+                      Road {formatDistance(route.distanceM)}
                     </>
                   ) : null}
                 </Popup>

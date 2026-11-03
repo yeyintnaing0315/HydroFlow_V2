@@ -465,7 +465,7 @@ def test_confirm_route_rolls_back_when_stock_is_full(detection_session: Session)
         region="east",
         category_code="kitchenware",
         item_code="water_dipper",
-        quantity=20000,
+        quantity=100000,
         entry_mode="manual",
     )
     detection_session.commit()
@@ -481,14 +481,14 @@ def test_confirm_route_rolls_back_when_stock_is_full(detection_session: Session)
             },
         )
         assert response.status_code == 422
-        assert "limited to 20000" in response.json()["detail"]
+        assert "limited to 100000" in response.json()["detail"]
         assert detection_session.scalars(select(DetectionSession)).all() == []
         balance = _quantity(
             client.get("/inventory/east").json(),
             "kitchenware",
             "water_dipper",
         )
-        assert balance == 20000
+        assert balance == 100000
     finally:
         app.dependency_overrides.pop(get_inventory_db, None)
 

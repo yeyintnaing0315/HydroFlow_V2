@@ -25,7 +25,7 @@ def test_merge_caps_affected_by_census_population() -> None:
         "help_probability": 0.5,
     }
     merged = merge_planning_baseline(scored, township_name_en="Bago", flood_probability=0.8, predicted_flood=True)
-    assert merged["expected_affected_people"] == 1000
-    assert merged["expected_affected_people"] <= merged["township_population"]
+    assert merged["expected_affected_people"] == merged["township_population"]
+    assert merged["expected_affected_people"] < 1_000_000
     assert merged["flood_probability"] == 0.8
     assert merged["predicted_flood"] == 1.0

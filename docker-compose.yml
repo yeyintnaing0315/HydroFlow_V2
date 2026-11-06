@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgis/postgis:16-3.4
+    image: public.ecr.aws/docker/library/postgres:16
     environment:
       POSTGRES_DB: hydroflow
       POSTGRES_USER: hydroflow

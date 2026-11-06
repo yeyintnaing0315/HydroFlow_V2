@@ -49,6 +49,8 @@ export function horizonLevel(probability: number): "low" | "moderate" | "high" |
   return "severe";
 }
 
+export type DisplayRiskLevel = RiskLevel | "unknown";
+
 /** Map color and risk labels use the same primary-model band for the selected day. */
 export function displayRiskLevel(
   score:
@@ -56,10 +58,13 @@ export function displayRiskLevel(
         probability_risk_level?: string | null;
         risk_level?: string | null;
         risk_band?: string | null;
+        horizon_3d?: number | null;
+        early_warning?: boolean;
+        warning_level?: string | null;
       }
     | null
     | undefined,
-): string {
+): DisplayRiskLevel {
   if (!score) return "unknown";
   const raw =
     score.probability_risk_level ??
@@ -67,12 +72,13 @@ export function displayRiskLevel(
     score.risk_level ??
     "unknown";
   if (raw === "very_high" || raw === "very high") return "severe";
-  return raw;
+  if (raw === "low" || raw === "moderate" || raw === "high" || raw === "severe") return raw;
+  return "unknown";
 }
 
 export function floodFillLevel(
   score: Parameters<typeof displayRiskLevel>[0],
-): string {
+): DisplayRiskLevel {
   return displayRiskLevel(score);
 }
 

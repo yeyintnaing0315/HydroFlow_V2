@@ -191,7 +191,12 @@ function mockPredictionPanelApis(severeToday = true) {
     forecast_end: today,
     select_max: today,
   });
-  vi.mocked(api.predictionMapScores).mockResolvedValue({ scores: [] });
+  vi.mocked(api.predictionMapScores).mockResolvedValue({
+    date: today,
+    model_version: "test",
+    cached: false,
+    scores: [],
+  });
   vi.mocked(api.predictionTimeline).mockResolvedValue({
     township_id: "t1",
     as_of: today,
@@ -260,7 +265,10 @@ describe("HomeDashboard", () => {
     ]);
     vi.mocked(api.allocationPlanDetail).mockResolvedValue(plan);
     vi.mocked(api.inventoryLocations).mockResolvedValue({ locations: [eastStock, westStock] });
-    vi.mocked(api.allocationNetworkRoutes).mockResolvedValue({ routes: [] });
+    vi.mocked(api.allocationNetworkRoutes).mockResolvedValue({
+      routes: [],
+      disclaimer: "Test",
+    });
     const onOpenPage = vi.fn();
     const onPlanResources = vi.fn();
 
@@ -354,7 +362,10 @@ describe("HomeDashboard", () => {
     mockPredictionPanelApis(false);
     vi.mocked(api.allocationPlans).mockResolvedValue([]);
     vi.mocked(api.inventoryLocations).mockResolvedValue({ locations: [eastStock] });
-    vi.mocked(api.allocationNetworkRoutes).mockResolvedValue({ routes: [] });
+    vi.mocked(api.allocationNetworkRoutes).mockResolvedValue({
+      routes: [],
+      disclaimer: "Test",
+    });
     const onOpenPage = vi.fn();
 
     render(

@@ -29,8 +29,6 @@ data/cache/*.sqlite-wal
 data/cache/*.sqlite-shm
 
 # Inventory photos and the local PostgreSQL data directory
-data/inventory/pgdata/
-data/inventory/objectDetect/
 data/Raw_Pic/
 
 # Editors and operating systems

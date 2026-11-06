@@ -13,7 +13,7 @@ import type { AllocationFocus } from "./lib/allocationFocus";
 import { resolveHighSevereAffectedPeople } from "./lib/syntheticAffectedEstimate";
 import { depotRegionForCoordinates, type DepotRegion } from "./lib/depotRegion";
 import { depotsFromPlan, routesFromPlan, townshipsFromPlan } from "./lib/allocationPlanMap";
-import { splitAffectedBySex } from "./lib/splitAffectedBySex";
+import { ensureAffectedSexSplit } from "./lib/splitAffectedBySex";
 import { depotReferenceCoords, resolveTownshipPosition } from "./lib/resolveTownshipPosition";
 import { floodFillLevel, riskLabel } from "./components/prediction/mapUtils";
 import type {
@@ -349,17 +349,18 @@ export default function ResourceAllocationDashboard({
     setFocusEstimateLoading(true);
     setFocusEstimateResult(null);
     try {
+      let helpDay: Awaited<ReturnType<typeof api.helpSummary>> | undefined;
       let affected: number | null =
         focus.expectedAffected != null && focus.expectedAffected > 0 ? focus.expectedAffected : null;
       if (affected == null) {
-        const day = await api.helpSummary({
+        helpDay = await api.helpSummary({
           date: startDate,
           township_id: focus.townshipId,
           township_name_en: focus.townshipName,
           latitude: focus.latitude,
           longitude: focus.longitude,
         });
-        affected = day?.expected_affected_people ?? null;
+        affected = helpDay?.expected_affected_people ?? null;
       }
       affected = resolveHighSevereAffectedPeople(
         focus.townshipId,
@@ -367,14 +368,17 @@ export default function ResourceAllocationDashboard({
         affected,
         focus.riskLevel,
       );
-      const split =
-        affected != null && affected > 0
-          ? splitAffectedBySex(focus.townshipName, affected, censusResource.data)
-          : null;
+      const sex = ensureAffectedSexSplit(
+        focus.townshipName,
+        affected,
+        helpDay?.affected_male ?? null,
+        helpDay?.affected_female ?? null,
+        censusResource.data,
+      );
       const result = {
         affected,
-        male: split?.male ?? null,
-        female: split?.female ?? null,
+        male: sex.male,
+        female: sex.female,
       };
       setFocusEstimateResult(result);
       setAffectedByTownship({ [focus.townshipId]: affected });
@@ -385,14 +389,17 @@ export default function ResourceAllocationDashboard({
         null,
         focus.riskLevel,
       );
-      const split =
-        fallback != null && fallback > 0
-          ? splitAffectedBySex(focus.townshipName, fallback, censusResource.data)
-          : null;
+      const sex = ensureAffectedSexSplit(
+        focus.townshipName,
+        fallback,
+        null,
+        null,
+        censusResource.data,
+      );
       setFocusEstimateResult({
         affected: fallback,
-        male: split?.male ?? null,
-        female: split?.female ?? null,
+        male: sex.male,
+        female: sex.female,
       });
       if (fallback != null) {
         setAffectedByTownship({ [focus.townshipId]: fallback });
@@ -807,19 +814,20 @@ export default function ResourceAllocationDashboard({
               focusEstimateResult?.affected ?? null,
               focus!.riskLevel,
             );
-            const split =
-              affected != null &&
-              affected > 0 &&
-              (focusEstimateResult?.male == null || focusEstimateResult?.female == null)
-                ? splitAffectedBySex(focus!.townshipName, affected, censusData)
-                : null;
+            const sex = ensureAffectedSexSplit(
+              focus!.townshipName,
+              affected,
+              focusEstimateResult?.male,
+              focusEstimateResult?.female,
+              censusData,
+            );
             return [
               {
                 id: focus!.townshipId,
                 name: focus!.townshipName,
                 affected,
-                male: focusEstimateResult?.male ?? split?.male ?? null,
-                female: focusEstimateResult?.female ?? split?.female ?? null,
+                male: sex.male,
+                female: sex.female,
                 pending: focusEstimateLoading,
               },
             ];
@@ -831,17 +839,20 @@ export default function ResourceAllocationDashboard({
               focus!.expectedAffected ?? null,
               focus!.riskLevel,
             );
-            const split =
-              affected != null && affected > 0
-                ? splitAffectedBySex(focus!.townshipName, affected, censusData)
-                : null;
+            const sex = ensureAffectedSexSplit(
+              focus!.townshipName,
+              affected,
+              null,
+              null,
+              censusData,
+            );
             return [
               {
                 id: focus!.townshipId,
                 name: focus!.townshipName,
                 affected,
-                male: split?.male ?? null,
-                female: split?.female ?? null,
+                male: sex.male,
+                female: sex.female,
                 pending: false,
               },
             ];
@@ -855,16 +866,19 @@ export default function ResourceAllocationDashboard({
             raw,
             floodFillLevel(score),
           );
-          const split =
-            affected != null && affected > 0
-              ? splitAffectedBySex(score.township_name, affected, censusData)
-              : null;
+          const sex = ensureAffectedSexSplit(
+            score.township_name,
+            affected,
+            null,
+            null,
+            censusData,
+          );
           return {
             id: score.township_id,
             name: score.township_name,
             affected,
-            male: split?.male ?? null,
-            female: split?.female ?? null,
+            male: sex.male,
+            female: sex.female,
             pending: affectedLoading && !(score.township_id in affectedByTownship),
           };
         });

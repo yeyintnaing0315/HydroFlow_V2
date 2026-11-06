@@ -15,7 +15,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/map-tiles/osm": {
-        target: "https://tile.openstreetmap.org",
+        target: "https://tile.openstreetmap.de",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/map-tiles\/osm/, ""),
         headers: {

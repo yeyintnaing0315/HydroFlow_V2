@@ -1,7 +1,7 @@
 import { needsResourceAllocation } from "./allocationFocus";
 import type { RiskLevel } from "../types";
 
-/** Stable pseudo-random affected count in [100, 5000] for demo when API returns zero. */
+/** Stable pseudo-random affected count in [100, 10_000] for demo when API returns zero. */
 export function syntheticAffectedPeople(townshipId: string, planningDate: string): number {
   let hash = 2166136261;
   const key = `${townshipId}:${planningDate}`;
@@ -9,7 +9,7 @@ export function syntheticAffectedPeople(townshipId: string, planningDate: string
     hash ^= key.charCodeAt(i);
     hash = Math.imul(hash, 16777619);
   }
-  return 100 + (hash >>> 0) % 4901;
+  return 100 + ((hash >>> 0) % 9901);
 }
 
 export function resolveHighSevereAffectedPeople(

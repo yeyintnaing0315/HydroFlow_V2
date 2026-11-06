@@ -32,6 +32,7 @@ data/cache/*.sqlite-shm
 data/Raw_Pic/
 
 # Editors and operating systems
+.cursor/
 .vscode/
 .idea/
 .DS_Store

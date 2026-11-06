@@ -19,18 +19,16 @@ services:
       dockerfile: backend/Dockerfile
     environment:
       DATABASE_URL: postgresql+psycopg://hydroflow:hydroflow_dev@db:5432/hydroflow
-      FLOOD_HISTORY_PATH: /data/validated_daily.csv
       OPENTOPOGRAPHY_API_KEY: ${OPENTOPOGRAPHY_API_KEY:-}
-    volumes:
-      - ./data/processed/validated_daily.csv:/data/validated_daily.csv:ro
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=30)"]
+      interval: 15s
+      timeout: 40s
+      retries: 12
+      start_period: 90s
 
   frontend:
     build:

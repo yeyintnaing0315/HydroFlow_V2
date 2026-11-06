@@ -5,7 +5,11 @@ frontend/node_modules
 frontend/dist
 data/*
 !data/external
+!data/offline
 data/external/*
 !data/external/bago_census_2024.json
+!data/external/bago_river_points.csv
+!data/external/geography
 .git
 hydroflow.db
+artifacts

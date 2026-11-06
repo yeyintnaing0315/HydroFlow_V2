@@ -48,9 +48,11 @@ the Vite dev server or `run_server.py`, since both bind port 5173.
 
 ## Integrated Docker stack
 
+On the new laptop the project folder is `D:\HydroFlow`. Start Docker Desktop first, then:
+
 ```powershell
-docker compose up --build
+powershell -ExecutionPolicy Bypass -File D:\HydroFlow\scripts\run-docker.ps1
 ```
 
-Open `http://127.0.0.1:8080`. Stop with `docker compose down`.
-Docker Desktop must report a healthy Linux engine before running this command.
+Open `http://127.0.0.1:8080`. Stop with Ctrl+C, then `docker compose down` from that same folder.
+The first build downloads PyTorch and can take several minutes. Docker Desktop must report a healthy Linux engine before running this command.

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HydroFlow — Bago Region in motion</title>
+  <style>
+    @font-face {
+      font-family: "Plus Jakarta Sans";
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url("plus-jakarta-sans-400.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Plus Jakarta Sans";
+      font-style: normal;
+      font-weight: 600;
+      font-display: block;
+      src: url("plus-jakarta-sans-600.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Noto Sans Myanmar";
+      font-style: normal;
+      font-weight: 400 600;
+      font-display: block;
+      src: url("noto-sans-myanmar.woff2") format("woff2");
+      unicode-range: U+1000-109F, U+200C-200D, U+25CC, U+A92E, U+A9E0-A9FE, U+AA60-AA7F, U+116D0-116E3;
+    }
+
+    :root {
+      --hf-midnight: oklch(0.198 0.035 254.7);
+      --hf-deep: oklch(0.274 0.04 240.1);
+      --hf-mist: oklch(0.97 0.011 243.7);
+      --hf-cyan: oklch(0.741 0.12 214.6);
+      --logo-ink: var(--hf-mist);
+      --logo-flow: var(--hf-cyan);
+      --logo-emblem: var(--hf-midnight);
+      --logo-glow: oklch(0.86 0.08 214);
+      --logo-ripple: var(--hf-cyan);
+      --muted: oklch(0.76 0.03 242);
+      --gradient-welcome:
+        radial-gradient(ellipse 70% 55% at 50% 42%, oklch(0.274 0.04 240.1 / 90%), transparent 70%),
+        linear-gradient(180deg, var(--hf-midnight), oklch(0.17 0.03 250));
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--hf-midnight);
+    }
+    body {
+      font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+      color: var(--hf-mist);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+    }
+    .welcome-surface {
+      position: relative;
+      display: flex;
+      width: 1920px;
+      height: 1080px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 0 48px;
+      background: var(--gradient-welcome);
+      animation: welcome-out 600ms ease 6000ms forwards;
+    }
+    .welcome-ripples {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-radial-gradient(
+          circle at 50% 42%,
+          transparent 0 70px,
+          oklch(0.741 0.12 214.6 / 4%) 71px 72px
+        );
+      mask-image: radial-gradient(ellipse 60% 50% at 50% 42%, black, transparent 75%);
+    }
+    .corner-logo {
+      position: absolute;
+      top: 32px;
+      z-index: 20;
+      height: 84px;
+      width: auto;
+      border-radius: 6px;
+      background: var(--hf-mist);
+      padding: 4px;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+      animation: corner-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+    }
+    .corner-logo--left { left: 36px; }
+    .corner-logo--right { right: 36px; animation-delay: 0.5s; }
+
+    .stack {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      width: 100%;
+      max-width: 1680px;
+      flex-direction: column;
+      align-items: center;
+    }
+    #logo-mount {
+      width: min(1500px, 100%);
+    }
+    .hf-logo {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+    .group-badge {
+      margin-top: 28px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--hf-cyan) 40%, transparent);
+      padding: 8px 22px;
+      font-size: 22px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: var(--hf-cyan);
+      animation: group-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 2.6s both;
+    }
+    .tagline {
+      margin: 28px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+      font-size: 46px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--muted);
+      animation: hf-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) 2.7s both;
+    }
+
+    .hf-ink path { fill: var(--logo-ink); }
+    .hf-glow-stop-inner { stop-color: var(--logo-glow); }
+    .hf-glow-stop-mid { stop-color: color-mix(in oklab, var(--logo-glow) 35%, var(--logo-ink)); }
+    .hf-glow-stop-outer { stop-color: var(--logo-ink); }
+    .hf-bago { fill: var(--logo-emblem); }
+    .hf-bago-outline {
+      fill: none;
+      stroke: var(--logo-flow);
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      stroke-dasharray: 1 1;
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    .hf-flow path { fill: var(--logo-flow); }
+    .hf-ripple {
+      fill: none;
+      stroke: var(--logo-ripple);
+      stroke-width: 3;
+      opacity: 0;
+    }
+    .hf-letter, .hf-circle, .hf-ripple, .hf-bago {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .hf-logo--animated .hf-circle {
+      animation: hf-drop-in 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both;
+    }
+    .hf-logo--animated .hf-bago-outline {
+      animation:
+        hf-draw 1100ms cubic-bezier(0.65, 0, 0.35, 1) 550ms forwards,
+        hf-outline-life 2000ms linear 550ms forwards;
+    }
+    .hf-logo--animated .hf-bago {
+      animation: hf-bago-fill 700ms cubic-bezier(0.22, 1, 0.36, 1) 1350ms both;
+    }
+    .hf-logo--animated .hf-ripple {
+      animation: hf-ripple 1500ms cubic-bezier(0.22, 1, 0.36, 1) 1700ms both;
+    }
+    .hf-logo--animated .hf-letter {
+      animation-duration: 800ms;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      animation-delay: calc(900ms + var(--i, 0) * 90ms);
+      animation-fill-mode: both;
+    }
+    .hf-logo--animated .hf-letter--left { animation-name: hf-emerge-left; }
+    .hf-logo--animated .hf-letter--right { animation-name: hf-emerge-right; }
+    .hf-logo--animated .hf-wave-reveal {
+      stroke-dasharray: 1 1;
+      animation: hf-draw 1200ms cubic-bezier(0.65, 0, 0.35, 1) 1750ms both;
+    }
+
+    @keyframes hf-drop-in {
+      0% { opacity: 0; transform: translateY(-68px) scale(0.2); }
+      60% { opacity: 1; }
+      100% { opacity: 1; transform: none; }
+    }
+    @keyframes hf-draw {
+      from { stroke-dashoffset: 1; }
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes hf-outline-life {
+      0%, 70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes hf-bago-fill {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes hf-ripple {
+      0% { opacity: 0.7; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.55); }
+    }
+    @keyframes hf-emerge-left {
+      from { opacity: 0; transform: translateX(120px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes hf-emerge-right {
+      from { opacity: 0; transform: translateX(-120px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes hf-fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes corner-in {
+      from { opacity: 0; transform: translateY(-24px) scale(0.92); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes group-in {
+      from { opacity: 0; transform: translateY(16px); letter-spacing: 0.1em; }
+      to { opacity: 1; transform: none; }
+    }
+
+    @keyframes welcome-out {
+      to { opacity: 0; }
+    }
+
+    .info-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      gap: 28px;
+      padding: 108px 56px 48px 64px;
+      background: var(--gradient-welcome);
+      opacity: 0;
+      animation: info-in 700ms cubic-bezier(0.22, 1, 0.36, 1) 6300ms both;
+    }
+    .info-text {
+      margin: 0;
+      font-family: "Myanmar Text", "Pyidaungsu", "Noto Sans Myanmar", "Plus Jakarta Sans", sans-serif;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.72;
+      color: var(--hf-mist);
+    }
+    .info-lead {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--hf-cyan);
+      font-weight: 600;
+      font-size: 44px;
+    }
+    .info-map {
+      position: relative;
+      margin: 0;
+    }
+    .info-map img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .map-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      padding: 6px 10px 7px;
+      border-radius: 10px;
+      background: rgba(8, 18, 32, 0.82);
+      border: 1px solid rgba(239, 246, 252, 0.28);
+      color: var(--hf-mist);
+      text-align: center;
+      line-height: 1.15;
+      font-family: "Myanmar Text", "Pyidaungsu", "Noto Sans Myanmar", "Plus Jakarta Sans", sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .map-label small {
+      display: block;
+      margin-top: 2px;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--hf-cyan);
+    }
+    @keyframes info-in {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* Held paused so the recorder can seek each frame. */
+    .welcome-surface, .welcome-surface *,
+    .info-scene, .info-scene * {
+      animation-play-state: paused !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <main class="welcome-surface">
+      <div class="welcome-ripples" aria-hidden="true"></div>
+      <img class="corner-logo corner-logo--left" src="uit-logo.png" alt="UIT logo" />
+      <img class="corner-logo corner-logo--right" src="imceits-logo.png" alt="IMCEITS logo" />
+      <div class="stack">
+        <div id="logo-mount"></div>
+        <span class="group-badge">Group 5</span>
+        <p class="tagline">
+          <span>A Machine Learning-Based Flood Risk Prediction</span>
+          <span>and</span>
+          <span>Emergency Resource Allocation System</span>
+        </p>
+      </div>
+    </main>
+    <section class="info-scene" aria-label="HydroFlow AI System">
+      <img class="corner-logo corner-logo--left" src="uit-logo.png" alt="" />
+      <img class="corner-logo corner-logo--right" src="imceits-logo.png" alt="" />
+      <p class="info-text">
+        <span class="info-lead">HydroFlow AI System ဟာဆိုရင်</span>
+        ပဲခူးတိုင်းဒေသကြီးမှာရှိတဲ့ ခရိုင် ၆ ခုရဲ့ မြို့နယ် ၂၈ မြို့နယ်အတွက်
+        ရေကြီးရေလျှံမှုဖြစ်စဉ်နှင့် ထိခိုက်လူဦးရေကို ခန့်မှန်းပြီး
+        ကူညီထောက်ပံ့ပစ္စည်း အရေအတွက် (Allocation Plan) ကို
+        သတ်မှတ်ပေးမည့် AI System တစ်ခုဖြစ်ပါတယ်။
+      </p>
+      <figure class="info-map">
+        <img src="bago-districts.png" alt="ပဲခူးတိုင်း ခရိုင် ၆ ခု" />
+        <p class="map-label" style="left:61%;top:24%"><b>တောင်ငူ</b><small>Taungoo</small></p>
+        <p class="map-label" style="left:22%;top:28%"><b>ပြည်</b><small>Pyay</small></p>
+        <p class="map-label" style="left:38%;top:39%"><b>နတ်တလင်း</b><small>Nattalin</small></p>
+        <p class="map-label" style="left:43%;top:54%"><b>သာယာဝတီ</b><small>Thayarwady</small></p>
+        <p class="map-label" style="left:78%;top:52%"><b>ညောင်လေးပင်</b><small>Nyaunglebin</small></p>
+        <p class="map-label" style="left:72%;top:80%"><b>ပဲခူး</b><small>Bago</small></p>
+      </figure>
+    </section>
+  </div>
+  <script src="logo-data.js"></script>
+  <script>
+    const ns = "http://www.w3.org/2000/svg";
+    const { cx, cy, r } = EMBLEM_CIRCLE;
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", `0 0 ${LOGO_VIEWBOX.width} ${LOGO_VIEWBOX.height}`);
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "HydroFlow");
+    svg.setAttribute("class", "hf-logo hf-logo--animated");
+
+    const defs = document.createElementNS(ns, "defs");
+    const glow = document.createElementNS(ns, "radialGradient");
+    glow.id = "hf-glow";
+    glow.setAttribute("cx", cx);
+    glow.setAttribute("cy", cy);
+    glow.setAttribute("r", r);
+    glow.setAttribute("gradientUnits", "userSpaceOnUse");
+    for (const [offset, cls] of [
+      ["0", "hf-glow-stop-inner"],
+      ["0.62", "hf-glow-stop-mid"],
+      ["1", "hf-glow-stop-outer"],
+    ]) {
+      const stop = document.createElementNS(ns, "stop");
+      stop.setAttribute("offset", offset);
+      stop.setAttribute("class", cls);
+      glow.appendChild(stop);
+    }
+    const mask = document.createElementNS(ns, "mask");
+    mask.id = "hf-wave";
+    mask.setAttribute("maskUnits", "userSpaceOnUse");
+    mask.setAttribute("x", "0");
+    mask.setAttribute("y", "0");
+    mask.setAttribute("width", LOGO_VIEWBOX.width);
+    mask.setAttribute("height", LOGO_VIEWBOX.height);
+    const reveal = document.createElementNS(ns, "path");
+    reveal.setAttribute("d", WAVE_CENTERLINE);
+    reveal.setAttribute("fill", "none");
+    reveal.setAttribute("stroke", "white");
+    reveal.setAttribute("stroke-width", String(WAVE_MAX_THICKNESS + 40));
+    reveal.setAttribute("stroke-linejoin", "round");
+    reveal.setAttribute("pathLength", "1");
+    reveal.setAttribute("class", "hf-wave-reveal");
+    mask.appendChild(reveal);
+    defs.append(glow, mask);
+    svg.appendChild(defs);
+
+    function letterGroup(className, letters, side) {
+      const g = document.createElementNS(ns, "g");
+      g.setAttribute("class", className);
+      letters.forEach((letter, i) => {
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("d", letter.d);
+        path.setAttribute("fill-rule", "evenodd");
+        path.setAttribute("class", `hf-letter hf-letter--${side}`);
+        const index = side === "left" ? letters.length - 1 - i : i;
+        path.style.setProperty("--i", String(index));
+        g.appendChild(path);
+      });
+      return g;
+    }
+
+    const ink = letterGroup("hf-ink", HYDR_LETTERS, "left");
+    const flow = letterGroup("hf-flow", FLOW_LETTERS, "right");
+    const wave = document.createElementNS(ns, "path");
+    wave.setAttribute("d", WAVE_PATH);
+    wave.setAttribute("fill-rule", "evenodd");
+    wave.setAttribute("class", "hf-wave");
+    wave.setAttribute("mask", "url(#hf-wave)");
+    flow.appendChild(wave);
+
+    const emblem = document.createElementNS(ns, "g");
+    emblem.setAttribute("class", "hf-emblem");
+    const ripple = document.createElementNS(ns, "circle");
+    ripple.setAttribute("cx", cx);
+    ripple.setAttribute("cy", cy);
+    ripple.setAttribute("r", r);
+    ripple.setAttribute("class", "hf-ripple");
+    const circle = document.createElementNS(ns, "circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", r);
+    circle.setAttribute("fill", "url(#hf-glow)");
+    circle.setAttribute("class", "hf-circle");
+    const bago = document.createElementNS(ns, "path");
+    bago.setAttribute("d", BAGO_PATH);
+    bago.setAttribute("fill-rule", "evenodd");
+    bago.setAttribute("class", "hf-bago");
+    const outline = document.createElementNS(ns, "path");
+    outline.setAttribute("d", BAGO_PATH);
+    outline.setAttribute("pathLength", "1");
+    outline.setAttribute("class", "hf-bago-outline");
+    emblem.append(ripple, circle, bago, outline);
+
+    svg.append(ink, flow, emblem);
+    document.getElementById("logo-mount").appendChild(svg);
+  </script>
+</body>
+</html>

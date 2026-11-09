@@ -151,6 +151,10 @@ class AllocationNotFound(LookupError):
 class AllocationStateError(ValueError):
     """The plan or store cannot accept this action."""
 
+    def __init__(self, message: str, shortages: list[AllocationShortage] | None = None) -> None:
+        super().__init__(message)
+        self.shortages = shortages or []
+
 
 PLAN_BLOCKED_ON_SHORTAGE = "We cannot create a plan if there is a shortage of resources."
 
@@ -605,18 +609,84 @@ def _validate_per_person_plan(rows: list[AllocationTownshipRow]) -> None:
             )
 
 
+def _catalog_label(key: tuple[str, str | None]) -> tuple[str, str]:
+    category, code = key
+    if category == "fund" and code is None:
+        return "Fund", "MMK"
+    for item_code, name, unit, _sort in DEFAULT_ITEM_TYPES.get(category, ()):
+        if item_code == code:
+            return name, unit
+    fallback = (code or category).replace("_", " ")
+    return fallback[:1].upper() + fallback[1:], "piece"
+
+
+def _catalog_rank(key: tuple[str, str | None]) -> tuple[int, int]:
+    category, code = key
+    if category == "fund":
+        return (50, 0)
+    categories = list(DEFAULT_ITEM_TYPES)
+    try:
+        category_index = categories.index(category)
+    except ValueError:
+        category_index = 40
+    item_index = 99
+    for index, (item_code, _name, _unit, _sort) in enumerate(DEFAULT_ITEM_TYPES.get(category, ())):
+        if item_code == code:
+            item_index = index
+            break
+    return category_index, item_index
+
+
+def _count_text(value: float) -> str:
+    return f"{int(round(value)):,}"
+
+
+def _unit_word(unit: str, count: float) -> str:
+    if unit.lower() == "mmk":
+        return "MMK"
+    if abs(count - 1) < 0.5:
+        return unit
+    plurals = {
+        "bag": "bags",
+        "bottle": "bottles",
+        "can": "cans",
+        "piece": "pieces",
+        "pack": "packs",
+        "box": "boxes",
+    }
+    return plurals.get(unit, unit)
+
+
+def _shortage_message(shortages: list[AllocationShortage]) -> str:
+    lines = [PLAN_BLOCKED_ON_SHORTAGE, "Add this inventory:"]
+    for item in shortages:
+        depot = WAREHOUSES[item.depot_region].name
+        lines.append(
+            f"{depot}: {item.name} — add {_count_text(item.unmet)} {_unit_word(item.unit, item.unmet)} "
+            f"(have {_count_text(item.available)}, need {_count_text(item.requested)})"
+        )
+    return "\n".join(lines)
+
+
 def _shortages_for_depot(
     requested_totals: dict[tuple[str, str | None], float],
     stock: dict[tuple[str, str | None], tuple[float, str, str]],
     depot_region: Literal["east", "west"],
+    labels: dict[tuple[str, str | None], tuple[str, str]] | None = None,
 ) -> list[AllocationShortage]:
     shortages: list[AllocationShortage] = []
-    for key, requested in sorted(requested_totals.items()):
-        available = stock.get(key, (0.0, key[0], "piece"))[0]
+    for key, requested in requested_totals.items():
+        stock_row = stock.get(key)
+        available = stock_row[0] if stock_row else 0.0
         unmet = max(0.0, requested - available)
         if unmet <= 0:
             continue
-        name, unit = stock.get(key, (0.0, key[0], "piece"))[1], stock.get(key, (0.0, key[0], "piece"))[2]
+        if labels and key in labels:
+            name, unit = labels[key]
+        elif stock_row:
+            name, unit = stock_row[1], stock_row[2]
+        else:
+            name, unit = _catalog_label(key)
         shortages.append(
             AllocationShortage(
                 category_code=key[0],
@@ -629,6 +699,7 @@ def _shortages_for_depot(
                 depot_region=depot_region,
             )
         )
+    shortages.sort(key=lambda item: _catalog_rank((item.category_code, item.item_code)))
     return shortages
 
 
@@ -1374,12 +1445,23 @@ async def _build_allocation_plan(
             affected += int(scored["expected_affected_people"])
         needed_units += region_needed
         allocated_rows.extend(rows)
+        labels = {
+            _stock_key(item.category_code, item.item_code): (item.name, item.unit)
+            for _township, _scored, items, _depot in depot_candidates
+            for item in items
+        }
         shortages.extend(
-            _shortages_for_depot(requested_totals, stock_by_region[region], region)
+            _shortages_for_depot(requested_totals, stock_by_region[region], region, labels)
         )
 
     if shortages:
-        raise AllocationStateError(PLAN_BLOCKED_ON_SHORTAGE)
+        shortages.sort(
+            key=lambda item: (
+                0 if item.depot_region == "east" else 1,
+                _catalog_rank((item.category_code, item.item_code)),
+            )
+        )
+        raise AllocationStateError(_shortage_message(shortages), shortages)
 
     if sku_model_version == "allocation-per-person":
         _validate_per_person_plan(allocated_rows)

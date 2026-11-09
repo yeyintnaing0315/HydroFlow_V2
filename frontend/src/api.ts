@@ -52,6 +52,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public readonly status: number,
+    public readonly detail?: unknown,
   ) {
     super(message);
     this.name = "ApiError";
@@ -70,15 +71,17 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     let detail = `${response.status} ${response.statusText}`.trim();
+    let payload: unknown;
     try {
       const body = (await response.json()) as { detail?: unknown };
+      payload = body.detail;
       if (body.detail !== undefined) {
         detail = formatApiDetail(body.detail);
       }
     } catch {
       // Keep the HTTP status when the server does not return JSON.
     }
-    throw new ApiError(detail, response.status);
+    throw new ApiError(detail, response.status, payload);
   }
   return response.json() as Promise<T>;
 }

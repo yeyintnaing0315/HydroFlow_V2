@@ -282,6 +282,10 @@ describe("HomeDashboard", () => {
 
     expect(screen.queryByRole("region", { name: "Overview" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Flood Prediction" })).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { name: /flood prediction/i })).toHaveLength(1);
+    expect(screen.queryByRole("heading", { name: "Flood prediction" })).not.toBeInTheDocument();
+    expect(screen.getByText("Year")).toBeInTheDocument();
+    expect(screen.getByText(today.slice(0, 4))).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Resource Allocation" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Inventory Management" })).toBeInTheDocument();
 

@@ -2,7 +2,10 @@ FROM public.ecr.aws/docker/library/python:3.12-slim
 
 WORKDIR /app
 
-RUN apt-get update \
+# deb.debian.org on port 80 is refused from this network. The slim image
+# already has CA certificates, so use the same mirror over HTTPS.
+RUN sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update \
     && apt-get install -y --no-install-recommends libglib2.0-0 libgomp1 libxcb1 \
     && rm -rf /var/lib/apt/lists/*
 

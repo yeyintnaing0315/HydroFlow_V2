@@ -3,6 +3,7 @@ import { CircleMarker, MapContainer, Pane, Polyline, Popup, Tooltip, useMap } fr
 import BasemapTileLayer from "../map/BasemapTileLayer";
 import MapViewportFix from "../map/MapViewportFix";
 import { formatDistance } from "./routeFormat";
+import { routePathForTownship } from "../../lib/allocationPlanMap";
 import type { Coordinates } from "../../types";
 
 export interface OverviewTownship {
@@ -131,26 +132,6 @@ function FitOverview({
   return null;
 }
 
-function pathEndsNear(
-  path: Coordinates[],
-  latitude: number,
-  longitude: number,
-  maxDelta = 0.015,
-): boolean {
-  const last = path[path.length - 1];
-  if (!last) return false;
-  return Math.abs(last.latitude - latitude) <= maxDelta && Math.abs(last.longitude - longitude) <= maxDelta;
-}
-
-function routePathForTownship(route: OverviewRoute, township: OverviewTownship): Coordinates[] {
-  if (route.path.length < 2) return route.path;
-  if (pathEndsNear(route.path, township.latitude, township.longitude)) return route.path;
-  return [
-    ...route.path,
-    { latitude: township.latitude, longitude: township.longitude },
-  ];
-}
-
 export default function AllocationOverviewMap({
   townships,
   depots,
@@ -194,7 +175,7 @@ export default function AllocationOverviewMap({
               townships.find((item) => item.name.trim().toLowerCase() === route.label.trim().toLowerCase());
             const path =
               township && route.path.length > 1
-                ? routePathForTownship(route, township)
+                ? routePathForTownship(route.path, township)
                 : route.path;
             if (path.length < 2) return null;
             return (

@@ -329,7 +329,7 @@ async def route_delivery(
     edge_index: dict[tuple[str, str], tuple[float, float]] | None = None,
     use_osrm: bool = True,
 ) -> DeliveryCorridor:
-    """Shortest flood-aware path from a depot through delivery stops and back."""
+    """Shortest flood-aware path from a depot through delivery stops."""
     catalog = {node_id: (lat, lon) for node_id, lat, lon in nodes}
     for stop_id, lat, lon in stops:
         catalog.setdefault(stop_id, (lat, lon))
@@ -361,10 +361,6 @@ async def route_delivery(
             sequence.append(stop_id)
         corridor_blocked = corridor_blocked or hop_blocked
         cursor = stop_id
-    return_hop, return_blocked = _link(graph, cursor, origin_id)
-    if return_hop and return_hop[0] == cursor:
-        sequence.extend(return_hop[1:])
-    corridor_blocked = corridor_blocked or return_blocked
 
     distance_m, duration_s, blocked_segments, metrics_blocked = _path_metrics(graph, sequence)
     corridor_blocked = corridor_blocked or metrics_blocked
@@ -385,19 +381,22 @@ async def route_delivery(
     waypoints = [(catalog[node_id][0], catalog[node_id][1]) for node_id in sequence]
     try:
         road = await asyncio.wait_for(
-            osrm.driving_path(waypoints),
+            osrm.driving_route(waypoints),
             timeout=OSRM_ROUTE_TIMEOUT_SECONDS,
         )
     except (TimeoutError, asyncio.TimeoutError):
         road = None
-    if road:
+    road_path = road.get("path") if isinstance(road, dict) else None
+    if isinstance(road_path, list) and len(road_path) >= 2:
+        road_distance = road.get("distance_m") if isinstance(road, dict) else None
+        road_duration = road.get("duration_s") if isinstance(road, dict) else None
         return DeliveryCorridor(
             ordered_stop_ids=ordered,
-            path=road,
+            path=road_path,
             routing_method="osrm_road",
             blocked_segments=[],
-            distance_m=distance_m,
-            duration_s=duration_s,
+            distance_m=float(road_distance) if isinstance(road_distance, (int, float)) else distance_m,
+            duration_s=float(road_duration) if isinstance(road_duration, (int, float)) else duration_s,
         )
     return DeliveryCorridor(
         ordered_stop_ids=ordered,

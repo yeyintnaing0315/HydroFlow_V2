@@ -152,7 +152,13 @@ describe("ResourceAllocationDashboard", () => {
     expect(screen.queryByRole("region", { name: "East and west stock" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Plans need verified depot stock/)).not.toBeInTheDocument();
     expect(screen.getByLabelText("Route map context")).toBeInTheDocument();
-    expect(screen.getByText("All high and severe")).toBeInTheDocument();
+    const details = screen.getByLabelText("Allocation details");
+    expect(within(details).getByText("All high and severe")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("Route map context")).queryByText("All high and severe")).not.toBeInTheDocument();
+    expect(
+      details.compareDocumentPosition(screen.getByLabelText("Route map context")) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(within(screen.getByLabelText("Allocation summary")).getByText("Estimated fund")).toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "Township allocations" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Inventory unavailable/)).not.toBeInTheDocument();
     await waitFor(() => expect(api.census).toHaveBeenCalled());
@@ -184,10 +190,10 @@ describe("ResourceAllocationDashboard", () => {
       />,
     );
 
-    expect(within(screen.getByLabelText("Route map context")).getByText("Bago")).toBeInTheDocument();
-    expect(
-      within(screen.getByLabelText("Allocation details")).getAllByText("High").length,
-    ).toBeGreaterThan(0);
+    const details = screen.getByLabelText("Allocation details");
+    expect(within(details).getByText("Bago")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("Route map context")).queryByText("Bago")).not.toBeInTheDocument();
+    expect(within(details).getAllByText("High").length).toBeGreaterThan(0);
     expect(
       within(screen.getByRole("region", { name: "Allocation plan table" })).getAllByText("Bago").length,
     ).toBeGreaterThan(0);
@@ -299,9 +305,95 @@ describe("ResourceAllocationDashboard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Print preview" }));
     const dialog = screen.getByRole("dialog", { name: "Allocation report" });
     expect(within(dialog).getByText("Resource allocation plan")).toBeInTheDocument();
-    const table = within(dialog).getByRole("table", { name: "Township supplies" });
-    expect(within(table).getByRole("cell", { name: "Taungoo" })).toBeInTheDocument();
+    const supplies = within(dialog).getByLabelText("Township supplies");
+    expect(within(supplies).getByRole("heading", { name: "Taungoo" })).toBeInTheDocument();
+    expect(within(supplies).getAllByText("Rice").length).toBeGreaterThan(0);
+    expect(within(supplies).getAllByText("Box").length).toBeGreaterThan(0);
     expect(within(dialog).getByRole("heading", { name: "Route map" })).toBeInTheDocument();
     expect(within(dialog).getByText(/Fund allocated/i)).toBeInTheDocument();
+  });
+
+  it("keeps fund money out of the required resource unit count", async () => {
+    vi.mocked(api.allocationPlan).mockResolvedValueOnce({
+      ...samplePlan,
+      totals: { affected_population: 10, available_stock_units: 100, resources_needed_units: 100_030 },
+      rows: [
+        {
+          ...samplePlan.rows[0],
+          population: 10,
+          affected_male: 4,
+          affected_female: 6,
+          line_items: [
+            { category_code: "foods", item_code: "rice", name: "Rice", unit: "bag", requested: 10, allocated: 10 },
+            { category_code: "fund", item_code: null, name: "Fund", unit: "mmk", requested: 100_000, allocated: 100_000 },
+          ],
+        },
+      ],
+    });
+    render(
+      <ResourceAllocationDashboard startDate="2026-10-20" onStartDate={() => undefined} focus={null} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
+    const summary = await screen.findByLabelText("Allocation summary");
+    expect(within(summary).getByText("10 units")).toBeInTheDocument();
+    expect(within(summary).getByText("100,000 MMK")).toBeInTheDocument();
+    expect(within(summary).queryByText(/100,030/)).not.toBeInTheDocument();
+    const details = screen.getByLabelText("Allocation details");
+    const mapColumn = details.closest(".allocation-map-column");
+    expect(mapColumn).not.toBeNull();
+    expect(mapColumn?.contains(screen.getByLabelText("Route map context"))).toBe(true);
+    expect(
+      details.compareDocumentPosition(screen.getByLabelText("Route map context")) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("shows which depot stock to add when the plan is blocked", async () => {
+    const openInventory = vi.fn();
+    const error = new Error("We cannot create a plan if there is a shortage of resources.");
+    Object.assign(error, {
+      detail: {
+        shortages: [
+          {
+            category_code: "foods",
+            item_code: "rice",
+            name: "Rice",
+            unit: "bag",
+            requested: 9499,
+            available: 1200,
+            unmet: 8299,
+            depot_region: "west",
+          },
+          {
+            category_code: "foods",
+            item_code: "oil",
+            name: "Oil",
+            unit: "bottle",
+            requested: 9499,
+            available: 0,
+            unmet: 9499,
+            depot_region: "west",
+          },
+        ],
+      },
+    });
+    vi.mocked(api.allocationPlan).mockRejectedValueOnce(error);
+    render(
+      <ResourceAllocationDashboard
+        startDate="2026-10-20"
+        onStartDate={() => undefined}
+        focus={null}
+        onOpenInventory={openInventory}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Create Allocation Plan" }));
+    const notice = await screen.findByRole("alert");
+    expect(within(notice).getByText("Add inventory before this plan can be created")).toBeInTheDocument();
+    expect(within(notice).getByText("Pyay depot (west)")).toBeInTheDocument();
+    expect(within(notice).getByText("Rice")).toBeInTheDocument();
+    expect(within(notice).getByText(/add 8,299 bags/)).toBeInTheDocument();
+    expect(within(notice).getByText("Oil")).toBeInTheDocument();
+    expect(within(notice).getByText(/add 9,499 bottles/)).toBeInTheDocument();
+    fireEvent.click(within(notice).getByRole("button", { name: "Open inventory" }));
+    expect(openInventory).toHaveBeenCalledOnce();
   });
 });

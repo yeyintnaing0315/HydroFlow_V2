@@ -115,7 +115,7 @@ function FloodPredictionNowPanelBody({
   const body = (
     <>
       <div className="prediction-title-row">
-        <h2 className="prediction-panel-title">Flood prediction</h2>
+        {embedded ? null : <h2 className="prediction-panel-title">Flood prediction</h2>}
         <p className="prediction-year">
           <span className="field-label">Year</span>
           <strong>{(selectedDate || anchorDate).slice(0, 4)}</strong>

@@ -161,7 +161,13 @@ async def create_allocation_plan(
     except AllocationStateError as exc:
         geo_session.rollback()
         inventory_session.rollback()
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+        detail: str | dict[str, object] = str(exc)
+        if exc.shortages:
+            detail = {
+                "message": str(exc),
+                "shortages": [item.model_dump() for item in exc.shortages],
+            }
+        raise HTTPException(status_code=422, detail=detail) from exc
     except Exception:
         geo_session.rollback()
         inventory_session.rollback()

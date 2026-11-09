@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AllocationPlanResponse } from "../../types";
 import { buildAllocationReport, downloadAllocationPlanPdf } from "../../allocationPlanPdf";
-import { printMapRoutes, type PrintRouteMode } from "../../lib/allocationPrintRoutes";
+import { printMapRoutes, type PrintRoadRoute, type PrintRouteMode } from "../../lib/allocationPrintRoutes";
 import {
   planRouteSummaries,
   selectedRouteLabels,
@@ -14,12 +14,17 @@ import AllocationOverviewMap from "./AllocationOverviewMap";
 interface AllocationPrintPreviewProps {
   plan: AllocationPlanResponse;
   emphasizedTownshipId?: string | null;
+  /** Same OSRM legs the plan map is already showing. */
+  roadRoutes?: Record<string, PrintRoadRoute>;
+  roadsLoading?: boolean;
   onClose: () => void;
 }
 
 export default function AllocationPrintPreview({
   plan,
   emphasizedTownshipId,
+  roadRoutes,
+  roadsLoading = false,
   onClose,
 }: AllocationPrintPreviewProps) {
   const [routeMode, setRouteMode] = useState<PrintRouteMode>("single");
@@ -28,9 +33,10 @@ export default function AllocationPrintPreview({
   const routeGroups = useMemo(() => planRouteSummaries(plan), [plan]);
   const townshipRoutes = useMemo(() => selectedRouteLabels(plan), [plan]);
   const mapModel = useMemo(
-    () => printMapRoutes(plan, routeMode, emphasizedTownshipId),
-    [plan, routeMode, emphasizedTownshipId],
+    () => printMapRoutes(plan, routeMode, emphasizedTownshipId, roadRoutes, roadsLoading),
+    [plan, routeMode, emphasizedTownshipId, roadRoutes, roadsLoading],
   );
+  const roadReady = mapModel.routes.some((route) => !route.dimmed && route.path.length > 2);
   const townships = useMemo(() => townshipsFromPlan(plan), [plan]);
   const hasAlternates = plan.rows.some((row) => (row.route_options?.length ?? 0) >= 2);
 
@@ -60,8 +66,7 @@ export default function AllocationPrintPreview({
           <h2>{report.title}</h2>
           <p>{report.subtitle}</p>
           <p className="allocation-print-lead">
-            Delivery summary for verified depot stock. Fund is shown separately from other relief units (one unit per
-            person across {summary.skuTypes} SKUs; longyi split by sex).
+            One list per township. Each person receives the items below. Men and women longyi are counted separately.
           </p>
         </header>
 
@@ -123,6 +128,7 @@ export default function AllocationPrintPreview({
               depots={mapModel.depots}
               routes={mapModel.routes}
               focusTownshipId={emphasizedTownshipId}
+              loadingMessage={roadsLoading && !roadReady ? "Loading road route…" : null}
             />
           </div>
           <p className="hint allocation-print-map-note">
@@ -155,28 +161,42 @@ export default function AllocationPrintPreview({
         </section>
 
         <section className="allocation-print-table-section" aria-label="Township supplies">
-          <h3>Full SKU allocation (19 items)</h3>
-          {report.tableBody.length ? (
-            <div className="allocation-print-table-wrap">
-              <table className="allocation-print-table" aria-label="Township supplies">
-                <thead>
-                  <tr>
-                    {report.tableHead.map((cell) => (
-                      <th key={cell}>{cell}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {report.tableBody.map((row, index) => (
-                    <tr key={`row-${index}`}>
-                      {row.map((cell, cellIndex) => (
-                        <td key={`${index}-${cellIndex}`}>{cell}</td>
-                      ))}
-                    </tr>
+          <h3>Items to deliver</h3>
+          {report.slips.length ? (
+            report.slips.map((slip) => (
+              <article key={slip.townshipName} className="allocation-print-slip">
+                <header className="allocation-print-slip-head">
+                  <h4>{slip.townshipName}</h4>
+                  <p>
+                    <span>Male <strong>{slip.male}</strong></span>
+                    <span>Female <strong>{slip.female}</strong></span>
+                    <span>People <strong>{slip.people}</strong></span>
+                    <span>Fund <strong>{slip.fund}</strong></span>
+                  </p>
+                </header>
+                <div className="allocation-print-slip-columns">
+                  {(["left", "right"] as const).map((column) => (
+                    <div key={column}>
+                      {slip.groups
+                        .filter((group) => group.column === column)
+                        .map((group) => (
+                          <div key={group.id} className="allocation-print-slip-group">
+                            <h5>{group.title}</h5>
+                            <ul>
+                              {group.lines.map((line) => (
+                                <li key={line.name}>
+                                  <span>{line.name}</span>
+                                  <strong>{line.detail}</strong>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </div>
+              </article>
+            ))
           ) : (
             <p className="state">No allocated items in this plan.</p>
           )}

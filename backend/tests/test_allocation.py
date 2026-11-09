@@ -151,7 +151,7 @@ def test_allocation_plan_ranks_townships_and_assigns_routes(
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
 
     _boost_depot_stock(inventory_session, "east")
     _boost_depot_stock(inventory_session, "west")
@@ -184,7 +184,7 @@ def test_allocation_api(client: TestClient, monkeypatch: pytest.MonkeyPatch, inv
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
 
     _boost_depot_stock(inventory_session, "east")
     app.dependency_overrides[get_inventory_db] = lambda: inventory_session
@@ -253,7 +253,7 @@ def test_plan_lists_unverified_stores_and_does_not_spend_stock(
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
 
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east", commit_inventory=True)
     with pytest.raises(allocation.AllocationStateError, match=allocation.PLAN_BLOCKED_ON_SHORTAGE):
@@ -280,7 +280,7 @@ def test_confirm_deducts_stock_only_after_verification(
     async def _no_osrm(_pts):
         return [{"latitude": 17.3, "longitude": 96.4}, {"latitude": 18.9, "longitude": 96.4}]
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
     store = store_for_region(inventory_session, "east")
     store.verified_at = datetime.now(timezone.utc)
     inventory_session.commit()
@@ -350,7 +350,7 @@ def test_confirm_with_split_inventory_database(
     async def _no_osrm(_pts):
         return [{"latitude": 17.3, "longitude": 96.4}, {"latitude": 18.9, "longitude": 96.4}]
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
     store = store_for_region(inventory_session, "east")
     store.verified_at = datetime.now(timezone.utc)
     inventory_session.commit()
@@ -398,7 +398,7 @@ def test_saved_plan_points_at_prediction_run(
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
     run = PredictionRun(
         as_of=date(2026, 10, 15),
         model_version="flood-v2",
@@ -442,7 +442,7 @@ def test_jrc_floodplain_blocks_corridor_without_osrm(
         called["count"] += 1
         return [{"latitude": 1.0, "longitude": 1.0}, {"latitude": 2.0, "longitude": 2.0}]
 
-    monkeypatch.setattr("app.services.osrm.driving_path", _osrm)
+    monkeypatch.setattr("app.services.osrm.driving_route", _osrm)
     geo_session.add(
         TownshipStaticFeatures(
             township_id="bago",
@@ -469,6 +469,43 @@ def test_jrc_floodplain_blocks_corridor_without_osrm(
     assert corridor.blocked_segments
 
 
+def test_delivery_corridor_is_one_way_and_uses_osrm_distance(
+    monkeypatch: pytest.MonkeyPatch,
+    geo_session: Session,
+) -> None:
+    from app.services.flood_routing import route_delivery
+
+    async def _road(points, timeout=None):
+        del timeout
+        return {
+            "path": [{"latitude": lat, "longitude": lon} for lat, lon in points],
+            "distance_m": 180_000.0,
+            "duration_s": 9_000.0,
+        }
+
+    monkeypatch.setattr("app.services.osrm.driving_route", _road)
+    corridor = asyncio.run(
+        route_delivery(
+            geo_session,
+            origin_id="depot:east",
+            stops=[("pyu", 18.48, 96.44), ("htantabin", 18.74, 96.52)],
+            nodes=[
+                ("depot:east", 17.335, 96.481),
+                ("pyu", 18.48, 96.44),
+                ("htantabin", 18.74, 96.52),
+            ],
+            planning_date=date(2026, 10, 15),
+            edge_index={},
+        )
+    )
+    assert corridor.routing_method == "osrm_road"
+    assert corridor.distance_m == 180_000.0
+    assert corridor.duration_s == 9_000.0
+    assert corridor.path[0] == {"latitude": 17.335, "longitude": 96.481}
+    assert corridor.path[-1] == {"latitude": 18.74, "longitude": 96.52}
+    assert sum(1 for point in corridor.path if point["latitude"] == 17.335) == 1
+
+
 def test_plan_uses_straight_line_when_osrm_hangs(
     monkeypatch: pytest.MonkeyPatch,
     geo_session: Session,
@@ -484,7 +521,7 @@ def test_plan_uses_straight_line_when_osrm_hangs(
 
     monkeypatch.setattr(allocation, "_iter_townships", lambda _session, _ids: _sample_townships()[:1])
     monkeypatch.setattr(allocation, "_help_for_township", fake_help)
-    monkeypatch.setattr(allocation.osrm, "driving_path", slow_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", slow_osrm)
 
     _boost_depot_stock(inventory_session, "east")
     request = AllocationPlanRequest(date=date(2026, 10, 27), warehouse_region="east")
@@ -520,11 +557,18 @@ def test_plan_rejected_when_depot_stock_is_insufficient(
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
 
     request = AllocationPlanRequest(date=date(2026, 10, 15), warehouse_region="east")
-    with pytest.raises(allocation.AllocationStateError, match=allocation.PLAN_BLOCKED_ON_SHORTAGE):
+    with pytest.raises(allocation.AllocationStateError, match=allocation.PLAN_BLOCKED_ON_SHORTAGE) as caught:
         asyncio.run(build_allocation_plan(geo_session, inventory_session, request))
+    message = str(caught.value)
+    assert "Add this inventory:" in message
+    assert "Bago depot (east)" in message
+    assert "Rice" in message
+    assert "add " in message
+    assert caught.value.shortages
+    assert any(item.name == "Rice" and item.unmet > 0 for item in caught.value.shortages)
 
 
 def test_plan_row_keeps_forecast_measurements(
@@ -543,7 +587,7 @@ def test_plan_row_keeps_forecast_measurements(
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
     run = PredictionRun(
         as_of=date(2026, 10, 15),
         model_version="v2",
@@ -597,7 +641,7 @@ def test_confirm_rejects_when_stock_dropped(
     async def _no_osrm(_pts):
         return None
 
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
     store = store_for_region(inventory_session, "east")
     store.verified_at = datetime.now(timezone.utc)
     inventory_session.commit()

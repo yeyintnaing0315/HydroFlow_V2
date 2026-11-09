@@ -37,6 +37,26 @@ function rowPosition(row: AllocationPlanResponse["rows"][number]): Coordinates {
   return { latitude: position.latitude, longitude: position.longitude };
 }
 
+const CONNECTOR_MAX_M = 3_000;
+
+function gapMeters(from: Coordinates, to: Coordinates): number {
+  const midLat = ((from.latitude + to.latitude) / 2) * (Math.PI / 180);
+  const dLat = (from.latitude - to.latitude) * 111_320;
+  const dLon = (from.longitude - to.longitude) * 111_320 * Math.cos(midLat);
+  return Math.hypot(dLat, dLon);
+}
+
+/** Join a road to the town pin only when the road already ends nearby. */
+export function routePathForTownship(path: Coordinates[], township: Coordinates): Coordinates[] {
+  if (path.length < 2) return path;
+  const last = path[path.length - 1];
+  const gap = gapMeters(last, township);
+  if (gap <= CONNECTOR_MAX_M && gap > 1) {
+    return [...path, { latitude: township.latitude, longitude: township.longitude }];
+  }
+  return path;
+}
+
 export function routesFromPlan(
   plan: AllocationPlanResponse,
   depots: OverviewDepot[],
@@ -47,22 +67,17 @@ export function routesFromPlan(
     const depot = depotFor(row.depot_region);
     if (!depot) return [];
     const destination = rowPosition(row);
-    const saved = plan.routes.find((route) => route.route_id === row.route_id && route.path.length >= 2);
-    const path =
-      saved && saved.path.length >= 2
-        ? saved.path
-        : [
-            { latitude: depot.latitude, longitude: depot.longitude },
-            destination,
-          ];
     return [
       {
         id: row.township_id,
         label: row.township_name,
         depotRegion: row.depot_region,
-        distanceM: saved?.distance_m ?? null,
+        distanceM: null,
         emphasized: row.township_id === emphasizedTownshipId,
-        path,
+        path: [
+          { latitude: depot.latitude, longitude: depot.longitude },
+          destination,
+        ],
       },
     ];
   });

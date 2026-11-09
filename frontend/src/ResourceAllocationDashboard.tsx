@@ -11,13 +11,14 @@ import { PageControls, ViewDialog } from "./components/ViewDialog";
 import { errorText } from "./lib/formatError";
 import type { AllocationFocus } from "./lib/allocationFocus";
 import { resolveHighSevereAffectedPeople } from "./lib/syntheticAffectedEstimate";
+import { RELIEF_ITEM_COUNT } from "./lib/allocationSupplyTable";
+import { FUND_MMK_PER_PERSON } from "./lib/allocationPerPersonCheck";
 import { depotRegionForCoordinates, type DepotRegion } from "./lib/depotRegion";
 import { depotsFromPlan, routesFromPlan, townshipsFromPlan } from "./lib/allocationPlanMap";
 import { ensureAffectedSexSplit } from "./lib/splitAffectedBySex";
 import { depotReferenceCoords, resolveTownshipPosition } from "./lib/resolveTownshipPosition";
 import { floodFillLevel, riskLabel } from "./components/prediction/mapUtils";
 import type {
-  AllocationBlockedSegment,
   AllocationPlanHistoryItem,
   AllocationPlanResponse,
   AllocationStoreStatus,
@@ -37,11 +38,6 @@ type SavedPlan = AllocationPlanResponse & {
   status?: "draft" | "confirmed";
   prediction_run_id?: number | null;
   unverified_stores?: AllocationStoreStatus[];
-};
-
-type SavedRoute = AllocationPlanResponse["routes"][number] & {
-  routing_method?: string;
-  blocked_segments?: AllocationBlockedSegment[];
 };
 
 interface ResourceAllocationDashboardProps {
@@ -67,6 +63,31 @@ const loading = <T,>(): Resource<T> => ({ state: "loading" });
 
 /** Plans include high and severe townships only (backend min_priority threshold). */
 const ALLOCATION_MIN_PRIORITY: AssistancePriority = "high";
+
+function isFundLine(item: { category_code: string; item_code: string | null }): boolean {
+  return item.category_code === "fund" && item.item_code == null;
+}
+
+/** Physical relief goods only. Fund is shown as MMK, not as a unit. */
+function reliefUnitsFromPlan(plan: AllocationPlanResponse): number {
+  let units = 0;
+  for (const row of plan.rows) {
+    for (const item of row.line_items) {
+      if (!isFundLine(item)) units += item.requested;
+    }
+  }
+  return Math.round(units);
+}
+
+function estimatedFundMmkFromPlan(plan: AllocationPlanResponse): number {
+  let fund = 0;
+  for (const row of plan.rows) {
+    for (const item of row.line_items) {
+      if (isFundLine(item)) fund += item.requested;
+    }
+  }
+  return Math.round(fund);
+}
 
 type RegionCode = DepotRegion;
 
@@ -157,16 +178,117 @@ function depotDisplayLabel(region: "east" | "west"): string {
   return region === "east" ? "Bago East" : "Pyay West";
 }
 
+interface RestockNeed {
+  depotRegion: "east" | "west";
+  name: string;
+  unit: string;
+  requested: number;
+  available: number;
+  unmet: number;
+}
+
+function restockNeedsFrom(reason: unknown): RestockNeed[] {
+  if (!reason || typeof reason !== "object" || !("detail" in reason)) return [];
+  const detail = (reason as { detail?: unknown }).detail;
+  if (!detail || typeof detail !== "object" || !("shortages" in detail)) return [];
+  const shortages = (detail as { shortages?: unknown }).shortages;
+  if (!Array.isArray(shortages)) return [];
+  const needs: RestockNeed[] = [];
+  for (const item of shortages) {
+    if (!item || typeof item !== "object") continue;
+    const row = item as Record<string, unknown>;
+    const name = typeof row.name === "string" ? row.name : "";
+    const unmet = Number(row.unmet);
+    if (!name || !Number.isFinite(unmet) || unmet <= 0) continue;
+    needs.push({
+      depotRegion: row.depot_region === "west" ? "west" : "east",
+      name,
+      unit: typeof row.unit === "string" ? row.unit : "",
+      requested: Number(row.requested) || 0,
+      available: Number(row.available) || 0,
+      unmet,
+    });
+  }
+  return needs;
+}
+
+function restockUnit(unit: string, count: number): string {
+  if (unit.toLowerCase() === "mmk") return "MMK";
+  if (Math.round(count) === 1) return unit;
+  const plurals: Record<string, string> = {
+    bag: "bags",
+    bottle: "bottles",
+    can: "cans",
+    piece: "pieces",
+    pack: "packs",
+    box: "boxes",
+  };
+  return plurals[unit] ?? unit;
+}
+
+function restockDepotName(region: "east" | "west"): string {
+  return region === "east" ? "Bago depot (east)" : "Pyay depot (west)";
+}
+
+function RestockAlert({
+  needs,
+  onOpenInventory,
+}: {
+  needs: RestockNeed[];
+  onOpenInventory?: () => void;
+}) {
+  const depots = ["east", "west"] as const;
+  const groups = depots
+    .map((region) => ({
+      region,
+      name: restockDepotName(region),
+      items: needs.filter((item) => item.depotRegion === region),
+    }))
+    .filter((group) => group.items.length > 0);
+
+  return (
+    <div className="allocation-restock-alert" role="alert">
+      <strong>Add inventory before this plan can be created</strong>
+      {groups.map((group) => (
+        <div key={group.region}>
+          <h4>{group.name}</h4>
+          <ul>
+            {group.items.map((item) => (
+              <li key={`${group.region}-${item.name}`}>
+                <span>{item.name}</span>
+                <strong>
+                  add {Math.round(item.unmet).toLocaleString()} {restockUnit(item.unit, item.unmet)}
+                </strong>
+                <em>
+                  in stock {Math.round(item.available).toLocaleString()} · needed{" "}
+                  {Math.round(item.requested).toLocaleString()}
+                </em>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      {onOpenInventory ? (
+        <button type="button" onClick={onOpenInventory}>
+          Open inventory
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 export default function ResourceAllocationDashboard({
   startDate,
   onStartDate,
   focus,
   onClearFocus,
+  onOpenInventory,
   areas,
 }: ResourceAllocationDashboardProps) {
   const [inventoryEast, setInventoryEast] = useState<Resource<InventorySnapshot>>({ state: "empty" });
   const [inventoryWest, setInventoryWest] = useState<Resource<InventorySnapshot>>({ state: "empty" });
   const [plan, setPlan] = useState<Resource<SavedPlan>>({ state: "empty" });
+  const [restockNeeds, setRestockNeeds] = useState<RestockNeed[]>([]);
   const [stores, setStores] = useState<AllocationStoreStatus[]>([]);
   const [history, setHistory] = useState<AllocationPlanHistoryItem[]>([]);
   const [confirming, setConfirming] = useState(false);
@@ -411,6 +533,7 @@ export default function ResourceAllocationDashboard({
 
   const runPlan = async () => {
     setPlan(loading);
+    setRestockNeeds([]);
     setConfirmError(undefined);
     setRoutesOpen(false);
     setComparison(null);
@@ -422,6 +545,7 @@ export default function ResourceAllocationDashboard({
       setPlan({ state: "ready", data: result });
     } catch (reason) {
       setPlan({ state: "error", error: errorText(reason) });
+      setRestockNeeds(restockNeedsFrom(reason));
     }
   };
 
@@ -646,19 +770,19 @@ export default function ResourceAllocationDashboard({
   const highlightedTownshipId = planReady ? selectedRowId : (selectedTownshipId ?? focus?.townshipId ?? null);
 
   useEffect(() => {
-    if (planReady) {
-      setNetworkRoutesByTownship({});
-      setNetworkRoutesLoading(false);
-      return;
-    }
     const east = overviewDepots.find((depot) => depot.region === "east");
     const west = overviewDepots.find((depot) => depot.region === "west");
     if (!east || !west) return;
+    const planTargets =
+      planReady && plan.data
+        ? townshipsFromPlan(plan.data).filter((township) => !isDepotTownship(township.name))
+        : null;
     const allTargets = overviewTownships.filter((township) => !isDepotTownship(township.name));
     const targets =
-      focus && !planReady
+      planTargets ??
+      (focus && !planReady
         ? allTargets.filter((township) => township.id === focus.townshipId)
-        : allTargets;
+        : allTargets);
     if (!targets.length) {
       setNetworkRoutesByTownship({});
       return;
@@ -698,7 +822,7 @@ export default function ResourceAllocationDashboard({
     return () => {
       active = false;
     };
-  }, [planReady, overviewDepots, overviewTownships, stores, focus]);
+  }, [planReady, plan.data, overviewDepots, overviewTownships, stores, focus]);
 
   const overviewRoutes = useMemo(() => {
     const east = overviewDepots.find((depot) => depot.region === "east");
@@ -734,13 +858,18 @@ export default function ResourceAllocationDashboard({
     const planDepots = depotsFromPlan(plan.data);
     const baseRoutes = routesFromPlan(plan.data, planDepots, highlightedTownshipId);
     return baseRoutes.map((route) => {
+      const network = networkRoutesByTownship[route.id];
+      const ownLeg =
+        network && network.path.length >= 2
+          ? { ...route, path: network.path, distanceM: network.distanceM }
+          : route;
       if (route.id !== selectedRowId || !activeAlternative || activeAlternative.path.length < 2) {
-        return route;
+        return ownLeg;
       }
       return {
-        ...route,
+        ...ownLeg,
         path: activeAlternative.path,
-        distanceM: activeAlternative.distance_m ?? route.distanceM,
+        distanceM: activeAlternative.distance_m ?? ownLeg.distanceM,
         emphasized: true,
       };
     });
@@ -757,11 +886,7 @@ export default function ResourceAllocationDashboard({
     networkRoutesByTownship,
   ]);
 
-  const mapDisplayRoutes = useMemo(() => {
-    if (!highlightedTownshipId) return overviewRoutes;
-    const active = overviewRoutes.filter((route) => route.id === highlightedTownshipId);
-    return active.length ? active : overviewRoutes;
-  }, [overviewRoutes, highlightedTownshipId]);
+  const mapDisplayRoutes = overviewRoutes;
 
   const inventoryError =
     inventoryEast.state === "error"
@@ -780,11 +905,12 @@ export default function ResourceAllocationDashboard({
     if (routesOpen && active) {
       return `${selectedRow.township_name} · ${active.label} · ${routeMethodLabel(active.routing_method)} · ${formatDistance(active.distance_m)}`;
     }
-    const route = (plan.data?.routes ?? []).find((item) => item.route_id === selectedRow.route_id);
-    const method = (route as SavedRoute | undefined)?.routing_method;
-    const km = formatDistance(route?.distance_m);
+    const own = overviewRoutes.find((route) => route.id === selectedRow.township_id);
+    const network = networkRoutesByTownship[selectedRow.township_id];
+    const method = network && network.path.length >= 2 ? "osrm_road" : undefined;
+    const km = formatDistance(own?.distanceM ?? undefined);
     return `${selectedRow.township_name} · ${selectedRow.route_id}${method ? ` · ${routeMethodLabel(method)}` : ""}${km === "—" ? "" : ` · ${km}`}`;
-  }, [selectedRow, comparison, routesOpen, plan.data]);
+  }, [selectedRow, comparison, routesOpen, overviewRoutes, networkRoutesByTownship]);
 
   const routeDistanceByTownship = useMemo(() => {
     const out: Record<string, number | null | undefined> = {};
@@ -968,7 +1094,9 @@ export default function ResourceAllocationDashboard({
   };
 
   const alerts: { tone: "error" | "status"; message: string }[] = [];
-  if (plan.state === "error" && plan.error) alerts.push({ tone: "error", message: `Plan failed: ${plan.error}` });
+  if (plan.state === "error" && plan.error && restockNeeds.length === 0) {
+    alerts.push({ tone: "error", message: `Plan failed: ${plan.error}` });
+  }
   if (confirmError) alerts.push({ tone: "error", message: `Confirm failed: ${confirmError}` });
   if (plan.data?.shortages.length) {
     alerts.push({
@@ -1034,11 +1162,19 @@ export default function ResourceAllocationDashboard({
     ? plan.data?.totals.affected_population.toLocaleString() ?? "—"
     : formatToolbarCount(totalAffectedEst, sexCountsPending);
 
-  const summaryResourcesDisplay = planReady
-    ? `${(plan.data?.totals.resources_needed_units ?? 0).toLocaleString()} units`
-    : totalAffectedEst != null
-      ? `${(totalAffectedEst * 19).toLocaleString()} units est.`
-      : "—";
+  const summaryResourcesDisplay =
+    planReady && plan.data
+      ? `${reliefUnitsFromPlan(plan.data).toLocaleString()} units`
+      : totalAffectedEst != null
+        ? `${(totalAffectedEst * RELIEF_ITEM_COUNT).toLocaleString()} units est.`
+        : "—";
+
+  const summaryFundDisplay =
+    planReady && plan.data
+      ? `${estimatedFundMmkFromPlan(plan.data).toLocaleString()} MMK`
+      : totalAffectedEst != null
+        ? `${(totalAffectedEst * FUND_MMK_PER_PERSON).toLocaleString()} MMK est.`
+        : "—";
 
   const summaryDepotDisplay = detailTownshipMeta
     ? depotDisplayLabel(detailTownshipMeta.depotRegion)
@@ -1096,16 +1232,41 @@ export default function ResourceAllocationDashboard({
 
       <section className="panel allocation-map-column">
         <div className="allocation-map-stack">
+          <div className="allocation-detail-list" aria-label="Allocation details">
+            <h3 className="allocation-detail-title">Allocation details</h3>
+            <dl className="allocation-detail-rows">
+              <div>
+                <dt>Township</dt>
+                <dd>{detailTownshipMeta?.name ?? allocationTownshipLabel}</dd>
+              </div>
+              {detailTownshipMeta ? (
+                <>
+                  <div>
+                    <dt>Risk level</dt>
+                    <dd>
+                      <span className={`risk-pill risk-${detailTownshipMeta.priority}`}>{detailRiskLabel}</span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Delivery priority</dt>
+                    <dd>
+                      <span className="allocation-priority-pill">{detailRiskLabel ?? "—"}</span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Estimated route</dt>
+                    <dd>{detailRouteLabel ?? "—"}</dd>
+                  </div>
+                </>
+              ) : null}
+            </dl>
+          </div>
           <div className="allocation-route-map-head">
             <h2>Route map</h2>
             <div className="allocation-route-map-meta" aria-label="Route map context">
               <span className="allocation-route-map-meta-item">
                 <span className="allocation-top-label">Planning date</span>
                 <strong>{allocationPlanningDate}</strong>
-              </span>
-              <span className="allocation-route-map-meta-item">
-                <span className="allocation-top-label">Township</span>
-                <strong>{allocationTownshipLabel}</strong>
               </span>
             </div>
             <span className="source allocation-route-map-source">
@@ -1179,39 +1340,13 @@ export default function ResourceAllocationDashboard({
               <strong className="allocation-summary-card-value">{summaryResourcesDisplay}</strong>
             </div>
             <div className="allocation-summary-card">
+              <span className="allocation-summary-card-label">Estimated fund</span>
+              <strong className="allocation-summary-card-value">{summaryFundDisplay}</strong>
+            </div>
+            <div className="allocation-summary-card">
               <span className="allocation-summary-card-label">Assigned depot</span>
               <strong className="allocation-summary-card-value">{summaryDepotDisplay}</strong>
             </div>
-          </div>
-
-          <div className="allocation-detail-list" aria-label="Allocation details">
-            <h3 className="allocation-detail-title">Allocation details</h3>
-            {detailTownshipMeta ? (
-              <dl className="allocation-detail-rows">
-                <div>
-                  <dt>Township</dt>
-                  <dd>{detailTownshipMeta.name}</dd>
-                </div>
-                <div>
-                  <dt>Risk level</dt>
-                  <dd>
-                    <span className={`risk-pill risk-${detailTownshipMeta.priority}`}>{detailRiskLabel}</span>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Delivery priority</dt>
-                  <dd>
-                    <span className="allocation-priority-pill">{detailRiskLabel ?? "—"}</span>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Estimated route</dt>
-                  <dd>{detailRouteLabel ?? "—"}</dd>
-                </div>
-              </dl>
-            ) : (
-              <p className="hint allocation-detail-empty">Select a township to see allocation details.</p>
-            )}
           </div>
 
           <div
@@ -1248,6 +1383,10 @@ export default function ResourceAllocationDashboard({
             />
             {planConfirmed ? <AllocationConfirmedDeductions lines={confirmedDeductions} /> : null}
           </div>
+
+          {restockNeeds.length ? (
+            <RestockAlert needs={restockNeeds} onOpenInventory={onOpenInventory} />
+          ) : null}
 
           <form
             className={`allocation-plan-form allocation-plan-form-stack${
@@ -1302,6 +1441,8 @@ export default function ResourceAllocationDashboard({
         <AllocationPrintPreview
           plan={plan.data}
           emphasizedTownshipId={highlightedTownshipId}
+          roadRoutes={networkRoutesByTownship}
+          roadsLoading={networkRoutesLoading}
           onClose={() => setPrintOpen(false)}
         />
       ) : null}

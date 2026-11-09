@@ -12,6 +12,9 @@ export function formatApiDetail(detail: unknown): string {
       })
       .join("; ");
   }
+  if (typeof detail === "object" && "message" in detail && typeof detail.message === "string") {
+    return detail.message;
+  }
   if (typeof detail === "object" && "msg" in detail) {
     return String((detail as { msg: unknown }).msg);
   }

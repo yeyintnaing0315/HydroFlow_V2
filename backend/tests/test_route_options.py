@@ -97,7 +97,7 @@ async def _plan(geo_session: Session, inventory_session: Session, monkeypatch: p
 
     monkeypatch.setattr(allocation, "_iter_townships", lambda _s, _ids: _sample())
     monkeypatch.setattr(allocation, "_help_for_township", fake_help)
-    monkeypatch.setattr(allocation.osrm, "driving_path", _no_osrm)
+    monkeypatch.setattr(allocation.osrm, "driving_route", _no_osrm)
     _boost_depot_stock(inventory_session, "east")
     return await allocation.build_allocation_plan(
         geo_session,
